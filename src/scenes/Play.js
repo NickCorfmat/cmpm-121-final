@@ -4,10 +4,9 @@ class Play extends Phaser.Scene {
   }
 
   create() {
-
+    // set background color
+    this.cameras.main.setBackgroundColor(0x000000)
   }
 
-  update() {
-    
-  }
+  update() {}
 }

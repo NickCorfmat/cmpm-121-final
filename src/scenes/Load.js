@@ -3,7 +3,10 @@ class Load extends Phaser.Scene {
     super("sceneLoad");
   }
 
-  preload() {}
+  preload() {
+    // load assets
+    this.load.path = "./assets";
+  }
 
   create() {
     this.scene.launch("sceneKeys");
