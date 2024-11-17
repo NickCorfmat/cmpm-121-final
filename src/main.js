@@ -16,7 +16,7 @@ let config = {
             debug: false
         }
     },
-    scene: [ Load, Tutorial, Credits, Menu, Cutscene, Select, Play, RumbleWinner, KarateWinner ]
+    scene: [ ]
 }
 
 let game = new Phaser.Game(config)
