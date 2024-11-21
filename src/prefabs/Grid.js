@@ -13,6 +13,13 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.gridY = y;
     this.size = size;
   }
+
+  getCenter() {
+    const centerX = this.gridX * this.size + this.size / 2;
+    const centerY = this.gridY * this.size + this.size / 2;
+
+    return { x: centerX, y: centerY };
+  }
 }
 
 class Grid {
