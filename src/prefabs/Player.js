@@ -16,13 +16,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // store references
     this.scene = scene;
     this.gridConfig = gridConfig;
+    this.x = x;
+    this.y = y;
+
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
 
     // initialize resources
     this.resources = 100;
     this.updateResourceDisplay();
-
-    this.setDepth(10);
   }
 
   update() {
@@ -78,6 +79,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateResourceDisplay() {
-    document.getElementById('resourceDisplay').innerText = `Resources: ${this.resources}`;
+    document.getElementById(
+      "resourceDisplay"
+    ).innerText = `Resources: ${this.resources}`;
   }
 }

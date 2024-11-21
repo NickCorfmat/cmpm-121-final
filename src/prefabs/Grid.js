@@ -9,24 +9,22 @@ class Cell extends Phaser.GameObjects.Sprite {
 
     // store references
     this.scene = scene;
-    this.gridX = x;
-    this.gridY = y;
+    this.gridX = x * size + size / 2;
+    this.gridY = y * size + size / 2;
     this.size = size;
 
-    // make cells clickable
     this.makeClickable();
-  }
-
-  getCenter() {
-    const centerX = this.gridX * this.size + this.size / 2;
-    const centerY = this.gridY * this.size + this.size / 2;
-
-    return { x: centerX, y: centerY };
   }
 
   makeClickable() {
     this.setInteractive();
-    this.on("pointerdown", () => {});
+    this.on("pointerdown", () => {
+      this.selectCell();
+    });
+  }
+
+  selectCell() {
+    this.setTint(0x00ff00);
   }
 }
 

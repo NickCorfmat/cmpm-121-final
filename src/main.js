@@ -2,7 +2,7 @@
 
 let config = {
   type: Phaser.AUTO,
-  width: 320,
+  width: 560,
   height: 320,
   parent: "game-container",
   render: {

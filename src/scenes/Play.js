@@ -32,11 +32,10 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
+    this.stats = new Stats(this, 440, 160, 240, 320)
 
-    const cell = this.grid.getCell(0, 0);
-    const cellCenter = cell.getCenter();
-
-    this.player = new Player(this, cellCenter.x, cellCenter.y, this.gridConfig);
+    const spawn = this.grid.getCell(0, 0);
+    this.player = new Player(this, spawn.gridX, spawn.gridY, this.gridConfig);
 
     // add event listener to end turn button
     document
@@ -54,24 +53,24 @@ class Play extends Phaser.Scene {
     });
   }
 
-  selectCell(cell) {
-    const playerCell = this.grid.getCell(
-      Math.floor(this.player.x / this.gridConfig.size),
-      Math.floor(this.player.y / this.gridConfig.size)
-    );
+  // selectCell(cell) {
+  //   const playerCell = this.grid.getCell(
+  //     Math.floor(this.player.x / this.gridConfig.size),
+  //     Math.floor(this.player.y / this.gridConfig.size)
+  //   );
 
-    const isAdjacent = Math.abs(cell.gridX - playerCell.gridX) <= 1 && Math.abs(cell.gridY - playerCell.gridY) <= 1;
+  //   const isAdjacent = Math.abs(cell.gridX - playerCell.gridX) <= 1 && Math.abs(cell.gridY - playerCell.gridY) <= 1;
 
-    if (isAdjacent) {
-      if (this.previousSelectedCell) {
-        this.previousSelectedCell.clearTint();
-      }
+  //   if (isAdjacent) {
+  //     if (this.previousSelectedCell) {
+  //       this.previousSelectedCell.clearTint();
+  //     }
 
-      this.selectedCell = cell;
-      this.selectedCell.setTint(0x00ff00); // Highlight the selected cell with green tint
-      this.previousSelectedCell = this.selectedCell;
-    }
-  }
+  //     this.selectedCell = cell;
+  //     this.selectedCell.setTint(0x00ff00); // Highlight the selected cell with green tint
+  //     this.previousSelectedCell = this.selectedCell;
+  //   }
+  // }
 
   buyBuilding(type) {
     if (this.selectedCell && this.player.spendResources(50)) {
