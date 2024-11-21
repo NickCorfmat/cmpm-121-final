@@ -5,8 +5,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // sprite configs
+    const converage = 0.75;
+    
     this.setOrigin(0.5);
-    this.setScale(2);
+    this.setDisplaySize(
+      gridConfig.size * converage,
+      gridConfig.size * converage
+    );
 
     // store references
     this.scene = scene;
