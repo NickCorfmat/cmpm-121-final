@@ -1,14 +1,12 @@
 class Grid extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, width, height, gridSize) {
+  constructor(scene, gridConfig) {
     super(scene);
     scene.add.existing(this);
-    scene.physics.add.existing(this)
+    scene.physics.add.existing(this);
 
-    // storing argument references
+    // store references
     this.scene = scene;
-    this.width = width;
-    this.height = height;
-    this.gridSize = gridSize;
+    this.gridConfig = gridConfig;
 
     this.createGrid();
   }
@@ -18,15 +16,14 @@ class Grid extends Phaser.Physics.Arcade.Sprite {
     this.grid = this.scene.add.group();
 
     // loop through grid width and height
-    for (let i = 0; i < this.width; i++) {
-      for (let j = 0; j < this.height; j++) {
-
+    for (let i = 0; i < this.gridConfig.width; i++) {
+      for (let j = 0; j < this.gridConfig.height; j++) {
         // draw grid cell
         const cell = this.scene.add.rectangle(
-          i * this.gridSize,
-          j * this.gridSize,
-          this.gridSize,
-          this.gridSize,
+          i * this.gridConfig.size,
+          j * this.gridConfig.size,
+          this.gridConfig.size,
+          this.gridConfig.size,
           0x00ff00
         );
 

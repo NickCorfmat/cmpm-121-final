@@ -10,9 +10,7 @@
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
-    this.gridSize = 32;
-    this.gridWidth = 10;
-    this.gridHeight = 10;
+    this.gridConfig = {width: 10, height: 10, size: 32 }
     this.isPlayerTurn = true;
   }
 
@@ -20,16 +18,8 @@ class Play extends Phaser.Scene {
     // set background color
     this.cameras.main.setBackgroundColor(0x000000);
 
-    this.grid = new Grid(this, 10, 10, 32);
-
-    // create a character
-    this.character = this.add.rectangle(
-      this.gridSize / 2,
-      this.gridSize / 2,
-      this.gridSize,
-      this.gridSize,
-      0xff0000
-    );
+    this.grid = new Grid(this, this.gridConfig);
+    this.player = new Player(this, width / 2, height / 2, this.gridConfig);
 
     // enable keyboard input
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -47,35 +37,7 @@ class Play extends Phaser.Scene {
 
   update() {
     if (this.isPlayerTurn) {
-      if (this.cursors.left.isDown) {
-        this.moveCharacter(-1, 0);
-      } else if (this.cursors.right.isDown) {
-        this.moveCharacter(1, 0);
-      } else if (this.cursors.up.isDown) {
-        this.moveCharacter(0, -1);
-      } else if (this.cursors.down.isDown) {
-        this.moveCharacter(0, 1);
-      }
+      this.player.update();
     }
-  }
-
-  moveCharacter(dx, dy) {
-    const newX = this.character.x + dx * this.gridSize;
-    const newY = this.character.y + dy * this.gridSize;
-
-    if (this.isValidMove(newX, newY)) {
-      this.character.x = newX;
-      this.character.y = newY;
-      this.isPlayerTurn = false;
-    }
-  }
-
-  isValidMove(x, y) {
-    return (
-      x >= 0 &&
-      x < this.gridWidth * this.gridSize &&
-      y >= 0 &&
-      y < this.gridHeight * this.gridSize
-    );
   }
 }
