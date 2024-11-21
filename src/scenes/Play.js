@@ -13,7 +13,7 @@ class Play extends Phaser.Scene {
   }
 
   init() {
-    this.gridConfig = { width: 10, height: 10, size: 32 };
+    this.gridConfig = { width: 8, height: 8, size: 40 };
     this.isPlayerTurn = true;
   }
 
@@ -22,7 +22,11 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
-    this.player = new Player(this, 4, 0, this.gridConfig);
+
+    const playerStartX = this.gridConfig.size / 2;
+    const playerStartY = this.gridConfig.size / 2;
+
+    this.player = new Player(this, playerStartX, playerStartY, this.gridConfig);
 
     // add event listener to end turn button
     document

@@ -2,15 +2,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, gridConfig, texture = "player") {
     super(scene, x, y, texture);
     scene.add.existing(this);
+    scene.physics.add.existing(this);
+
+    // sprite configs
+    this.setOrigin(0.5);
+    this.setScale(2);
 
     // store references
     this.scene = scene;
     this.gridConfig = gridConfig;
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
-
-    // sprite configs
-    this.setOrigin(0);
-    this.setScale(2);
   }
 
   update() {
@@ -21,17 +22,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const { KEYS } = this;
 
     if (KEYS.LEFT.isDown) {
-      this.moveCharacter(-1, 0);
+      this.movePlayer(-1, 0);
     } else if (KEYS.RIGHT.isDown) {
-      this.moveCharacter(1, 0);
+      this.movePlayer(1, 0);
     } else if (KEYS.UP.isDown) {
-      this.moveCharacter(0, -1);
+      this.movePlayer(0, -1);
     } else if (KEYS.DOWN.isDown) {
-      this.moveCharacter(0, 1);
+      this.movePlayer(0, 1);
     }
   }
 
-  moveCharacter(dx, dy) {
+  movePlayer(dx, dy) {
     const newX = this.x + dx * this.gridConfig.size;
     const newY = this.y + dy * this.gridConfig.size;
 
