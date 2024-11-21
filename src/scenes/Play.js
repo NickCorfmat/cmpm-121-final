@@ -43,12 +43,6 @@ class Play extends Phaser.Scene {
       .getElementById("endTurnButton")
       .addEventListener("click", () => this.endTurn());
 
-    // add event listener to grid cells
-    this.grid.grid.forEach(cell => {
-      cell.setInteractive();
-      cell.on('pointerdown', () => this.selectCell(cell));
-    });
-
     // add event listeners to building buttons
     this.createBuildingButtons();
   }
