@@ -6,6 +6,8 @@ class Load extends Phaser.Scene {
   preload() {
     // load assets
     this.load.path = "./assets";
+
+    this.load.image("player", "/player.png")
   }
 
   create() {
