@@ -22,7 +22,7 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
-    this.player = new Player(this, width / 2, height / 2, this.gridConfig);
+    this.player = new Player(this, 4, 0, this.gridConfig);
 
     // add event listener to end turn button
     document

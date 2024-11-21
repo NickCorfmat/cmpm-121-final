@@ -1,4 +1,4 @@
-class Player extends Phaser.GameObjects.Sprite {
+class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, gridConfig, texture = "player") {
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -9,7 +9,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
 
     // sprite configs
-    this.setOrigin(0.5);
+    this.setOrigin(0);
     this.setScale(2);
   }
 
@@ -38,12 +38,14 @@ class Player extends Phaser.GameObjects.Sprite {
     if (this.isValidMove(newX, newY)) {
       this.x = newX;
       this.y = newY;
+
+      this.scene.isPlayerTurn = false;
     }
   }
 
   isValidMove(x, y) {
     const { width, height, size } = this.gridConfig;
-    
+
     const isWithinWidth = x >= 0 && x < width * size;
     const isWithinHeight = y >= 0 && y < height * size;
 
