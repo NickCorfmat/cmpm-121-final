@@ -4,11 +4,9 @@ let config = {
   type: Phaser.AUTO,
   width: 320,
   height: 320,
+  parent: "game-container",
   render: {
     pixelArt: true,
-  },
-  scale: {
-    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   physics: {
     default: "arcade",
