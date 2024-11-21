@@ -6,7 +6,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // sprite configs
     const converage = 0.75;
-    
+
     this.setOrigin(0.5);
     this.setDisplaySize(
       gridConfig.size * converage,
@@ -17,6 +17,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.gridConfig = gridConfig;
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
+
+    // initialize resources
+    this.resources = 100;
+    this.updateResourceDisplay();
+
+    this.setDepth(10);
   }
 
   update() {
@@ -56,5 +62,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const isWithinHeight = y >= 0 && y < height * size;
 
     return isWithinWidth && isWithinHeight;
+  }
+
+  canAfford(cost) {
+    return this.resources >= cost;
+  }
+
+  spendResources(cost) {
+    if (this.canAfford(cost)) {
+      this.resources -= cost;
+      this.updateResourceDisplay();
+      return true;
+    }
+    return false;
+  }
+
+  updateResourceDisplay() {
+    document.getElementById('resourceDisplay').innerText = `Resources: ${this.resources}`;
   }
 }
