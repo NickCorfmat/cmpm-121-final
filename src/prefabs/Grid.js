@@ -1,8 +1,22 @@
-class Grid extends Phaser.GameObjects.Sprite {
-  constructor(scene, gridConfig) {
-    super(scene);
+class Cell extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y, size, texture = "cell") {
+    super(scene, x * size, y * size, texture);
     scene.add.existing(this);
 
+    // sprite configs
+    this.setOrigin(0);
+    this.setDisplaySize(size, size);
+
+    // store references
+    this.scene = scene;
+    this.gridX = x;
+    this.gridY = y;
+    this.size = size;
+  }
+}
+
+class Grid {
+  constructor(scene, gridConfig) {
     // store references
     this.scene = scene;
     this.gridConfig = gridConfig;
@@ -12,28 +26,19 @@ class Grid extends Phaser.GameObjects.Sprite {
 
   createGrid() {
     // create a grid with grouped sprites
-    this.grid = this.scene.add.group();
+    this.grid = [];
 
     // destructuring grid config
     const { width, height, size } = this.gridConfig;
 
     // loop through grid width and height
-    for (let i = 0; i < width; i++) {
-      for (let j = 0; j < height; j++) {
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
         // draw grid cell
-        const cell = this.scene.add.rectangle(
-          i * size,
-          j * size,
-          size,
-          size,
-          0xb5b5b5
-        );
-
-        cell.setStrokeStyle(2, 0x000000);
-        cell.setOrigin(0);
+        const cell = new Cell(this.scene, x, y, size);
 
         // add cell sprite to grid container
-        this.grid.add(cell);
+        this.grid.push(cell);
       }
     }
   }
