@@ -32,6 +32,7 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
+    this.stats = new Stats(this, 440, 160, 240, 320)
 
     const spawn = this.grid.getCell(0, 0);
     this.player = new Player(this, spawn.gridX, spawn.gridY, this.gridConfig);

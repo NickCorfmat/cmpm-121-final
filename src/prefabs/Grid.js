@@ -13,7 +13,6 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.gridY = y * size + size / 2;
     this.size = size;
 
-    // make cells clickable
     this.makeClickable();
   }
 
