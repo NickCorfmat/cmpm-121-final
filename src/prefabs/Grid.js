@@ -12,6 +12,9 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.gridX = x;
     this.gridY = y;
     this.size = size;
+
+    // make cells clickable
+    this.makeClickable();
   }
 
   getCenter() {
@@ -19,6 +22,11 @@ class Cell extends Phaser.GameObjects.Sprite {
     const centerY = this.gridY * this.size + this.size / 2;
 
     return { x: centerX, y: centerY };
+  }
+
+  makeClickable() {
+    this.setInteractive();
+    this.on("pointerdown", () => {});
   }
 }
 
@@ -33,7 +41,7 @@ class Grid {
 
   createGrid() {
     // create a grid with grouped sprites
-    this.grid = new Map();
+    this.cells = new Map();
 
     // destructuring grid config
     const { width, height, size } = this.gridConfig;
@@ -45,13 +53,13 @@ class Grid {
         const cell = new Cell(this.scene, x, y, size);
 
         // add cell sprite to grid container
-        this.grid.set(this.generateKey(x, y), cell);
+        this.cells.set(this.generateKey(x, y), cell);
       }
     }
   }
 
   getCell(x, y) {
-    return this.grid.get(this.generateKey(x, y));
+    return this.cells.get(this.generateKey(x, y));
   }
 
   // Extracting key generation to own function idea inspired by Brace
