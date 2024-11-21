@@ -4,14 +4,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    // sprite configs
+    this.setOrigin(0.5);
+    this.setScale(2);
+
     // store references
     this.scene = scene;
     this.gridConfig = gridConfig;
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
-
-    // sprite configs
-    this.setOrigin(0);
-    this.setScale(2);
   }
 
   update() {

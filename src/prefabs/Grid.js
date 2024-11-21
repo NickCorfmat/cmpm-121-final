@@ -1,8 +1,7 @@
-class Grid extends Phaser.Physics.Arcade.Sprite {
+class Grid extends Phaser.GameObjects.Sprite {
   constructor(scene, gridConfig) {
     super(scene);
     scene.add.existing(this);
-    scene.physics.add.existing(this);
 
     // store references
     this.scene = scene;
@@ -15,20 +14,23 @@ class Grid extends Phaser.Physics.Arcade.Sprite {
     // create a grid with grouped sprites
     this.grid = this.scene.add.group();
 
+    // destructuring grid config
+    const { width, height, size } = this.gridConfig;
+
     // loop through grid width and height
-    for (let i = 0; i < this.gridConfig.width; i++) {
-      for (let j = 0; j < this.gridConfig.height; j++) {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
         // draw grid cell
         const cell = this.scene.add.rectangle(
-          i * this.gridConfig.size,
-          j * this.gridConfig.size,
-          this.gridConfig.size,
-          this.gridConfig.size,
-          0x00ff00
+          i * size,
+          j * size,
+          size,
+          size,
+          0xb5b5b5
         );
 
         cell.setStrokeStyle(2, 0x000000);
-        cell.setOrigin(0, 0);
+        cell.setOrigin(0);
 
         // add cell sprite to grid container
         this.grid.add(cell);

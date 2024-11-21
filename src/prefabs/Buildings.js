@@ -1,4 +1,4 @@
-class Building extends Phaser.Physics.Arcade.Sprite {
+class MiningFacility extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture) {
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -6,19 +6,19 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-class MiningLaser extends Building {
+class Drill extends MiningFacility {
   constructor(scene, x, y, texture) {
     super(scene, x, y, texture);
   }
 }
 
-class MiningLaser extends Building {
+class Excavator extends MiningFacility {
   constructor(scene, x, y, texture) {
     super(scene, x, y, texture);
   }
 }
 
-class MiningLaser extends Building {
+class DemolitionPlant extends MiningFacility {
   constructor(scene, x, y, texture) {
     super(scene, x, y, texture);
   }
