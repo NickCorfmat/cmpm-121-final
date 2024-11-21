@@ -10,7 +10,10 @@
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
-    this.gridConfig = {width: 10, height: 10, size: 32 }
+  }
+
+  init() {
+    this.gridConfig = { width: 10, height: 10, size: 32 };
     this.isPlayerTurn = true;
   }
 
@@ -20,9 +23,6 @@ class Play extends Phaser.Scene {
 
     this.grid = new Grid(this, this.gridConfig);
     this.player = new Player(this, width / 2, height / 2, this.gridConfig);
-
-    // enable keyboard input
-    this.cursors = this.input.keyboard.createCursorKeys();
 
     // add event listener to end turn button
     document
