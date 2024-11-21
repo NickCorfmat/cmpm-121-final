@@ -20,8 +20,7 @@ class Play extends Phaser.Scene {
     // set background color
     this.cameras.main.setBackgroundColor(0x000000);
 
-    // create a grid
-    this.createGrid();
+    this.grid = new Grid(this, 10, 10, 32);
 
     // create a character
     this.character = this.add.rectangle(
@@ -39,24 +38,6 @@ class Play extends Phaser.Scene {
     document
       .getElementById("endTurnButton")
       .addEventListener("click", () => this.endTurn());
-  }
-
-  createGrid() {
-    this.grid = this.add.group();
-    for (let y = 0; y < this.gridHeight; y++) {
-      for (let x = 0; x < this.gridWidth; x++) {
-        let cell = this.add.rectangle(
-          x * this.gridSize,
-          y * this.gridSize,
-          this.gridSize,
-          this.gridSize,
-          0x00ff00
-        );
-        cell.setStrokeStyle(2, 0x000000);
-        cell.setOrigin(0, 0);
-        this.grid.add(cell);
-      }
-    }
   }
 
   endTurn() {
