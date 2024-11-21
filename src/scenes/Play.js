@@ -23,10 +23,10 @@ class Play extends Phaser.Scene {
 
     this.grid = new Grid(this, this.gridConfig);
 
-    const playerStartX = this.gridConfig.size / 2;
-    const playerStartY = this.gridConfig.size / 2;
+    const cell = this.grid.getCell(0, 0);
+    const cellCenter = cell.getCenter();
 
-    this.player = new Player(this, playerStartX, playerStartY, this.gridConfig);
+    this.player = new Player(this, cellCenter.x, cellCenter.y, this.gridConfig);
 
     // add event listener to end turn button
     document

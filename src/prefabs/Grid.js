@@ -33,7 +33,7 @@ class Grid {
 
   createGrid() {
     // create a grid with grouped sprites
-    this.grid = [];
+    this.grid = new Map();
 
     // destructuring grid config
     const { width, height, size } = this.gridConfig;
@@ -45,8 +45,17 @@ class Grid {
         const cell = new Cell(this.scene, x, y, size);
 
         // add cell sprite to grid container
-        this.grid.push(cell);
+        this.grid.set(this.generateKey(x, y), cell);
       }
     }
+  }
+
+  getCell(x, y) {
+    return this.grid.get(this.generateKey(x, y));
+  }
+
+  // Extracting key generation to own function idea inspired by Brace
+  generateKey(x, y) {
+    return `${x}:${y}`;
   }
 }
