@@ -23,8 +23,8 @@ class Play extends Phaser.Scene {
   init() {
     this.gridConfig = { width: 8, height: 8, size: 40 };
     this.isPlayerTurn = true;
-    this.selectedCell = null;
-    this.previousSelectedCell = null;
+    this.currentCell = null;
+    this.previousCell = null;
   }
 
   create() {

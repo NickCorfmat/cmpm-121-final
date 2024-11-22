@@ -18,9 +18,7 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   makeClickable() {
     this.setInteractive();
-    this.on("pointerdown", () => {
-      this.selectCell();
-    });
+    this.on("pointerdown", () => {});
   }
 
   selectCell() {
