@@ -80,7 +80,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   displaySunLevel() {
     const x = this.x + this.width / 2;
-    const y = (2 * this.height) / 3;
+    const y = (2 * this.height) / 3 + 2;
 
     const text = `Sun Level: ${this.cell.sunLevel}`;
 
