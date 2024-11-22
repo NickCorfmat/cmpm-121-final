@@ -105,7 +105,7 @@ class Play extends Phaser.Scene {
   }
 
   endTurn() {
-    this.grid.updateCells();
+    this.grid.updateCellLevels();
     this.grid.cells.forEach((cell) => {
       if (cell.building) {
         cell.building.generateResources(cell.sunLevel, cell.waterLevel);
@@ -118,5 +118,8 @@ class Play extends Phaser.Scene {
 
   update() {
     this.player.update();
+    if(this.grid.selectedCell) {
+      this.stats.update(this.grid.selectedCell);
+    }
   }
 }
