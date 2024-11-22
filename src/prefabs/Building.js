@@ -11,7 +11,7 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, config) {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
-    super(scene, x, y, config.texture);
+    super(scene, x, y, config.type);
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -20,7 +20,6 @@ class Building extends Phaser.Physics.Arcade.Sprite {
     this.cost = config.cost;
     this.multiplier = config.multiplier;
     this.name = config.type;
-    this.texture = config.texture;
     this.row = row;
     this.col = row;
     this.resources = 0;
