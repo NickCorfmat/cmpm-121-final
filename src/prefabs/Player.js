@@ -1,7 +1,7 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, texture = "player") {
     // convert logical to pixel for displaying cell
-    const { x, y } = grid.logicalToCoordinates(row, col);
+    const { x, y } = grid.logicalToPixelCoords(row, col);
 
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -38,14 +38,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   checkForInput() {
     const { KEYS } = this;
 
-    if (Phaser.Input.Keyboard.JustDown(KEYS.LEFT)) {
-      this.movePlayer(-1, 0);
-    } else if (Phaser.Input.Keyboard.JustDown(KEYS.RIGHT)) {
-      this.movePlayer(1, 0);
-    } else if (Phaser.Input.Keyboard.JustDown(KEYS.UP)) {
-      this.movePlayer(0, -1);
-    } else if (Phaser.Input.Keyboard.JustDown(KEYS.DOWN)) {
-      this.movePlayer(0, 1);
+    switch (true) {
+      case Phaser.Input.Keyboard.JustDown(KEYS.LEFT):
+        this.movePlayer(-1, 0);
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.RIGHT):
+        this.movePlayer(1, 0);
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.UP):
+        this.movePlayer(0, -1);
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.DOWN):
+        this.movePlayer(0, 1);
+        break;
+      default:
+        break;
     }
   }
 
@@ -54,16 +61,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const newCol = this.col + dCol;
 
     if (this.isValidMove(newRow, newCol)) {
-      this.row = newRow;
-      this.col = newCol;
-
-      // update player pixel coordinates
-      const coords = this.grid.logicalToCoordinates(this.row, this.col);
-      this.x = coords.x;
-      this.y = coords.y;
-
+      this.updatePlayerCoordinates(newRow, newCol);
       this.updateCurrentCell();
     }
+  }
+
+  updatePlayerCoordinates(newRow, newCol) {
+    // update player logical coordinates
+    this.row = newRow;
+    this.col = newCol;
+
+    // update player pixel coordinates
+    const coords = this.grid.logicalToPixelCoords(newRow, newCol);
+
+    this.x = coords.x;
+    this.y = coords.y;
   }
 
   isValidMove(row, col) {
@@ -74,11 +86,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateCurrentCell() {
+    // clear previous cell's tint
     if (this.scene.previousCell) {
       this.scene.previousCell.clearTint();
     }
 
-    // get the cell player is standing over
+    // highlight current cell
     this.scene.currentCell = this.grid.getCell(this.row, this.col);
     this.scene.currentCell.selectCell();
 
