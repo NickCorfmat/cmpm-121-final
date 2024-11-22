@@ -65,9 +65,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (this.isValidMove(newRow, newCol)) {
       this.updatePlayerCoordinates(newRow, newCol);
-      this.updateCurrentCell();
-      
-      this.scene.isPlayerTurn = false;
     }
   }
 
@@ -90,26 +87,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     return isWithinWidth && isWithinHeight;
   }
 
-  updateCurrentCell() {
-    // clear previous cell's tint
-    if (this.scene.previousCell) {
-      this.scene.previousCell.clearTint();
-    }
-
-    // highlight current cell
-    this.scene.currentCell = this.grid.getCell(this.row, this.col);
-    this.scene.currentCell.selectCell();
-
-    this.scene.previousCell = this.scene.currentCell;
-  }
-
   spendResources(cost) {
     if (this.resources >= cost) {
       this.resources -= cost;
       this.updateResourceDisplay();
       return true;
     }
-    
+
     return false;
   }
 

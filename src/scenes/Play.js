@@ -14,6 +14,10 @@ Mechanics:
 - Player starts with enough resources for 2 buildings
 - Player can harvest resources from buildings (must be within one grid cell)
 - Each turn player receives the same resources from buildings with different rates based on the type (Drill, Ecavator, DemolitionPlant)
+- Player can oil buildings to increase their oil level (must be within one grid cell)
+- At the end of the turn, each cell is updated with a sun level, if a building is present, the building recieves the sun level (otherwise the sun level is wasted) and the cell is updated with resources based on the sun and oil level of the cell
+- Player cannot oil cells with no buildings
+- Buildings use 1 oil level per turn and may be oiled to a maximum of 5
 */
 class Play extends Phaser.Scene {
   constructor() {
@@ -22,7 +26,6 @@ class Play extends Phaser.Scene {
 
   init() {
     this.gridConfig = { width: 8, height: 8, size: 40 };
-    this.isPlayerTurn = true;
     this.selectedCell = null;
     this.previousSelectedCell = null;
   }
@@ -57,9 +60,6 @@ class Play extends Phaser.Scene {
     });
   }
 
-
-
-
   createBuildingButtons() {
     const buyBuildingButtons = [
       "buyDrillButton",
@@ -84,7 +84,13 @@ class Play extends Phaser.Scene {
       }
       this.previousSelectedCell = this.selectedCell;
     }
+    this.updateStats(cell);
   }
+
+  updateStats(cell) {
+    this.stats.updateStats(cell);
+  }
+
 
   buyBuilding(type) {
     if (this.selectedCell && this.player.spendResources(50)) {
@@ -116,13 +122,13 @@ class Play extends Phaser.Scene {
   }
 
   endTurn() {
-    this.isPlayerTurn = true;
-    // Add logic for advancing time and updating grid cells
+    this.grid.updateCells();
+    if (this.selectedCell) {
+      this.updateStats(this.selectedCell);
+    }
   }
 
   update() {
-    if (this.isPlayerTurn) {
-      this.player.update();
-    }
+    this.player.update();
   }
 }

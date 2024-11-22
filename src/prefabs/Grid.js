@@ -16,20 +16,34 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.col = col;
     this.grid = grid;
 
+    // initialize sun and water levels
+    this.sunLevel = Phaser.Math.Between(1, 5);
+    this.waterLevel = 2;
+
     this.makeClickable();
   }
 
   makeClickable() {
     this.setInteractive();
-    this.on("pointerdown", () => {});
+    this.on("pointerdown", () => { });
   }
 
   selectCell() {
     this.setTint(0x00ff00);
+    this.scene.updateStats(this);
   }
 
   clearSelection() {
     this.clearTint();
+  }
+
+  updateSunLevel() {
+    this.sunLevel = Phaser.Math.Between(1, 5);
+  }
+
+  updateWaterLevel() {
+    const change = Phaser.Math.Between(-1, 1);
+    this.waterLevel = Math.max(0, Math.min(5, this.waterLevel + change));
   }
 }
 
@@ -86,5 +100,12 @@ class Grid {
   // Extracting key generation to own function idea inspired by Brace
   generateKey(row, col) {
     return `${row}:${col}`;
+  }
+
+  updateCells() {
+    this.cells.forEach((cell) => {
+      cell.updateSunLevel();
+      cell.updateWaterLevel();
+    });
   }
 }

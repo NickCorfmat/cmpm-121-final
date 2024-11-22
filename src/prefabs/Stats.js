@@ -5,5 +5,13 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     this.setOrigin(0);
     this.setDisplaySize(width, height);
+    this.text = scene.add.text(x + 10, y + 10, "", {
+      fontSize: "16px",
+      fill: "#fff",
+    });
+  }
+
+  updateStats(cell) {
+    this.text.setText(`Cell: (${cell.row}, ${cell.col})\nSun Level: ${cell.sunLevel}\nWater Level: ${cell.waterLevel}`);
   }
 }
