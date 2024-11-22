@@ -39,7 +39,6 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   update(cell) {
     this.cell = cell;
-
     this.displayCellName();
     this.displayCellIcon();
     this.displayCellLocation();
@@ -79,7 +78,12 @@ class Stats extends Phaser.GameObjects.Sprite {
     const y = this.height / 3;
     const size = this.width / 2;
 
-    this.icon = this.scene.add.rectangle(x, y, size, size, 0x000000);
+    this.iconframe = this.scene.add.rectangle(x, y, size, size, 0x474355 );
+    if(this.cell.building){
+      this.icon = this.scene.add.image(x, y, this.cell.building.texture);
+      this.icon.setDisplaySize(size, size);
+    }
+
   }
 
   displayCellLocation() {
