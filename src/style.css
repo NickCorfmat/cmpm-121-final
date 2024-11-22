@@ -2,13 +2,34 @@ body {
     background-color: rgb(38, 88, 44);
 }
 
-#endTurnButton {
+button {
     position: absolute;
-    top: 10px;
-    left: 350px; /* Adjust this value based on your game window size */
+    left: 10px; /* Adjust this value based on your game window size */
     padding: 10px 20px;
     font-size: 16px;
     background-color: #0f0;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
+}
+
+button:hover {
+    background-color: #68e1ff;
+    transform: scale(1.05);
+}
+
+#endTurnButton {
+    top: 10px; /* Adjust this value based on your game window size */
+}
+
+#buyDrillButton {
+    top: 60px; /* Adjust this value based on your game window size */
+}
+
+#buyExcavatorButton {
+    top: 110px; /* Adjust this value based on your game window size */
+}
+
+#buyDemolitionPlantButton {
+    top: 160px; /* Adjust this value based on your game window size */
 }

@@ -10,52 +10,94 @@
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
-    this.gridSize = 32;
-    this.gridWidth = 10;
-    this.gridHeight = 10;
+  }
+
+  init() {
+    this.gridConfig = { width: 8, height: 8, size: 40 };
     this.isPlayerTurn = true;
+    this.selectedCell = null;
+    this.previousSelectedCell = null;
   }
 
   create() {
     // set background color
     this.cameras.main.setBackgroundColor(0x000000);
 
-    // create a grid
-    this.createGrid();
+    this.grid = new Grid(this, this.gridConfig);
 
-    // create a character
-    this.character = this.add.rectangle(
-      this.gridSize / 2,
-      this.gridSize / 2,
-      this.gridSize,
-      this.gridSize,
-      0xff0000
-    );
+    const cell = this.grid.getCell(0, 0);
+    const cellCenter = cell.getCenter();
 
-    // enable keyboard input
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.player = new Player(this, cellCenter.x, cellCenter.y, this.gridConfig);
 
     // add event listener to end turn button
     document
       .getElementById("endTurnButton")
       .addEventListener("click", () => this.endTurn());
+
+    // add event listener to grid cells
+    this.grid.grid.forEach(cell => {
+      cell.setInteractive();
+      cell.on('pointerdown', () => this.selectCell(cell));
+    });
+
+    // add event listeners to building buttons
+    this.createBuildingButtons();
   }
 
-  createGrid() {
-    this.grid = this.add.group();
-    for (let y = 0; y < this.gridHeight; y++) {
-      for (let x = 0; x < this.gridWidth; x++) {
-        let cell = this.add.rectangle(
-          x * this.gridSize,
-          y * this.gridSize,
-          this.gridSize,
-          this.gridSize,
-          0x00ff00
-        );
-        cell.setStrokeStyle(2, 0x000000);
-        cell.setOrigin(0, 0);
-        this.grid.add(cell);
+  createBuildingButtons() {
+    const buyBuildingButtons = ["buyDrillButton", "buyExcavatorButton", "buyDemolitionPlantButton"];
+    buyBuildingButtons.forEach(type => {
+      document.getElementById(type).addEventListener('click', () => this.buyBuilding(type));
+    });
+  }
+
+  selectCell(cell) {
+    const playerCell = this.grid.getCell(
+      Math.floor(this.player.x / this.gridConfig.size),
+      Math.floor(this.player.y / this.gridConfig.size)
+    );
+
+    const isAdjacent = Math.abs(cell.gridX - playerCell.gridX) <= 1 && Math.abs(cell.gridY - playerCell.gridY) <= 1;
+
+    if (isAdjacent) {
+      if (this.previousSelectedCell) {
+        this.previousSelectedCell.clearTint();
       }
+
+      this.selectedCell = cell;
+      this.selectedCell.setTint(0x00ff00); // Highlight the selected cell with green tint
+      this.previousSelectedCell = this.selectedCell;
+    }
+  }
+
+  buyBuilding(type) {
+    if (this.selectedCell && this.player.spendResources(50)) {
+      const { x, y } = this.selectedCell.getCenter();
+      let building;
+      let tint;
+
+      switch (type) {
+        case 'buyDrillButton':
+          building = new Drill(this, x, y, 'cell');
+          tint = 0x000000; // Black
+          break;
+        case 'buyExcavatorButton':
+          building = new Excavator(this, x, y, 'cell');
+          tint = 0x8B4513; // Brown
+          break;
+        case 'buyDemolitionPlantButton':
+          building = new DemolitionPlant(this, x, y, 'cell');
+          tint = 0xFF0000; // Red
+          break;
+      }
+
+      this.selectedCell.setTexture('cell');
+      this.selectedCell.building = building;
+      this.selectedCell.setTint(tint); // Set the tint color for the building
+      this.selectedCell.setDepth(1); // Ensure buildings are below the player
+      this.selectedCell = null;
+      this.previousSelectedCell = null;
     }
   }
 
@@ -66,35 +108,7 @@ class Play extends Phaser.Scene {
 
   update() {
     if (this.isPlayerTurn) {
-      if (this.cursors.left.isDown) {
-        this.moveCharacter(-1, 0);
-      } else if (this.cursors.right.isDown) {
-        this.moveCharacter(1, 0);
-      } else if (this.cursors.up.isDown) {
-        this.moveCharacter(0, -1);
-      } else if (this.cursors.down.isDown) {
-        this.moveCharacter(0, 1);
-      }
+      this.player.update();
     }
-  }
-
-  moveCharacter(dx, dy) {
-    const newX = this.character.x + dx * this.gridSize;
-    const newY = this.character.y + dy * this.gridSize;
-
-    if (this.isValidMove(newX, newY)) {
-      this.character.x = newX;
-      this.character.y = newY;
-      this.isPlayerTurn = false;
-    }
-  }
-
-  isValidMove(x, y) {
-    return (
-      x >= 0 &&
-      x < this.gridWidth * this.gridSize &&
-      y >= 0 &&
-      y < this.gridHeight * this.gridSize
-    );
   }
 }
