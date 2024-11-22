@@ -25,6 +25,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // initialize resources
     this.resources = 100;
     this.updateResourceDisplay();
+
+    // spawn player at current cell
+    this.movePlayer(0, 0)
   }
 
   update() {
