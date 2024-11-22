@@ -20,7 +20,7 @@ class Stats extends Phaser.GameObjects.Sprite {
       fontSize: "24px",
       fill: "#fff",
       backgroundColor: "000",
-      padding: 5
+      padding: 5,
     };
 
     // create text elements
@@ -62,19 +62,6 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.displayCollectButton();
   }
 
-  displayCellName() {
-    const x = this.x + this.width / 2;
-    const y = 43;
-
-    let text =
-      this.cell.building == null
-        ? "Cell: Empty"
-        : `Cell: ${this.cell.building.type}`;
-
-    this.name.setPosition(x, y);
-    this.name.setText(text);
-  }
-
   updateStats(cell) {
     this.selectedCell = cell;
     const sunLevelText = cell.building
@@ -95,6 +82,19 @@ class Stats extends Phaser.GameObjects.Sprite {
     } else {
       this.collectButton.setVisible(false);
     }
+  }
+
+  displayCellName() {
+    const x = this.x + this.width / 2;
+    const y = 43;
+
+    let text =
+      this.cell.building == null
+        ? "Cell: Empty"
+        : `Cell: ${this.cell.building.type}`;
+
+    this.name.setPosition(x, y);
+    this.name.setText(text);
   }
 
   displayCellIcon() {
