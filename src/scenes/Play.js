@@ -34,9 +34,6 @@ class Play extends Phaser.Scene {
       height: height,
     };
 
-    this.selectedCell = null;
-    this.previousSelectedCell = null;
-
     this.BUILDINGS = [
       {
         type: "Drill",
@@ -82,20 +79,6 @@ class Play extends Phaser.Scene {
 
     // add event listeners to building buttons
     this.createBuyButtons();
-  }
-
-  selectCell(cell) {
-    this.selectedCell = cell;
-    if (this.previousSelectedCell === this.selectedCell) {
-      this.selectedCell.clearSelection();
-    } else {
-      this.selectedCell.border.setVisible(true); // Highlight the selected cell
-      if (this.previousSelectedCell) {
-        this.previousSelectedCell.border.setVisible(false); // Clear the previous selected cell
-      }
-      this.previousSelectedCell = this.selectedCell;
-    }
-    this.stats.updateStats(cell);
   }
 
   createBuyButtons() {

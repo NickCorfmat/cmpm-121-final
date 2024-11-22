@@ -6,6 +6,9 @@ class Grid {
     this.height = gridConfig.height;
     this.size = gridConfig.size;
 
+    this.selectedCell = null;
+    this.lastSelectedCell = null;
+
     this.createGrid();
   }
 
@@ -23,6 +26,21 @@ class Grid {
         this.cells.set(this.generateKey(row, col), cell);
       }
     }
+  }
+
+  selectCell(row, col) {
+    this.selectedCell = this.getCell(row, col);
+
+    if (this.lastSelectedCell === this.selectedCell) {
+      this.selectedCell.border.setVisible(false);
+    } else {
+      this.selectedCell.border.setVisible(true);
+      if (this.lastSelectedCell) {
+        this.lastSelectedCell.border.setVisible(false);
+      }
+      this.lastSelectedCell = this.selectedCell;
+    }
+    this.scene.stats.updateStats(this.selectedCell);
   }
 
   getCell(row, col) {
