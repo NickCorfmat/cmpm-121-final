@@ -14,17 +14,53 @@ Mechanics:
 - Player starts with enough resources for 2 buildings
 - Player can harvest resources from buildings (must be within one grid cell)
 - Each turn player receives the same resources from buildings with different rates based on the type (Drill, Ecavator, DemolitionPlant)
+- Player can oil buildings to increase their oil level (must be within one grid cell)
+- At the end of the turn, each cell is updated with a sun level, if a building is present, the building recieves the sun level (otherwise the sun level is wasted) and the cell is updated with resources based on the sun and oil level of the cell
+- Player cannot oil cells with no buildings
+- Buildings use 1 oil level per turn and may be oiled to a maximum of 5
 */
+
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
   }
 
   init() {
+    // set game display parameters
     this.gridConfig = { width: 8, height: 8, size: 40 };
-    this.isPlayerTurn = true;
-    this.selectedCell = null;
-    this.previousSelectedCell = null;
+    this.statsConfig = {
+      x: this.gridConfig.width * this.gridConfig.size,
+      y: 0,
+      width: width - this.gridConfig.width * this.gridConfig.size,
+      height: height,
+    };
+
+    this.BUILDINGS = [
+      {
+        type: "Drill",
+        cost: 10,
+        multiplier: 1,
+        tint: 0x000000,
+        texture: "drill",
+        scale: 1
+      },
+      {
+        type: "Excavator",
+        cost: 30,
+        multiplier: 2,
+        tint: 0x8b4513,
+        texture:"excavator",
+        scale: 1
+      },
+      {
+        type: "DemolitionPlant",
+        cost: 50,
+        multiplier: 3,
+        tint: 0xff0000,
+        texture:"demo",
+        scale: 1
+      },
+    ];
   }
 
   create() {
@@ -32,12 +68,13 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
+
     this.stats = new Stats(
       this,
-      this.gridConfig.width * this.gridConfig.size,
-      0,
-      width - this.gridConfig.width * this.gridConfig.size,
-      height
+      this.statsConfig.x,
+      this.statsConfig.y,
+      this.statsConfig.width,
+      this.statsConfig.height
     );
 
     this.player = new Player(this, 0, 0, this.grid);
@@ -48,81 +85,41 @@ class Play extends Phaser.Scene {
       .addEventListener("click", () => this.endTurn());
 
     // add event listeners to building buttons
-    this.createBuildingButtons();
-
-    //add pointerdown interactivity that calls selectCell for every cell in grid
-    this.grid.cells.forEach((cell) => {
-      cell.setInteractive();
-      cell.on("pointerdown", () => this.selectCell(cell));
-    });
+    this.createBuyButtons();
   }
 
-
-
-
-  createBuildingButtons() {
-    const buyBuildingButtons = [
-      "buyDrillButton",
-      "buyExcavatorButton",
-      "buyDemolitionPlantButton",
-    ];
-    buyBuildingButtons.forEach((type) => {
-      document
-        .getElementById(type)
-        .addEventListener("click", () => this.buyBuilding(type));
+  createBuyButtons() {
+    this.BUILDINGS.forEach((building) => {
+      const button = document.getElementById("buy" + building.type + "Button");
+      button.innerText = `Buy ${building.type}: $${building.cost}`;
+      button.addEventListener("click", () => this.buyBuilding(building.type));
     });
-  }
-
-  selectCell(cell) {
-    this.selectedCell = cell;
-    if (this.previousSelectedCell === this.selectedCell) {
-      this.selectedCell.clearSelection();
-    } else {
-      this.selectedCell.selectCell(); // Highlight the selected cell
-      if (this.previousSelectedCell) {
-        this.previousSelectedCell.clearSelection(); // Clear the previous selected cell
-      }
-      this.previousSelectedCell = this.selectedCell;
-    }
   }
 
   buyBuilding(type) {
-    if (this.selectedCell && this.player.spendResources(50)) {
-      const { x, y } = this.selectedCell.getCenter();
-      let building;
-      let tint;
-
-      switch (type) {
-        case "buyDrillButton":
-          building = new Drill(this, x, y, "cell");
-          tint = 0x000000; // Black
-          break;
-        case "buyExcavatorButton":
-          building = new Excavator(this, x, y, "cell");
-          tint = 0x8b4513; // Brown
-          break;
-        case "buyDemolitionPlantButton":
-          building = new DemolitionPlant(this, x, y, "cell");
-          tint = 0xff0000; // Red
-          break;
-      }
-
-      this.selectedCell.setTexture("cell");
-      this.selectedCell.building = building;
-      this.selectedCell.setTint(tint); // Set the tint color for the building
-      this.selectedCell = null;
-      this.previousSelectedCell = null;
+    // find building object based on property. Source: Brace
+    const buildingConfig = this.BUILDINGS.find((b) => b.type === type);
+    // construct building in current cell
+    if (this.grid.selectedCell && this.player.resources >= buildingConfig.cost && !this.grid.selectedCell.building) {
+      this.player.spendResources(buildingConfig.cost);
+      const { row, col } = this.grid.selectedCell.getLogicalCoords();
+      this.grid.selectedCell.building = new Building(this, row, col,this.grid, buildingConfig);
     }
   }
 
   endTurn() {
-    this.isPlayerTurn = true;
-    // Add logic for advancing time and updating grid cells
+    this.grid.updateCells();
+    this.grid.cells.forEach((cell) => {
+      if (cell.building) {
+        cell.building.generateResources(cell.sunLevel, cell.waterLevel);
+      }
+    });
+    if (this.selectedCell) {
+      this.stats.update(this.selectedCell);
+    }
   }
 
   update() {
-    if (this.isPlayerTurn) {
-      this.player.update();
-    }
+    this.player.update();
   }
 }

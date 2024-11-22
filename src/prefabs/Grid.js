@@ -1,38 +1,3 @@
-class Cell extends Phaser.GameObjects.Sprite {
-  constructor(scene, row, col, grid, texture = "cell") {
-    // convert logical to pixel for displaying cell
-    const { x, y } = grid.logicalToPixelCoords(row, col);
-
-    super(scene, x, y, texture);
-    scene.add.existing(this);
-
-    // sprite configs
-    this.setOrigin(0.5);
-    this.setDisplaySize(grid.size, grid.size);
-
-    // store references
-    this.scene = scene;
-    this.row = row;
-    this.col = col;
-    this.grid = grid;
-
-    this.makeClickable();
-  }
-
-  makeClickable() {
-    this.setInteractive();
-    this.on("pointerdown", () => {});
-  }
-
-  selectCell() {
-    this.setTint(0x00ff00);
-  }
-
-  clearSelection() {
-    this.clearTint();
-  }
-}
-
 class Grid {
   constructor(scene, gridConfig) {
     // store references
@@ -40,6 +5,9 @@ class Grid {
     this.width = gridConfig.width;
     this.height = gridConfig.height;
     this.size = gridConfig.size;
+
+    this.selectedCell = null;
+    this.lastSelectedCell = null;
 
     this.createGrid();
   }
@@ -58,6 +26,21 @@ class Grid {
         this.cells.set(this.generateKey(row, col), cell);
       }
     }
+  }
+
+  selectCell(row, col) {
+    this.selectedCell = this.getCell(row, col);
+
+    if (this.lastSelectedCell === this.selectedCell) {
+      this.selectedCell.border.setVisible(false);
+    } else {
+      this.selectedCell.border.setVisible(true);
+      if (this.lastSelectedCell) {
+        this.lastSelectedCell.border.setVisible(false);
+      }
+      this.lastSelectedCell = this.selectedCell;
+    }
+    this.scene.stats.update(this.selectedCell);
   }
 
   getCell(row, col) {
@@ -86,5 +69,12 @@ class Grid {
   // Extracting key generation to own function idea inspired by Brace
   generateKey(row, col) {
     return `${row}:${col}`;
+  }
+
+  updateCellLevels() {
+    this.cells.forEach((cell) => {
+      cell.updateSunLevel();
+      cell.updateWaterLevel();
+    });
   }
 }

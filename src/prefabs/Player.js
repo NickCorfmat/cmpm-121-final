@@ -8,11 +8,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // sprite configs
-    const converage = 0.75;
+    const converage = 1;
 
     this.setOrigin(0.5);
     this.setDisplaySize(grid.size * converage, grid.size * converage);
-    this.setDepth(10); // Ensure sprite is rendered above everything else
 
     // store references
     this.scene = scene;
@@ -30,6 +29,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // spawn player at current cell
     this.movePlayer(0, 0);
+
+    // set player depth to ensure it is above everything else
+    this.setDepth(10);
+
+    this.anims.play("idle");
   }
 
   update() {
@@ -63,7 +67,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (this.isValidMove(newRow, newCol)) {
       this.updatePlayerCoordinates(newRow, newCol);
-      this.updateCurrentCell();
+
+      // display stats of current cell
+      const currentCell = this.grid.getCell(newRow, newCol);
+      this.scene.stats.update(currentCell);
     }
   }
 
@@ -84,19 +91,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const isWithinHeight = col >= 0 && col < this.grid.height;
 
     return isWithinWidth && isWithinHeight;
-  }
-
-  updateCurrentCell() {
-    // clear previous cell's tint
-    if (this.scene.previousCell) {
-      this.scene.previousCell.clearTint();
-    }
-
-    // highlight current cell
-    this.scene.currentCell = this.grid.getCell(this.row, this.col);
-    this.scene.currentCell.selectCell();
-
-    this.scene.previousCell = this.scene.currentCell;
   }
 
   spendResources(cost) {
