@@ -1,7 +1,9 @@
-class Stats extends Phaser.GameObjects.Rectangle {
-  constructor(scene, x, y, width, height) {
-    super(scene, x, y, width, height);
+class Stats extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y, width, height, texture = "stats") {
+    super(scene, x, y, texture);
+    scene.add.existing(this);
 
-    scene.add.rectangle(x, y, width, height, 0x6d8a85);
+    this.setOrigin(0);
+    this.setDisplaySize(width, height);
   }
 }

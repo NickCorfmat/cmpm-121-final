@@ -16,6 +16,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // store references
     this.scene = scene;
     this.gridConfig = gridConfig;
+    this.grid = scene.grid;
     this.x = x;
     this.y = y;
 
@@ -24,6 +25,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // initialize resources
     this.resources = 100;
     this.updateResourceDisplay();
+
+    // spawn player at current cell
+    this.movePlayer(0, 0)
   }
 
   update() {
@@ -33,13 +37,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   checkForInput() {
     const { KEYS } = this;
 
-    if (KEYS.LEFT.isDown) {
+    if (Phaser.Input.Keyboard.JustDown(KEYS.LEFT)) {
       this.movePlayer(-1, 0);
-    } else if (KEYS.RIGHT.isDown) {
+    } else if (Phaser.Input.Keyboard.JustDown(KEYS.RIGHT)) {
       this.movePlayer(1, 0);
-    } else if (KEYS.UP.isDown) {
+    } else if (Phaser.Input.Keyboard.JustDown(KEYS.UP)) {
       this.movePlayer(0, -1);
-    } else if (KEYS.DOWN.isDown) {
+    } else if (Phaser.Input.Keyboard.JustDown(KEYS.DOWN)) {
       this.movePlayer(0, 1);
     }
   }
@@ -52,7 +56,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       this.x = newX;
       this.y = newY;
 
-      this.scene.isPlayerTurn = false;
+      this.updateCurrentCell();
     }
   }
 
@@ -63,6 +67,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const isWithinHeight = y >= 0 && y < height * size;
 
     return isWithinWidth && isWithinHeight;
+  }
+
+  updateCurrentCell() {
+    if (this.scene.previousCell) {
+      this.scene.previousCell.clearTint();
+    }
+
+    // get the cell player is standing over
+    this.scene.currentCell = this.grid.getCellFromCoordinates(this.x, this.y);
+    this.scene.currentCell.selectCell();
+
+    this.scene.previousCell = this.scene.currentCell;
   }
 
   canAfford(cost) {

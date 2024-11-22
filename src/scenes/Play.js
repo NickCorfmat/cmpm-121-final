@@ -23,8 +23,8 @@ class Play extends Phaser.Scene {
   init() {
     this.gridConfig = { width: 8, height: 8, size: 40 };
     this.isPlayerTurn = true;
-    this.selectedCell = null;
-    this.previousSelectedCell = null;
+    this.currentCell = null;
+    this.previousCell = null;
   }
 
   create() {
@@ -32,7 +32,13 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
-    this.stats = new Stats(this, 440, 160, 240, 320)
+    this.stats = new Stats(
+      this,
+      this.gridConfig.width * this.gridConfig.size,
+      0,
+      width - this.gridConfig.width * this.gridConfig.size,
+      height
+    );
 
     const spawn = this.grid.getCell(0, 0);
     this.player = new Player(this, spawn.gridX, spawn.gridY, this.gridConfig);
@@ -47,9 +53,15 @@ class Play extends Phaser.Scene {
   }
 
   createBuildingButtons() {
-    const buyBuildingButtons = ["buyDrillButton", "buyExcavatorButton", "buyDemolitionPlantButton"];
-    buyBuildingButtons.forEach(type => {
-      document.getElementById(type).addEventListener('click', () => this.buyBuilding(type));
+    const buyBuildingButtons = [
+      "buyDrillButton",
+      "buyExcavatorButton",
+      "buyDemolitionPlantButton",
+    ];
+    buyBuildingButtons.forEach((type) => {
+      document
+        .getElementById(type)
+        .addEventListener("click", () => this.buyBuilding(type));
     });
   }
 
@@ -79,21 +91,21 @@ class Play extends Phaser.Scene {
       let tint;
 
       switch (type) {
-        case 'buyDrillButton':
-          building = new Drill(this, x, y, 'cell');
+        case "buyDrillButton":
+          building = new Drill(this, x, y, "cell");
           tint = 0x000000; // Black
           break;
-        case 'buyExcavatorButton':
-          building = new Excavator(this, x, y, 'cell');
-          tint = 0x8B4513; // Brown
+        case "buyExcavatorButton":
+          building = new Excavator(this, x, y, "cell");
+          tint = 0x8b4513; // Brown
           break;
-        case 'buyDemolitionPlantButton':
-          building = new DemolitionPlant(this, x, y, 'cell');
-          tint = 0xFF0000; // Red
+        case "buyDemolitionPlantButton":
+          building = new DemolitionPlant(this, x, y, "cell");
+          tint = 0xff0000; // Red
           break;
       }
 
-      this.selectedCell.setTexture('cell');
+      this.selectedCell.setTexture("cell");
       this.selectedCell.building = building;
       this.selectedCell.setTint(tint); // Set the tint color for the building
       this.selectedCell = null;
@@ -107,8 +119,6 @@ class Play extends Phaser.Scene {
   }
 
   update() {
-    if (this.isPlayerTurn) {
-      this.player.update();
-    }
+    this.player.update();
   }
 }
