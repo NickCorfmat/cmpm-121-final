@@ -1,7 +1,7 @@
 class Cell extends Phaser.GameObjects.Sprite {
   constructor(scene, row, col, grid, texture = "cell") {
     // convert logical to pixel for displaying cell
-    const { x, y } = grid.logicalToCoordinates(row, col);
+    const { x, y } = grid.logicalToPixelCoords(row, col);
 
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -45,7 +45,7 @@ class Grid {
   }
 
   createGrid() {
-    // create a grid with grouped sprites
+    // create a map to store cells and their row/col keys
     this.cells = new Map();
 
     // loop through grid width and height
@@ -64,19 +64,19 @@ class Grid {
     return this.cells.get(this.generateKey(row, col));
   }
 
-  getCellFromCoordinates(x, y) {
-    const { row, col } = this.getLogicalCoordinates(x, y);
+  getCellFromPixelCoords(x, y) {
+    const { row, col } = this.pixelToLogicalCoords(x, y);
     return this.getCell(row, col);
   }
 
-  getLogicalCoordinates(x, y) {
+  pixelToLogicalCoords(x, y) {
     return {
       row: Math.floor(x / this.size),
       col: Math.floor(y / this.size),
     };
   }
 
-  logicalToCoordinates(row, col) {
+  logicalToPixelCoords(row, col) {
     const x = row * this.size + this.size / 2;
     const y = col * this.size + this.size / 2;
 
