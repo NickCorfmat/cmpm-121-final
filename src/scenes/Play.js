@@ -121,5 +121,8 @@ class Play extends Phaser.Scene {
 
   update() {
     this.player.update();
+    if(this.grid.selectedCell) {
+      this.stats.update(this.grid.selectedCell);
+    }
   }
 }
