@@ -7,14 +7,22 @@ Building cost and production output:
   Excavator: 30 resources, 2x multiplier
   Demolition Plant: 50 resources, 3x multiplier
 */
-class MiningFacility extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, cost, multiplier) {
-    super(scene, x, y, texture);
+class Building extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, row, col, config) {
+    // convert logical to pixel for displaying cell
+    const { x, y } = grid.logicalToPixelCoords(row, col);
+
+    super(scene, x, y, config.type);
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    this.cost = cost;
-    this.multiplier = multiplier;
+    // store references
+    this.type = config.type;
+    this.cost = config.cost;
+    this.multiplier = config.multiplier;
+    this.tint = config.tint;
+    this.row = row;
+    this.col = row;
     this.resources = 0;
   }
 
@@ -26,23 +34,5 @@ class MiningFacility extends Phaser.Physics.Arcade.Sprite {
     const collected = this.resources;
     this.resources = 0;
     return collected;
-  }
-}
-
-class Drill extends MiningFacility {
-  constructor(scene, x, y, texture) {
-    super(scene, x, y, texture, 10, 1);
-  }
-}
-
-class Excavator extends MiningFacility {
-  constructor(scene, x, y, texture) {
-    super(scene, x, y, texture, 30, 2);
-  }
-}
-
-class DemolitionPlant extends MiningFacility {
-  constructor(scene, x, y, texture) {
-    super(scene, x, y, texture, 50, 3);
   }
 }

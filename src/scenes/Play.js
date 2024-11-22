@@ -36,6 +36,27 @@ class Play extends Phaser.Scene {
 
     this.selectedCell = null;
     this.previousSelectedCell = null;
+
+    this.BUILDINGS = [
+      {
+        type: "Drill",
+        cost: 10,
+        multiplier: 1,
+        tint: 0x000000,
+      },
+      {
+        type: "Excavator",
+        cost: 30,
+        multiplier: 2,
+        tint: 0x8b4513,
+      },
+      {
+        type: "DemolitionPlant",
+        cost: 50,
+        multiplier: 3,
+        tint: 0xff0000,
+      },
+    ];
   }
 
   create() {
@@ -60,31 +81,7 @@ class Play extends Phaser.Scene {
       .addEventListener("click", () => this.endTurn());
 
     // add event listeners to building buttons
-    this.createBuildingButtons();
-
-    // add pointerdown interactivity that calls selectCell for every cell in grid
-    this.grid.cells.forEach((cell) => {
-      cell.setInteractive();
-      cell.on("pointerdown", () => this.selectCell(cell));
-    });
-  }
-
-  createBuildingButtons() {
-    const buyBuildingButtons = [
-      { id: "buyDrill", type: "buyDrill", cost: 10 },
-      { id: "buyExcavator", type: "buyExcavator", cost: 30 },
-      {
-        id: "buyDemolitionPlant",
-        type: "buyDemolitionPlant",
-        cost: 50,
-      },
-    ];
-    buyBuildingButtons.forEach((button) => {
-      const btn = document.getElementById(button.id + "Button");
-      btn.innerText = `${btn.innerText} (${button.cost} resources)`;
-
-      btn.addEventListener("click", () => this.buyBuilding(button.type));
-    });
+    this.createBuyButtons();
   }
 
   selectCell(cell) {
@@ -92,56 +89,35 @@ class Play extends Phaser.Scene {
     if (this.previousSelectedCell === this.selectedCell) {
       this.selectedCell.clearSelection();
     } else {
-      this.selectedCell.selectCell(); // Highlight the selected cell
+      this.selectedCell.border.setVisible(true); // Highlight the selected cell
       if (this.previousSelectedCell) {
-        this.previousSelectedCell.clearSelection(); // Clear the previous selected cell
+        this.previousSelectedCell.border.setVisible(false); // Clear the previous selected cell
       }
       this.previousSelectedCell = this.selectedCell;
     }
-    this.updateStats(cell);
-  }
-
-  updateStats(cell) {
     this.stats.updateStats(cell);
   }
 
+  createBuyButtons() {
+    this.BUILDINGS.forEach((building) => {
+      const button = document.getElementById("buy" + building.type + "Button");
+      button.innerText = `Buy ${building.type}: $${building.cost}`;
+
+      button.addEventListener("click", () => this.buyBuilding(button.type));
+    });
+  }
+
   buyBuilding(type) {
-    let cost;
-    switch (type) {
-      case "buyDrillButton":
-        cost = 10;
-        break;
-      case "buyExcavatorButton":
-        cost = 30;
-        break;
-      case "buyDemolitionPlantButton":
-        cost = 50;
-        break;
-    }
+    console.log("bought");
+    // find building object based on property. Source: Brace
+    const buildingConfig = this.BUILDINGS.find((b) => b.type === type);
 
-    if (this.selectedCell && this.player.spendResources(cost)) {
-      const { x, y } = this.selectedCell.getCenter();
-      let building;
-      let tint;
+    // construct building in current cell
+    if (this.selectedCell && this.player.spendResources(buildingConfig.cost)) {
+      const { row, col } = this.selectedCell.getLogicalCoords();
 
-      switch (type) {
-        case "buyDrillButton":
-          building = new Drill(this, x, y, "cell");
-          tint = 0x000000; // Black
-          break;
-        case "buyExcavatorButton":
-          building = new Excavator(this, x, y, "cell");
-          tint = 0x8b4513; // Brown
-          break;
-        case "buyDemolitionPlantButton":
-          building = new DemolitionPlant(this, x, y, "cell");
-          tint = 0xff0000; // Red
-          break;
-      }
-
-      building.setTint(tint); // Set the tint color for the building
+      const building = new Building(this, row, col, buildingConfig);
       this.selectedCell.building = building;
-      this.selectedCell.setTexture("cell");
     }
   }
 
@@ -153,7 +129,7 @@ class Play extends Phaser.Scene {
       }
     });
     if (this.selectedCell) {
-      this.updateStats(this.selectedCell);
+      this.stats.updateStats(this.selectedCell);
     }
   }
 
