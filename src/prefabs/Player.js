@@ -90,7 +90,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   spendResources(cost) {
-    console.log("spent");
     if (this.resources >= cost) {
       this.resources -= cost;
       this.updateResourceDisplay();

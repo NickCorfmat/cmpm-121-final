@@ -29,7 +29,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.selectedCell = cell;
     const sunLevelText = cell.building ? `Sun Level (Last Turn): \n${cell.sunLevel}\n` : `Sun Level (Last Turn): \n${cell.sunLevel} (unused)\n`;
     const resourcesText = cell.building ? `Resources: \n${cell.building.resources}` : '';
-    const buildingText = cell.building ? `Building: \n${cell.building.constructor.name}\n` : 'No Building';
+    const buildingText = cell.building ? `Building: \n${cell.building.name}\n` : 'No Building';
     this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: \n${cell.waterLevel}\n\n${buildingText}\n${resourcesText}`);
     
     if (cell.building && cell.building.resources > 0) {
