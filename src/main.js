@@ -2,8 +2,8 @@
 
 let config = {
   type: Phaser.AUTO,
-  width: 560,
-  height: 320,
+  width: 840,
+  height: 480,
   parent: "game-container",
   render: {
     pixelArt: true,
