@@ -9,10 +9,33 @@ class Stats extends Phaser.GameObjects.Sprite {
       fontSize: "16px",
       fill: "#fff",
     });
+
+    this.collectButton = scene.add.text(x + 10, y + 100, "Collect", {
+      fontSize: "16px",
+      fill: "#fff",
+      backgroundColor: "#000",
+      padding: { x: 10, y: 5 },
+    }).setVisible(false).setInteractive().on('pointerdown', () => {
+      if (this.selectedCell && this.selectedCell.building) {
+        const collected = this.selectedCell.building.collectResources();
+        scene.player.resources += collected;
+        scene.player.updateResourceDisplay();
+        this.updateStats(this.selectedCell);
+      }
+    });
   }
 
   updateStats(cell) {
+    this.selectedCell = cell;
     const sunLevelText = cell.building ? `Sun Level: ${cell.sunLevel}` : `Sun Level: ${cell.sunLevel} (unused)`;
-    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: ${cell.waterLevel}`);
+    const resourcesText = cell.building ? `Resources: ${cell.building.resources}` : '';
+    const buildingText = cell.building ? `Building: \n${cell.building.constructor.name}` : 'No Building';
+    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: ${cell.waterLevel}\n${buildingText}\n${resourcesText}`);
+    
+    if (cell.building && cell.building.resources > 0) {
+      this.collectButton.setVisible(true);
+    } else {
+      this.collectButton.setVisible(false);
+    }
   }
 }

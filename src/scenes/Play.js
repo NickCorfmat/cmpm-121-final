@@ -62,14 +62,14 @@ class Play extends Phaser.Scene {
 
   createBuildingButtons() {
     const buyBuildingButtons = [
-      "buyDrillButton",
-      "buyExcavatorButton",
-      "buyDemolitionPlantButton",
+      { id: "buyDrillButton", type: "buyDrillButton", cost: 10 },
+      { id: "buyExcavatorButton", type: "buyExcavatorButton", cost: 30 },
+      { id: "buyDemolitionPlantButton", type: "buyDemolitionPlantButton", cost: 50 },
     ];
-    buyBuildingButtons.forEach((type) => {
-      document
-        .getElementById(type)
-        .addEventListener("click", () => this.buyBuilding(type));
+    buyBuildingButtons.forEach((button) => {
+      const btn = document.getElementById(button.id);
+      btn.innerText = `${btn.innerText} (${button.cost} resources)`;
+      btn.addEventListener("click", () => this.buyBuilding(button.type));
     });
   }
 
@@ -91,9 +91,21 @@ class Play extends Phaser.Scene {
     this.stats.updateStats(cell);
   }
 
-
   buyBuilding(type) {
-    if (this.selectedCell && this.player.spendResources(50)) {
+    let cost;
+    switch (type) {
+      case "buyDrillButton":
+        cost = 10;
+        break;
+      case "buyExcavatorButton":
+        cost = 30;
+        break;
+      case "buyDemolitionPlantButton":
+        cost = 50;
+        break;
+    }
+
+    if (this.selectedCell && this.player.spendResources(cost)) {
       const { x, y } = this.selectedCell.getCenter();
       let building;
       let tint;
@@ -121,6 +133,11 @@ class Play extends Phaser.Scene {
 
   endTurn() {
     this.grid.updateCells();
+    this.grid.cells.forEach((cell) => {
+      if (cell.building) {
+        cell.building.generateResources(cell.sunLevel, cell.waterLevel);
+      }
+    });
     if (this.selectedCell) {
       this.updateStats(this.selectedCell);
     }
