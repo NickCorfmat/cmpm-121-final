@@ -39,6 +39,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   update(cell) {
     this.cell = cell;
+
     this.displayCellName();
     this.displayCellIcon();
     this.displayCellLocation();
@@ -59,21 +60,6 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.name.setText(text);
   }
 
-
-  updateStats(cell) {
-    this.selectedCell = cell;
-    const sunLevelText = cell.building ? `Sun Level (Last Turn): \n${cell.sunLevel}\n` : `Sun Level (Last Turn): \n${cell.sunLevel} (unused)\n`;
-    const resourcesText = cell.building ? `Resources: \n${cell.building.resources}` : '';
-    const buildingText = cell.building ? `Building: \n${cell.building.name}\n` : 'No Building';
-    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: \n${cell.waterLevel}\n\n${buildingText}\n${resourcesText}`);
-    
-    if (cell.building && cell.building.resources > 0) {
-      this.collectButton.setVisible(true);
-    } else {
-      this.collectButton.setVisible(false);
-    }
-  }
-  
   displayCellIcon() {
     const x = this.x + this.width / 2;
     const y = this.height / 3;
