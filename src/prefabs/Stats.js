@@ -73,7 +73,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     } else {
       this.collectButton.setVisible(false);
     }
-    
+  }
   displayCellIcon() {
     const x = this.x + this.width / 2;
     const y = this.height / 3;
