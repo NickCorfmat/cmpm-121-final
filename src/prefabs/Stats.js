@@ -63,6 +63,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.displayCellName();
     this.displayCellIcon();
     this.displayDescription();
+    this.displayBuildingLevel();
     this.displayCollectButton();
   }
 
@@ -104,6 +105,20 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.description.setText(
       `${this.location}\n${this.sunLevel}\n${this.waterLevel}`
     );
+  }
+    
+  displayBuildingLevel() {
+    if (this.cell.building) {
+      const x = this.x + this.width / 2;
+      const y = (3 * this.height) / 5 - 15;
+
+      const text = `Level: ${this.cell.building.level}`;
+
+      this.level.setPosition(x, y);
+      this.level.setText(text);
+    } else {
+      this.level.setText("");
+    }
   }
 
   displayCollectButton() {
