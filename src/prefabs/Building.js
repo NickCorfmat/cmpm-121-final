@@ -8,11 +8,11 @@ Building cost and production output:
   Demolition Plant: 50 resources, 3x multiplier
 */
 class Building extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, row, col, config) {
+  constructor(scene, row, col, grid, config) {
     // convert logical to pixel for displaying cell
+    console.log("new building created");
     const { x, y } = grid.logicalToPixelCoords(row, col);
-
-    super(scene, x, y, config.type);
+    super(scene, x, y, config.texture);
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -20,7 +20,8 @@ class Building extends Phaser.Physics.Arcade.Sprite {
     this.type = config.type;
     this.cost = config.cost;
     this.multiplier = config.multiplier;
-    this.tint = config.tint;
+    //this.tint = config.tint;
+    this.texture = config.texture;
     this.row = row;
     this.col = row;
     this.resources = 0;
