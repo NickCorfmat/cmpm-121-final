@@ -115,7 +115,7 @@ class Play extends Phaser.Scene {
       }
     });
     if (this.selectedCell) {
-      this.stats.updateStats(this.selectedCell);
+      this.stats.update(this.selectedCell);
     }
   }
 

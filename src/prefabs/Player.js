@@ -8,7 +8,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // sprite configs
-    const converage = 0.75;
+    const converage = 1;
 
     this.setOrigin(0.5);
     this.setDisplaySize(grid.size * converage, grid.size * converage);
@@ -67,6 +67,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (this.isValidMove(newRow, newCol)) {
       this.updatePlayerCoordinates(newRow, newCol);
+
+      // display stats of current cell
+      const currentCell = this.grid.getCell(newRow, newCol);
+      this.scene.stats.update(currentCell);
     }
   }
 
