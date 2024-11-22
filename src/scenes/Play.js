@@ -23,8 +23,8 @@ class Play extends Phaser.Scene {
   init() {
     this.gridConfig = { width: 8, height: 8, size: 40 };
     this.isPlayerTurn = true;
-    this.currentCell = null;
-    this.previousCell = null;
+    this.selectedCell = null;
+    this.previousSelectedCell = null;
   }
 
   create() {
@@ -49,7 +49,16 @@ class Play extends Phaser.Scene {
 
     // add event listeners to building buttons
     this.createBuildingButtons();
+
+    //add pointerdown interactivity that calls selectCell for every cell in grid
+    this.grid.cells.forEach((cell) => {
+      cell.setInteractive();
+      cell.on("pointerdown", () => this.selectCell(cell));
+    });
   }
+
+
+
 
   createBuildingButtons() {
     const buyBuildingButtons = [
@@ -64,24 +73,18 @@ class Play extends Phaser.Scene {
     });
   }
 
-  // selectCell(cell) {
-  //   const playerCell = this.grid.getCell(
-  //     Math.floor(this.player.x / this.gridConfig.size),
-  //     Math.floor(this.player.y / this.gridConfig.size)
-  //   );
-
-  //   const isAdjacent = Math.abs(cell.gridX - playerCell.gridX) <= 1 && Math.abs(cell.gridY - playerCell.gridY) <= 1;
-
-  //   if (isAdjacent) {
-  //     if (this.previousSelectedCell) {
-  //       this.previousSelectedCell.clearTint();
-  //     }
-
-  //     this.selectedCell = cell;
-  //     this.selectedCell.setTint(0x00ff00); // Highlight the selected cell with green tint
-  //     this.previousSelectedCell = this.selectedCell;
-  //   }
-  // }
+  selectCell(cell) {
+    this.selectedCell = cell;
+    if (this.previousSelectedCell === this.selectedCell) {
+      this.selectedCell.clearSelection();
+    } else {
+      this.selectedCell.selectCell(); // Highlight the selected cell
+      if (this.previousSelectedCell) {
+        this.previousSelectedCell.clearSelection(); // Clear the previous selected cell
+      }
+      this.previousSelectedCell = this.selectedCell;
+    }
+  }
 
   buyBuilding(type) {
     if (this.selectedCell && this.player.spendResources(50)) {
@@ -118,6 +121,8 @@ class Play extends Phaser.Scene {
   }
 
   update() {
-    this.player.update();
+    if (this.isPlayerTurn) {
+      this.player.update();
+    }
   }
 }
