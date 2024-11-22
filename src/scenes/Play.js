@@ -25,7 +25,15 @@ class Play extends Phaser.Scene {
   }
 
   init() {
+    // set game display parameters
     this.gridConfig = { width: 8, height: 8, size: 40 };
+    this.statsConfig = {
+      x: this.gridConfig.width * this.gridConfig.size,
+      y: 0,
+      width: width - this.gridConfig.width * this.gridConfig.size,
+      height: height,
+    };
+
     this.selectedCell = null;
     this.previousSelectedCell = null;
   }
@@ -35,12 +43,13 @@ class Play extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(0x000000);
 
     this.grid = new Grid(this, this.gridConfig);
+
     this.stats = new Stats(
       this,
-      this.gridConfig.width * this.gridConfig.size,
-      0,
-      width - this.gridConfig.width * this.gridConfig.size,
-      height
+      this.statsConfig.x,
+      this.statsConfig.y,
+      this.statsConfig.width,
+      this.statsConfig.height
     );
 
     this.player = new Player(this, 0, 0, this.grid);
@@ -62,13 +71,18 @@ class Play extends Phaser.Scene {
 
   createBuildingButtons() {
     const buyBuildingButtons = [
-      { id: "buyDrillButton", type: "buyDrillButton", cost: 10 },
-      { id: "buyExcavatorButton", type: "buyExcavatorButton", cost: 30 },
-      { id: "buyDemolitionPlantButton", type: "buyDemolitionPlantButton", cost: 50 },
+      { id: "buyDrill", type: "buyDrill", cost: 10 },
+      { id: "buyExcavator", type: "buyExcavator", cost: 30 },
+      {
+        id: "buyDemolitionPlant",
+        type: "buyDemolitionPlant",
+        cost: 50,
+      },
     ];
     buyBuildingButtons.forEach((button) => {
-      const btn = document.getElementById(button.id);
+      const btn = document.getElementById(button.id + "Button");
       btn.innerText = `${btn.innerText} (${button.cost} resources)`;
+
       btn.addEventListener("click", () => this.buyBuilding(button.type));
     });
   }

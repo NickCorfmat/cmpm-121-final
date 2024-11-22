@@ -23,15 +23,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.makeClickable();
 
     // create a graphics object for the border
-    this.border = scene.add.graphics();
-    this.border.lineStyle(2, 0x00ff00, 1);
-    this.border.strokeRect(
-      this.x - this.displayWidth / 2,
-      this.y - this.displayHeight / 2,
-      this.displayWidth,
-      this.displayHeight
-    );
-    this.border.setVisible(false);
+    this.addBorder();
   }
 
   makeClickable() {
@@ -57,6 +49,19 @@ class Cell extends Phaser.GameObjects.Sprite {
   updateWaterLevel() {
     const change = Phaser.Math.Between(-1, 1);
     this.waterLevel = Math.max(0, Math.min(5, this.waterLevel + change));
+  }
+
+  addBorder() {
+    this.border = this.scene.add.graphics();
+
+    this.border.lineStyle(2, 0x00ff00, 1);
+    this.border.strokeRect(
+      this.x - this.displayWidth / 2,
+      this.y - this.displayHeight / 2,
+      this.displayWidth,
+      this.displayHeight
+    );
+    this.border.setVisible(false);
   }
 }
 
@@ -115,7 +120,7 @@ class Grid {
     return `${row}:${col}`;
   }
 
-  updateCells() {
+  updateCellLevels() {
     this.cells.forEach((cell) => {
       cell.updateSunLevel();
       cell.updateWaterLevel();
