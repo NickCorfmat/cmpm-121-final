@@ -98,22 +98,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.previousCell = this.scene.currentCell;
   }
 
-  canAfford(cost) {
-    return this.resources >= cost;
-  }
-
   spendResources(cost) {
-    if (this.canAfford(cost)) {
+    if (this.resources >= cost) {
       this.resources -= cost;
       this.updateResourceDisplay();
       return true;
     }
+    
     return false;
   }
 
   updateResourceDisplay() {
-    document.getElementById(
-      "resourceDisplay"
-    ).innerText = `Resources: ${this.resources}`;
+    const resourceDisplay = document.getElementById("resourceDisplay");
+    resourceDisplay.innerText = `Resources: ${this.resources}`;
   }
 }
