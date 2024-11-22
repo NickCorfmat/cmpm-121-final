@@ -20,22 +20,22 @@ class Stats extends Phaser.GameObjects.Sprite {
       fontSize: "24px",
       fill: "#fff",
       backgroundColor: "000",
-      padding: 5,
+      padding: 10,
+      lineSpacing: 10,
     };
 
     // create text elements
     this.name = this.scene.add.text(0, 0, "", this.textConfig);
-    this.location = this.scene.add.text(0, 0, "", this.textConfig);
-    this.level = this.scene.add.text(0, 0, "", this.textConfig);
-    this.sunLevel = this.scene.add.text(0, 0, "", this.textConfig);
-    this.waterLevel = this.scene.add.text(0, 0, "", this.textConfig);
+    this.description = this.scene.add.text(
+      this.x + this.width / 2,
+      (2 * this.height) / 3,
+      "",
+      this.textConfig
+    );
 
     // center text
     this.name.setOrigin(0.5);
-    this.location.setOrigin(0.5);
-    this.level.setOrigin(0.5);
-    this.sunLevel.setOrigin(0.5);
-    this.waterLevel.setOrigin(0.5);
+    this.description.setOrigin(0.5);
 
     // declare icon sprite
     this.icon = null;
@@ -47,21 +47,23 @@ class Stats extends Phaser.GameObjects.Sprite {
       backgroundColor: "#000",
       padding: { x: 10, y: 5 },
     });
+
+    // collect button configs
     this.collectButton.setOrigin(0.5);
+    this.collectButton.setVisible(false);
+
     this.collectButton.setInteractive();
     this.collectButton.on("pointerdown", () => this.collectResources());
-    this.collectButton.setVisible(false);
   }
 
   update(cell) {
     this.cell = cell;
+    this.getCellInfo();
 
     this.displayCellName();
     this.displayCellIcon();
+    this.displayDescription();
     this.displayBuildingLevel();
-    this.displayCellLocation();
-    this.displaySunLevel();
-    this.displayWaterLevel();
     this.displayCollectButton();
   }
 
@@ -93,6 +95,18 @@ class Stats extends Phaser.GameObjects.Sprite {
     }
   }
 
+  getCellInfo() {
+    this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
+    this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
+    this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
+  }
+
+  displayDescription() {
+    this.description.setText(
+      `${this.location}\n${this.sunLevel}\n${this.waterLevel}`
+    );
+  }
+    
   displayBuildingLevel() {
     if (this.cell.building) {
       const x = this.x + this.width / 2;
@@ -105,38 +119,6 @@ class Stats extends Phaser.GameObjects.Sprite {
     } else {
       this.level.setText("");
     }
-  }
-
-  displayCellLocation() {
-    const x = this.x + this.width / 2;
-    const y = (3 * this.height) / 5 + 20;
-
-    const text = `Location: (${this.cell.row}, ${this.cell.col})`;
-
-    this.location.setPosition(x, y);
-    this.location.setText(text);
-  }
-
-
-
-  displaySunLevel() {
-    const x = this.x + this.width / 2;
-    const y = (2 * this.height) / 3 + 25;
-
-    const text = `Sun Level: ${this.cell.sunLevel}`;
-
-    this.sunLevel.setPosition(x, y);
-    this.sunLevel.setText(text);
-  }
-
-  displayWaterLevel() {
-    const x = this.x + this.width / 2;
-    const y = (3 * this.height) / 4 + 25;
-
-    const text = `Water Level: ${this.cell.waterLevel}`;
-
-    this.waterLevel.setPosition(x, y);
-    this.waterLevel.setText(text);
   }
 
   displayCollectButton() {
