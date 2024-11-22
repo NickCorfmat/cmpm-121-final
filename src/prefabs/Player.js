@@ -32,6 +32,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // set player depth to ensure it is above everything else
     this.setDepth(10);
+
+    this.anims.play("idle");
   }
 
   update() {
