@@ -29,6 +29,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // spawn player at current cell
     this.movePlayer(0, 0);
+
+    // set player depth to ensure it is above everything else
+    this.setDepth(10);
   }
 
   update() {
@@ -63,6 +66,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.isValidMove(newRow, newCol)) {
       this.updatePlayerCoordinates(newRow, newCol);
       this.updateCurrentCell();
+      
+      this.scene.isPlayerTurn = false;
     }
   }
 

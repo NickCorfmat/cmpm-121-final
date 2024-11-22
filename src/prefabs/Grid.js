@@ -27,6 +27,10 @@ class Cell extends Phaser.GameObjects.Sprite {
   selectCell() {
     this.setTint(0x00ff00);
   }
+
+  clearSelection() {
+    this.clearTint();
+  }
 }
 
 class Grid {
