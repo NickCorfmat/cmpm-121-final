@@ -45,23 +45,35 @@ class Grid {
     const { width, height, size } = this.gridConfig;
 
     // loop through grid width and height
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
+    for (let row = 0; row < width; row++) {
+      for (let col = 0; col < height; col++) {
         // draw grid cell
-        const cell = new Cell(this.scene, x, y, size);
+        const cell = new Cell(this.scene, row, col, size);
 
         // add cell sprite to grid container
-        this.cells.set(this.generateKey(x, y), cell);
+        this.cells.set(this.generateKey(row, col), cell);
       }
     }
   }
 
-  getCell(x, y) {
-    return this.cells.get(this.generateKey(x, y));
+  getCell(row, col) {
+    return this.cells.get(this.generateKey(row, col));
+  }
+
+  getCellFromCoordinates(x, y) {
+    const { row, col } = this.getLogicalCoordinates(x, y);
+    return this.getCell(row, col);
+  }
+
+  getLogicalCoordinates(x, y) {
+    return {
+      row: Math.floor(x / this.gridConfig.size),
+      col: Math.floor(y / this.gridConfig.size),
+    };
   }
 
   // Extracting key generation to own function idea inspired by Brace
-  generateKey(x, y) {
-    return `${x}:${y}`;
+  generateKey(row, col) {
+    return `${row}:${col}`;
   }
 }
