@@ -19,6 +19,7 @@ Mechanics:
 - Player cannot oil cells with no buildings
 - Buildings use 1 oil level per turn and may be oiled to a maximum of 5
 */
+
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
@@ -40,18 +41,24 @@ class Play extends Phaser.Scene {
         cost: 10,
         multiplier: 1,
         tint: 0x000000,
+        texture: "drill",
+        scale: 1
       },
       {
         type: "Excavator",
         cost: 30,
         multiplier: 2,
         tint: 0x8b4513,
+        texture:"excavator",
+        scale: 1
       },
       {
         type: "DemolitionPlant",
         cost: 50,
         multiplier: 3,
         tint: 0xff0000,
+        texture:"demo",
+        scale: 1
       },
     ];
   }
@@ -85,22 +92,18 @@ class Play extends Phaser.Scene {
     this.BUILDINGS.forEach((building) => {
       const button = document.getElementById("buy" + building.type + "Button");
       button.innerText = `Buy ${building.type}: $${building.cost}`;
-
-      button.addEventListener("click", () => this.buyBuilding(button.type));
+      button.addEventListener("click", () => this.buyBuilding(building.type));
     });
   }
 
   buyBuilding(type) {
-    console.log("bought");
     // find building object based on property. Source: Brace
     const buildingConfig = this.BUILDINGS.find((b) => b.type === type);
-
     // construct building in current cell
-    if (this.selectedCell && this.player.spendResources(buildingConfig.cost)) {
-      const { row, col } = this.selectedCell.getLogicalCoords();
-
-      const building = new Building(this, row, col, buildingConfig);
-      this.selectedCell.building = building;
+    if (this.grid.selectedCell && this.player.resources >= buildingConfig.cost && !this.grid.selectedCell.building) {
+      this.player.spendResources(buildingConfig.cost);
+      const { row, col } = this.grid.selectedCell.getLogicalCoords();
+      this.grid.selectedCell.building = new Building(this, row, col,this.grid, buildingConfig);
     }
   }
 

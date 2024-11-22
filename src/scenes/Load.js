@@ -10,6 +10,9 @@ class Load extends Phaser.Scene {
     this.load.atlas("player", "/Astronaut_Idle.png", "/Astronaut_Idle.json");
     this.load.image("cell", "/cell.png");
     this.load.image("stats", "/stats.png");
+    this.load.image("demo","/demo.png");
+    this.load.image("drill","/drill.png");
+    this.load.image("excavator","/Excavator.png");
   }
 
   create() {
