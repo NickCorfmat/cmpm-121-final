@@ -26,12 +26,14 @@ class Stats extends Phaser.GameObjects.Sprite {
     // create text elements
     this.name = this.scene.add.text(0, 0, "", this.textConfig);
     this.location = this.scene.add.text(0, 0, "", this.textConfig);
+    this.level = this.scene.add.text(0, 0, "", this.textConfig);
     this.sunLevel = this.scene.add.text(0, 0, "", this.textConfig);
     this.waterLevel = this.scene.add.text(0, 0, "", this.textConfig);
 
     // center text
     this.name.setOrigin(0.5);
     this.location.setOrigin(0.5);
+    this.level.setOrigin(0.5);
     this.sunLevel.setOrigin(0.5);
     this.waterLevel.setOrigin(0.5);
 
@@ -56,6 +58,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     this.displayCellName();
     this.displayCellIcon();
+    this.displayBuildingLevel();
     this.displayCellLocation();
     this.displaySunLevel();
     this.displayWaterLevel();
@@ -90,9 +93,23 @@ class Stats extends Phaser.GameObjects.Sprite {
     }
   }
 
+  displayBuildingLevel() {
+    if (this.cell.building) {
+      const x = this.x + this.width / 2;
+      const y = (3 * this.height) / 5 - 15;
+
+      const text = `Level: ${this.cell.building.level}`;
+
+      this.level.setPosition(x, y);
+      this.level.setText(text);
+    } else {
+      this.level.setText("");
+    }
+  }
+
   displayCellLocation() {
     const x = this.x + this.width / 2;
-    const y = (3 * this.height) / 5;
+    const y = (3 * this.height) / 5 + 20;
 
     const text = `Location: (${this.cell.row}, ${this.cell.col})`;
 
@@ -100,9 +117,11 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.location.setText(text);
   }
 
+
+
   displaySunLevel() {
     const x = this.x + this.width / 2;
-    const y = (2 * this.height) / 3 + 5;
+    const y = (2 * this.height) / 3 + 25;
 
     const text = `Sun Level: ${this.cell.sunLevel}`;
 
@@ -112,7 +131,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   displayWaterLevel() {
     const x = this.x + this.width / 2;
-    const y = (3 * this.height) / 4;
+    const y = (3 * this.height) / 4 + 25;
 
     const text = `Water Level: ${this.cell.waterLevel}`;
 

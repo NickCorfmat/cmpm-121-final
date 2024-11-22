@@ -101,6 +101,7 @@ class Play extends Phaser.Scene {
       this.player.spendResources(buildingConfig.cost);
       const { row, col } = this.grid.selectedCell.getLogicalCoords();
       this.grid.selectedCell.building = new Building(this, row, col,this.grid, buildingConfig);
+      this.stats.update(this.grid.selectedCell); // Update stats after buying a building
     }
   }
 
@@ -108,18 +109,16 @@ class Play extends Phaser.Scene {
     this.grid.updateCellLevels();
     this.grid.cells.forEach((cell) => {
       if (cell.building) {
+        cell.building.updateLevel(); // Update building level
         cell.building.generateResources(cell.sunLevel, cell.waterLevel);
       }
     });
-    if (this.selectedCell) {
-      this.stats.update(this.selectedCell);
+    if (this.grid.selectedCell) {
+      this.stats.update(this.grid.selectedCell);
     }
   }
 
   update() {
     this.player.update();
-    if(this.grid.selectedCell) {
-      this.stats.update(this.grid.selectedCell);
-    }
   }
 }
