@@ -15,64 +15,36 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.setOrigin(0);
     this.setDisplaySize(width, height);
 
+    // tunable text parameters
     this.textConfig = {
       fontSize: "16px",
       fill: "#fff",
     };
 
-    this.collectButton = scene.add
-      .text(x + 10, y + 280, "Collect", {
-        fontSize: "16px",
-        fill: "#fff",
-        backgroundColor: "#000",
-        padding: { x: 10, y: 5 },
-      })
-      .setVisible(false)
-      .setInteractive()
-      .on("pointerdown", () => {
-        if (this.selectedCell && this.selectedCell.building) {
-          const collected = this.selectedCell.building.collectResources();
-          scene.player.resources += collected;
-          scene.player.updateResourceDisplay();
-          this.updateStats(this.selectedCell);
-        }
-      });
+    // create text elements
+    this.name = this.scene.add.text(0, 0, "", this.textConfig);
+    this.location = this.scene.add.text(0, 0, "", this.textConfig);
+    this.sunLevel = this.scene.add.text(0, 0, "", this.textConfig);
+    this.waterLevel = this.scene.add.text(0, 0, "", this.textConfig);
+
+    // center text
+    this.name.setOrigin(0.5);
+    this.location.setOrigin(0.5);
+    this.sunLevel.setOrigin(0.5);
+    this.waterLevel.setOrigin(0.5);
+
+    // declare icon sprite
+    this.icon = null;
   }
 
   updateStats(cell) {
     this.cell = cell;
-
-    this.clearDisplay();
 
     this.displayCellName();
     this.displayCellIcon();
     this.displayCellLocation();
     this.displaySunLevel();
     this.displayWaterLevel();
-    // const sunLevelText = cell.building
-    //   ? `Sun Level (Last Turn): \n${cell.sunLevel}\n`
-    //   : `Sun Level (Last Turn): \n${cell.sunLevel} (unused)\n`;
-    // const resourcesText = cell.building
-    //   ? `Resources: \n${cell.building.resources}`
-    //   : "";
-    // const buildingText = cell.building
-    //   ? `Building: \n${cell.building.constructor.name}\n`
-    //   : "No Building";
-    // this.text.setText(
-    //   `Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: \n${cell.waterLevel}\n\n${buildingText}\n${resourcesText}`
-    // );
-
-    // if (cell.building && cell.building.resources > 0) {
-    //   this.collectButton.setVisible(true);
-    // } else {
-    //   this.collectButton.setVisible(false);
-    // }
-  }
-
-  clearDisplay() {
-    this.name = null;
-    this.icon = null;
-    this.location = null;
   }
 
   displayCellName() {
@@ -84,10 +56,8 @@ class Stats extends Phaser.GameObjects.Sprite {
         ? "Cell: Empty"
         : `Cell: ${this.cell.building.type}`;
 
-    this.name = this.scene.add.text(x, y, text, this.textConfig);
-
-    // center text
-    this.name.setOrigin(0.5);
+    this.name.setPosition(x, y);
+    this.name.setText(text);
   }
 
   displayCellIcon() {
@@ -104,10 +74,8 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     const text = `Location: (${this.cell.row}, ${this.cell.col})`;
 
-    this.location = this.scene.add.text(x, y, text, this.textConfig);
-
-    // center text
-    this.location.setOrigin(0.5);
+    this.location.setPosition(x, y);
+    this.location.setText(text);
   }
 
   displaySunLevel() {
@@ -115,10 +83,9 @@ class Stats extends Phaser.GameObjects.Sprite {
     const y = (2 * this.height) / 3;
 
     const text = `Sun Level: ${this.cell.sunLevel}`;
-    this.name = this.scene.add.text(x, y, text, this.textConfig);
 
-    // center text
-    this.name.setOrigin(0.5);
+    this.sunLevel.setPosition(x, y);
+    this.sunLevel.setText(text);
   }
 
   displayWaterLevel() {
@@ -126,9 +93,8 @@ class Stats extends Phaser.GameObjects.Sprite {
     const y = (3 * this.height) / 4;
 
     const text = `Water Level: ${this.cell.waterLevel}`;
-    this.name = this.scene.add.text(x, y, text, this.textConfig);
 
-    // center text
-    this.name.setOrigin(0.5);
+    this.waterLevel.setPosition(x, y);
+    this.waterLevel.setText(text);
   }
 }
