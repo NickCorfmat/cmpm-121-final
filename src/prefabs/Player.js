@@ -1,5 +1,8 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, gridConfig, texture = "player") {
+  constructor(scene, row, col, grid, texture = "player") {
+    // convert logical to pixel for displaying cell
+    const { x, y } = grid.logicalToCoordinates(row, col);
+
     super(scene, x, y, texture);
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -8,16 +11,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const converage = 0.75;
 
     this.setOrigin(0.5);
-    this.setDisplaySize(
-      gridConfig.size * converage,
-      gridConfig.size * converage
-    );
+    this.setDisplaySize(grid.size * converage, grid.size * converage);
 
     // store references
     this.scene = scene;
-    this.gridConfig = gridConfig;
-    this.grid = scene.grid;
-    this.x = x;
+    this.grid = grid;
+    this.row = row; // player logical coords
+    this.col = col;
+    this.x = x; // player pixel coords
     this.y = y;
 
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
@@ -27,7 +28,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.updateResourceDisplay();
 
     // spawn player at current cell
-    this.movePlayer(0, 0)
+    this.movePlayer(0, 0);
   }
 
   update() {
@@ -48,23 +49,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  movePlayer(dx, dy) {
-    const newX = this.x + dx * this.gridConfig.size;
-    const newY = this.y + dy * this.gridConfig.size;
+  movePlayer(dRow, dCol) {
+    const newRow = this.row + dRow;
+    const newCol = this.col + dCol;
 
-    if (this.isValidMove(newX, newY)) {
-      this.x = newX;
-      this.y = newY;
+    if (this.isValidMove(newRow, newCol)) {
+      this.row = newRow;
+      this.col = newCol;
+
+      // update player pixel coordinates
+      const coords = this.grid.logicalToCoordinates(this.row, this.col);
+      this.x = coords.x;
+      this.y = coords.y;
 
       this.updateCurrentCell();
     }
   }
 
-  isValidMove(x, y) {
-    const { width, height, size } = this.gridConfig;
-
-    const isWithinWidth = x >= 0 && x < width * size;
-    const isWithinHeight = y >= 0 && y < height * size;
+  isValidMove(row, col) {
+    const isWithinWidth = row >= 0 && row < this.grid.width;
+    const isWithinHeight = col >= 0 && col < this.grid.height;
 
     return isWithinWidth && isWithinHeight;
   }
@@ -75,7 +79,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // get the cell player is standing over
-    this.scene.currentCell = this.grid.getCellFromCoordinates(this.x, this.y);
+    this.scene.currentCell = this.grid.getCell(this.row, this.col);
     this.scene.currentCell.selectCell();
 
     this.scene.previousCell = this.scene.currentCell;

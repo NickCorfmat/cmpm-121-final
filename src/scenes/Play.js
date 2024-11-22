@@ -40,8 +40,7 @@ class Play extends Phaser.Scene {
       height
     );
 
-    const spawn = this.grid.getCell(0, 0);
-    this.player = new Player(this, spawn.gridX, spawn.gridY, this.gridConfig);
+    this.player = new Player(this, 0, 0, this.grid);
 
     // add event listener to end turn button
     document
