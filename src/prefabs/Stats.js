@@ -17,8 +17,10 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     // tunable text parameters
     this.textConfig = {
-      fontSize: "16px",
+      fontSize: "24px",
       fill: "#fff",
+      backgroundColor: "000",
+      padding: 5
     };
 
     // create text elements
@@ -51,6 +53,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   update(cell) {
     this.cell = cell;
+
     this.displayCellName();
     this.displayCellIcon();
     this.displayCellLocation();
@@ -61,7 +64,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   displayCellName() {
     const x = this.x + this.width / 2;
-    const y = 30;
+    const y = 43;
 
     let text =
       this.cell.building == null
@@ -93,12 +96,16 @@ class Stats extends Phaser.GameObjects.Sprite {
       this.collectButton.setVisible(false);
     }
   }
+
   displayCellIcon() {
     const x = this.x + this.width / 2;
     const y = this.height / 3;
     const size = this.width / 2;
 
-    this.iconframe = this.scene.add.rectangle(x, y, size, size, 0x474355);
+    this.iconframe = this.scene.add
+      .sprite(x, y, "cell")
+      .setDisplaySize(size, size);
+
     if (this.cell.building) {
       this.icon = this.scene.add.image(x, y, this.cell.building.texture);
       this.icon.setDisplaySize(size, size);
@@ -117,7 +124,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   displaySunLevel() {
     const x = this.x + this.width / 2;
-    const y = (2 * this.height) / 3 + 2;
+    const y = (2 * this.height) / 3 + 5;
 
     const text = `Sun Level: ${this.cell.sunLevel}`;
 

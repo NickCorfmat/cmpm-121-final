@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
 
   init() {
     // set game display parameters
-    this.gridConfig = { width: 8, height: 8, size: 40 };
+    this.gridConfig = { width: 8, height: 8, size: 60 };
     this.statsConfig = {
       x: this.gridConfig.width * this.gridConfig.size,
       y: 0,
@@ -41,7 +41,6 @@ class Play extends Phaser.Scene {
         cost: 10,
         multiplier: 1,
         tint: 0x000000,
-        texture: "drill",
         scale: 1
       },
       {
@@ -49,7 +48,6 @@ class Play extends Phaser.Scene {
         cost: 30,
         multiplier: 2,
         tint: 0x8b4513,
-        texture:"excavator",
         scale: 1
       },
       {
@@ -57,7 +55,6 @@ class Play extends Phaser.Scene {
         cost: 50,
         multiplier: 3,
         tint: 0xff0000,
-        texture:"demo",
         scale: 1
       },
     ];
