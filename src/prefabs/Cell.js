@@ -46,7 +46,7 @@ class Cell extends Phaser.GameObjects.Sprite {
   addBorder() {
     this.border = this.scene.add.graphics();
 
-    this.border.lineStyle(2, 0x00ff00, 1);
+    this.border.lineStyle(2, 0x34eba8, 1);
     this.border.strokeRect(
       this.x - this.displayWidth / 2,
       this.y - this.displayHeight / 2,

@@ -40,7 +40,7 @@ class Grid {
       }
       this.lastSelectedCell = this.selectedCell;
     }
-    this.scene.stats.updateStats(this.selectedCell);
+    this.scene.stats.update(this.selectedCell);
   }
 
   getCell(row, col) {

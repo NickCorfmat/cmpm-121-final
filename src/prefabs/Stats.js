@@ -37,7 +37,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.icon = null;
   }
 
-  updateStats(cell) {
+  update(cell) {
     this.cell = cell;
 
     this.displayCellName();
