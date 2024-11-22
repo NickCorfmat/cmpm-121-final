@@ -12,6 +12,7 @@ class Stats extends Phaser.GameObjects.Sprite {
   }
 
   updateStats(cell) {
-    this.text.setText(`Cell: (${cell.row}, ${cell.col})\nSun Level: ${cell.sunLevel}\nWater Level: ${cell.waterLevel}`);
+    const sunLevelText = cell.building ? `Sun Level: ${cell.sunLevel}` : `Sun Level: ${cell.sunLevel} (unused)`;
+    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: ${cell.waterLevel}`);
   }
 }

@@ -116,8 +116,6 @@ class Play extends Phaser.Scene {
       this.selectedCell.setTexture("cell");
       this.selectedCell.building = building;
       this.selectedCell.setTint(tint); // Set the tint color for the building
-      this.selectedCell = null;
-      this.previousSelectedCell = null;
     }
   }
 
