@@ -21,20 +21,33 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.waterLevel = 2;
 
     this.makeClickable();
+
+    // create a graphics object for the border
+    this.border = scene.add.graphics();
+    this.border.lineStyle(2, 0x00ff00, 1);
+    this.border.strokeRect(
+      this.x - this.displayWidth / 2,
+      this.y - this.displayHeight / 2,
+      this.displayWidth,
+      this.displayHeight
+    );
+    this.border.setVisible(false);
   }
 
   makeClickable() {
     this.setInteractive();
-    this.on("pointerdown", () => { });
+    this.on("pointerdown", () => {
+      this.scene.selectCell(this);
+    });
   }
 
   selectCell() {
-    this.setTint(0x00ff00);
+    this.border.setVisible(true);
     this.scene.updateStats(this);
   }
 
   clearSelection() {
-    this.clearTint();
+    this.border.setVisible(false);
   }
 
   updateSunLevel() {

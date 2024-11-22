@@ -53,7 +53,7 @@ class Play extends Phaser.Scene {
     // add event listeners to building buttons
     this.createBuildingButtons();
 
-    //add pointerdown interactivity that calls selectCell for every cell in grid
+    // add pointerdown interactivity that calls selectCell for every cell in grid
     this.grid.cells.forEach((cell) => {
       cell.setInteractive();
       cell.on("pointerdown", () => this.selectCell(cell));
@@ -125,9 +125,9 @@ class Play extends Phaser.Scene {
           break;
       }
 
-      this.selectedCell.setTexture("cell");
+      building.setTint(tint); // Set the tint color for the building
       this.selectedCell.building = building;
-      this.selectedCell.setTint(tint); // Set the tint color for the building
+      this.selectedCell.setTexture("cell");
     }
   }
 

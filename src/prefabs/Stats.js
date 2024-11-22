@@ -10,7 +10,7 @@ class Stats extends Phaser.GameObjects.Sprite {
       fill: "#fff",
     });
 
-    this.collectButton = scene.add.text(x + 10, y + 100, "Collect", {
+    this.collectButton = scene.add.text(x + 10, y + 280, "Collect", {
       fontSize: "16px",
       fill: "#fff",
       backgroundColor: "#000",
@@ -27,10 +27,10 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   updateStats(cell) {
     this.selectedCell = cell;
-    const sunLevelText = cell.building ? `Sun Level: ${cell.sunLevel}` : `Sun Level: ${cell.sunLevel} (unused)`;
-    const resourcesText = cell.building ? `Resources: ${cell.building.resources}` : '';
-    const buildingText = cell.building ? `Building: \n${cell.building.constructor.name}` : 'No Building';
-    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: ${cell.waterLevel}\n${buildingText}\n${resourcesText}`);
+    const sunLevelText = cell.building ? `Sun Level (Last Turn): \n${cell.sunLevel}\n` : `Sun Level (Last Turn): \n${cell.sunLevel} (unused)\n`;
+    const resourcesText = cell.building ? `Resources: \n${cell.building.resources}` : '';
+    const buildingText = cell.building ? `Building: \n${cell.building.constructor.name}\n` : 'No Building';
+    this.text.setText(`Cell: (${cell.row}, ${cell.col})\n${sunLevelText}\nWater Level: \n${cell.waterLevel}\n\n${buildingText}\n${resourcesText}`);
     
     if (cell.building && cell.building.resources > 0) {
       this.collectButton.setVisible(true);
