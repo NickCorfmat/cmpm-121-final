@@ -4,7 +4,7 @@ let config = {
   type: Phaser.AUTO,
   width: 840,
   height: 480,
-  parent: "game-container",
+  parent: "phaser-game",
   render: {
     pixelArt: true,
   },

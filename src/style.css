@@ -26,24 +26,27 @@ h2 {
 }
 
 #game-container {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 8px solid black;
+    border-radius: 10px;
+}
+
+#phaser-game {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 850px;
     height: 490px;
-    border: 8px solid black;
-    border-radius: 12px;
     background-color: rgb(130, 138, 255);
 }
 
 #info-panel {
     display: flex;
-    width: 80%;
-    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
     background-color: rgb(114, 117, 168);
-    border: 6px solid black;
-    border-radius: 12px;
+    border: 6px solid rgb(130, 138, 255);;
 }
 
 #info-panel-left,
