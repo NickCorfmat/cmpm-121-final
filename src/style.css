@@ -20,7 +20,7 @@ h1 {
 
 h2 {
     margin-bottom: 20px;
-    font-size: 1.8em;
+    font-size: 1.6em;
     color: #102c42;
     text-align: center;
 }
@@ -36,8 +36,8 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 850px;
-    height: 490px;
+    width: 710px;
+    height: 410px;
     background-color: rgb(130, 138, 255);
 }
 

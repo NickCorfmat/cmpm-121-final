@@ -17,7 +17,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     // tunable text parameters
     this.textConfig = {
-      fontSize: "24px",
+      fontSize: "20px",
       fill: "#fff",
       backgroundColor: "000",
       padding: 10,

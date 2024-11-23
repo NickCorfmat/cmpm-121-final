@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
 
   init() {
     // set game display parameters
-    this.gridConfig = { width: 8, height: 8, size: 60 };
+    this.gridConfig = { width: 8, height: 8, size: 50 };
     this.statsConfig = {
       x: this.gridConfig.width * this.gridConfig.size,
       y: 0,
