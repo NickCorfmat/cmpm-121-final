@@ -68,7 +68,7 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   displayCellName() {
     const x = this.x + this.width * 0.5;
-    const y = 43;
+    const y = this.height * 0.1;
 
     let text =
       this.cell.building == null
