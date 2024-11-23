@@ -29,10 +29,11 @@ class Grid {
 
   selectCell(row, col) {
     // retrieve selected cell
-    this.selectedCell = this.getCell(row, col);
+    const cell = this.getCell(row, col);
 
     // select cell only if game deems it selectable
-    if (this.selectedCell.isClickable) {
+    if (cell.isClickable) {
+      this.selectedCell = cell;
       this.selectedCell.enableBorder();
 
       // unhighlight previously selected cell

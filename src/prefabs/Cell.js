@@ -30,7 +30,7 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   enableMouseEvents() {
     this.setInteractive();
-    this.on("pointerover", () => {
+    this.on("pointerdown", () => {
       this.grid.selectCell(this.row, this.col);
     });
   }

@@ -107,8 +107,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateResourceDisplay() {
-    const resourceDisplay = document.getElementById("resourceDisplay");
-    resourceDisplay.innerText = `Resources: ${this.resources}`;
+    const display = document.getElementById("resourceDisplay");
+    display.innerText = `Resources: ${this.resources}`;
   }
 
   updateCellInteractivity() {
