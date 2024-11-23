@@ -18,24 +18,25 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.building = null;
 
     // initialize sun and water levels
-    this.sunLevel = Phaser.Math.Between(1, 5);
-    this.waterLevel = 2;
-
-    this.makeClickable();
+    this.sunLevel = 0;
+    this.waterLevel = 0;
 
     // create a graphics object for the border
     this.addBorder();
   }
 
-  makeClickable() {
+  setClickable() {
     this.setInteractive();
-    this.on("pointerdown", () => {
+    this.on("pointerover", () => {
       this.grid.selectCell(this.row, this.col);
     });
   }
 
   updateSunLevel() {
-    this.sunLevel = Phaser.Math.Between(1, 5);
+    // only store sun level if cell is occupied
+    if (this.building) {
+      this.sunLevel = Phaser.Math.Between(1, 5);
+    }
   }
 
   updateWaterLevel() {

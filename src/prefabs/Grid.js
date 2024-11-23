@@ -31,15 +31,16 @@ class Grid {
   selectCell(row, col) {
     this.selectedCell = this.getCell(row, col);
 
-    if (this.lastSelectedCell === this.selectedCell) {
-      this.selectedCell.border.setVisible(false);
-    } else {
-      this.selectedCell.border.setVisible(true);
-      if (this.lastSelectedCell) {
-        this.lastSelectedCell.border.setVisible(false);
-      }
-      this.lastSelectedCell = this.selectedCell;
+    console.log("-----------------")
+
+    this.selectedCell.border.setVisible(true);
+
+    if (this.lastSelectedCell) {
+      this.lastSelectedCell.border.setVisible(false);
     }
+
+    this.lastSelectedCell = this.selectedCell;
+
     this.scene.stats.update(this.selectedCell);
   }
 

@@ -27,13 +27,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.resources = 100;
     this.updateResourceDisplay();
 
-    // spawn player at current cell
-    this.movePlayer(0, 0);
-
     // set player depth to ensure it is above everything else
     this.setDepth(10);
 
     this.anims.play("idle");
+
+    // spawn player at current cell
+    this.movePlayer(0, 0);
   }
 
   update() {
@@ -71,6 +71,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       // display stats of current cell
       const currentCell = this.grid.getCell(newRow, newCol);
       this.scene.stats.update(currentCell);
+
+      // make adjacent cells interactable
+      this.updateCellInteractivity();
     }
   }
 
@@ -106,5 +109,30 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   updateResourceDisplay() {
     const resourceDisplay = document.getElementById("resourceDisplay");
     resourceDisplay.innerText = `Resources: ${this.resources}`;
+  }
+
+  updateCellInteractivity() {
+    // disable interactivty on all cells
+    this.grid.cells.forEach((cell) => {
+      //cell.removeInteractive();
+    });
+
+    for (let row = this.row - 1; row < this.row + 2; row++) {
+      for (let col = this.col - 1; col < this.col + 2; col++) {
+        // skip current cell
+        if (row === this.row && col === this.col) continue;
+
+        // check if cell is within bounds
+        if (
+          row >= 0 &&
+          row < this.grid.width &&
+          col >= 0 &&
+          col < this.grid.height
+        ) {
+          const cell = this.grid.getCell(row, col);
+          cell.setClickable();
+        }
+      }
+    }
   }
 }

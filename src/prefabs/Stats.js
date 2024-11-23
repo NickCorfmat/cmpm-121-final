@@ -99,16 +99,14 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
 
-    if (this.cell.building) {
-      this.level = `Level: ${this.cell.building.level}`;
-    } else {
-      this.level = "Level: 0";
-    }
+    this.level = this.cell.building
+      ? `Level: ${this.cell.building.level}`
+      : "Level: 0";
   }
 
   displayDescription() {
     this.description.setText(
-      `${this.location}\n${this.sunLevel}\n${this.waterLevel}\n${this.level}`
+      `${this.level}\n${this.location}\n${this.sunLevel}\n${this.waterLevel}`
     );
   }
 
