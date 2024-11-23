@@ -41,21 +41,21 @@ class Play extends Phaser.Scene {
         cost: 10,
         multiplier: 1,
         tint: 0x000000,
-        scale: 1.9
+        scale: 1.9,
       },
       {
         type: "Excavator",
         cost: 30,
         multiplier: 2,
         tint: 0x8b4513,
-        scale: 1.9
+        scale: 1.9,
       },
       {
         type: "DemolitionPlant",
         cost: 50,
         multiplier: 3,
         tint: 0xff0000,
-        scale: 1.9
+        scale: 1.9,
       },
     ];
   }
@@ -76,10 +76,7 @@ class Play extends Phaser.Scene {
 
     this.player = new Player(this, 0, 0, this.grid);
 
-    // add event listener to end turn button
-    document
-      .getElementById("endTurnButton")
-      .addEventListener("click", () => this.endTurn());
+    this.createNextRoundButton();
 
     // add event listeners to building buttons
     this.createBuyButtons();
@@ -97,15 +94,25 @@ class Play extends Phaser.Scene {
     // find building object based on property. Source: Brace
     const buildingConfig = this.BUILDINGS.find((b) => b.type === type);
     // construct building in current cell
-    if (this.grid.selectedCell && this.player.resources >= buildingConfig.cost && !this.grid.selectedCell.building) {
+    if (
+      this.grid.selectedCell &&
+      this.player.resources >= buildingConfig.cost &&
+      !this.grid.selectedCell.building
+    ) {
       this.player.spendResources(buildingConfig.cost);
       const { row, col } = this.grid.selectedCell.getLogicalCoords();
-      this.grid.selectedCell.building = new Building(this, row, col,this.grid, buildingConfig);
+      this.grid.selectedCell.building = new Building(
+        this,
+        row,
+        col,
+        this.grid,
+        buildingConfig
+      );
       this.stats.update(this.grid.selectedCell); // Update stats after buying a building
     }
   }
 
-  endTurn() {
+  startNextRound() {
     this.grid.updateCellLevels();
     this.grid.cells.forEach((cell) => {
       if (cell.building) {
@@ -116,6 +123,14 @@ class Play extends Phaser.Scene {
     if (this.grid.selectedCell) {
       this.stats.update(this.grid.selectedCell);
     }
+  }
+
+  createNextRoundButton() {
+    const button = document.getElementById("nextRoundButton");
+
+    button.addEventListener("click", () => {
+      this.startNextRound();
+    });
   }
 
   update() {
