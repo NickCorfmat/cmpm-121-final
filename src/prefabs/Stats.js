@@ -27,8 +27,8 @@ class Stats extends Phaser.GameObjects.Sprite {
     // create text elements
     this.name = this.scene.add.text(0, 0, "", this.textConfig);
     this.description = this.scene.add.text(
-      this.x + this.width / 2,
-      (2 * this.height) / 3,
+      this.x + this.width * 0.5,
+      this.height * 0.75,
       "",
       this.textConfig
     );
@@ -63,12 +63,11 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.displayCellName();
     this.displayCellIcon();
     this.displayDescription();
-    this.displayBuildingLevel();
     this.displayCollectButton();
   }
 
   displayCellName() {
-    const x = this.x + this.width / 2;
+    const x = this.x + this.width * 0.5;
     const y = 43;
 
     let text =
@@ -81,9 +80,9 @@ class Stats extends Phaser.GameObjects.Sprite {
   }
 
   displayCellIcon() {
-    const x = this.x + this.width / 2;
-    const y = this.height / 3;
-    const size = this.width / 2;
+    const x = this.x + this.width * 0.5;
+    const y = this.height * 0.365;
+    const size = this.width * 0.5;
 
     this.iconframe = this.scene.add
       .sprite(x, y, "cell")
@@ -99,31 +98,23 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
+
+    if (this.cell.building) {
+      this.level = `Level: ${this.cell.building.level}`;
+    } else {
+      this.level = "Level: 0";
+    }
   }
 
   displayDescription() {
     this.description.setText(
-      `${this.location}\n${this.sunLevel}\n${this.waterLevel}`
+      `${this.location}\n${this.sunLevel}\n${this.waterLevel}\n${this.level}`
     );
-  }
-    
-  displayBuildingLevel() {
-    if (this.cell.building) {
-      const x = this.x + this.width / 2;
-      const y = (3 * this.height) / 5 - 15;
-
-      const text = `Level: ${this.cell.building.level}`;
-
-      this.level.setPosition(x, y);
-      this.level.setText(text);
-    } else {
-      this.level.setText("");
-    }
   }
 
   displayCollectButton() {
     if (this.cell.building && this.cell.building.resources > 0) {
-      const x = this.x + this.width / 2;
+      const x = this.x + this.width * 0.5;
       const y = this.height - 30;
 
       this.collectButton.setPosition(x, y);
