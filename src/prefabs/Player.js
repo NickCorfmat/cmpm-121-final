@@ -118,6 +118,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       cell.disableBorder();
     });
 
+    // loop through all adjacent cells
     for (let row = this.row - 1; row < this.row + 2; row++) {
       for (let col = this.col - 1; col < this.col + 2; col++) {
         // skip current cell
@@ -130,6 +131,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
           col >= 0 &&
           col < this.grid.height
         ) {
+          // enable cell interactivity on adjacent cells
           const cell = this.grid.getCell(row, col);
           cell.setClickable();
         }

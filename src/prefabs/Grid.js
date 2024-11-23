@@ -6,6 +6,10 @@ class Grid {
     this.height = gridConfig.height;
     this.size = gridConfig.size;
 
+    // create a map to store cells and their row/col keys
+    this.cells = new Map();
+
+    // track cell selection
     this.selectedCell = null;
     this.lastSelectedCell = null;
 
@@ -13,33 +17,33 @@ class Grid {
   }
 
   createGrid() {
-    // create a map to store cells and their row/col keys
-    this.cells = new Map();
-
-    // loop through grid width and height
+    // loop through each cell in the grid
     for (let row = 0; row < this.width; row++) {
       for (let col = 0; col < this.height; col++) {
-        // draw grid cell
+        // initialize cell and append it to grid map
         const cell = new Cell(this.scene, row, col, this);
-
-        // add cell sprite to grid container
         this.cells.set(this.generateKey(row, col), cell);
       }
     }
   }
 
   selectCell(row, col) {
+    // retrieve selected cell
     this.selectedCell = this.getCell(row, col);
 
+    // select cell only if game deems it selectable
     if (this.selectedCell.isClickable) {
       this.selectedCell.enableBorder();
 
+      // unhighlight previously selected cell
       if (this.lastSelectedCell) {
         this.lastSelectedCell.disableBorder();
       }
 
+      // update cell selection tracking
       this.lastSelectedCell = this.selectedCell;
 
+      // display stats of currently selected cell
       this.scene.stats.update(this.selectedCell);
     }
   }
