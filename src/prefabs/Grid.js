@@ -31,17 +31,17 @@ class Grid {
   selectCell(row, col) {
     this.selectedCell = this.getCell(row, col);
 
-    console.log("-----------------")
+    if (this.selectedCell.isClickable) {
+      this.selectedCell.enableBorder();
 
-    this.selectedCell.border.setVisible(true);
+      if (this.lastSelectedCell) {
+        this.lastSelectedCell.disableBorder();
+      }
 
-    if (this.lastSelectedCell) {
-      this.lastSelectedCell.border.setVisible(false);
+      this.lastSelectedCell = this.selectedCell;
+
+      this.scene.stats.update(this.selectedCell);
     }
-
-    this.lastSelectedCell = this.selectedCell;
-
-    this.scene.stats.update(this.selectedCell);
   }
 
   getCell(row, col) {

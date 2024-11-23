@@ -114,7 +114,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   updateCellInteractivity() {
     // disable interactivty on all cells
     this.grid.cells.forEach((cell) => {
-      //cell.removeInteractive();
+      cell.disableClickable();
+      cell.disableBorder();
     });
 
     for (let row = this.row - 1; row < this.row + 2; row++) {

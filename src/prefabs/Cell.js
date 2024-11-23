@@ -16,20 +16,39 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.col = col;
     this.grid = grid;
     this.building = null;
+    this.isClickable = false;
 
     // initialize sun and water levels
     this.sunLevel = 0;
     this.waterLevel = 0;
 
     // create a graphics object for the border
-    this.addBorder();
+    this.createBorder();
+
+    this.enableMouseEvents();
   }
 
-  setClickable() {
+  enableMouseEvents() {
     this.setInteractive();
     this.on("pointerover", () => {
       this.grid.selectCell(this.row, this.col);
     });
+  }
+
+  setClickable() {
+    this.isClickable = true;
+  }
+
+  disableClickable() {
+    this.isClickable = false;
+  }
+
+  enableBorder() {
+    this.border.setVisible(true);
+  }
+
+  disableBorder() {
+    this.border.setVisible(false);
   }
 
   updateSunLevel() {
@@ -44,7 +63,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.waterLevel = Math.max(0, Math.min(5, this.waterLevel + change));
   }
 
-  addBorder() {
+  createBorder() {
     this.border = this.scene.add.graphics();
 
     this.border.lineStyle(2, 0x34eba8, 1);
@@ -54,7 +73,7 @@ class Cell extends Phaser.GameObjects.Sprite {
       this.displayWidth,
       this.displayHeight
     );
-    this.border.setVisible(false);
+    this.disableBorder();
   }
 
   getLogicalCoords() {
