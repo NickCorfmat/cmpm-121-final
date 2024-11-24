@@ -29,3 +29,23 @@ https://mattwalkden.itch.io/free-space-runner-pack
 
 Cell and stats tile made in GIMP
 https://www.gimp.org/
+
+# Devlog Entry - 11/23/24
+
+## How we satisfied the software requirements
+- [F0.a] The player can control a character over a 2d grid using the arrow keys. The player also uses the mouse to select grid cells to view stats about that grid cell and any applicable buildings that might be placed there. Players can also purchase buildings when a grid cell is selected in the buy menu below the game screen.
+
+- [F0.b] The player cam advance time with the end turn button which is located in the buy menu below the game screen. Each turn causes the sun and water levels of each cell to change as well as any buildings that might be placed to collect resources for that turn. Resources can be accumulated over multiple turns in buildings.
+  
+- [F0.c] The player can place buildings at the cost of resources and collect resources from placed buildings after every turn with the amount to collect determined by an equation factoring in that building's level, the cell's water and sun level, and the type of building. The equation is as follows: Sun level + water Level * building multiplier = resource output per turn. The building multiplier at level 1 for the Dril is at 1x, 2x for the Excavator, and 3x for the Demolition Plant. With each increase in level, a 1 is added to that building's multiplier.
+  
+- [F0.d] Each grid cell has a sun and water level that is randomly generated. The sun level for any given level is always a random number between 1 and 5. The water level for every cell starts at level 2 but every turn has an equal chance of increasing by 1, decreasing by 1, or staying the same.
+  
+- [F0.e] Each building has a distinct type: Drill, Excavator, or Demolition Plant. All three types of buildings have a level 1, 2, and 3. Levels are unlocked by having a different type of building next to a building.
+  
+- [F0.f] For every unique building placed next to each other, those buildings gain a level. In order for a building to reach level 3, it must have at least 2 unique buildings adjacent to that building's cell.
+  
+- [F0.g] The play scenario is satisfied when the player collects a total of 1000 resources. After the player collects 1000 resources the game is transitioned to a Win scene and the player is shown stats like how many total resources they collected, how many buildings they placed, and how many turns they took to win.
+
+## Reflection
+There were many changes we had to make in order to satisfy the F0 requirements. For example, we had to change the design of the machines and their resource collection. We had initially planned to oil the machines manually with the player so that the player has some control over how well the machines take in resources. This oil mechanic was planned to take the place of the water mechanic currently implemented. Because the water and sun had to be random in some way we had to adjust our design of our game in order to fit these requirements. We had also planned on a separate mechanic on how to level up machines using the resources they collected. However, this again had to be adjusted because of the requirements stating that growth had to be determined spatially. Our tools and materials used were the same ones we stated in the previous devlog. The familiarity with these tools aided us in our development and not many adjustments were made in this regard. Our roles were kept intact throughout this development as well.
