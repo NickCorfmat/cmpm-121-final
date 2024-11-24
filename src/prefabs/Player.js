@@ -121,9 +121,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     // loop through all adjacent cells
     for (let row = this.row - 1; row < this.row + 2; row++) {
       for (let col = this.col - 1; col < this.col + 2; col++) {
-        // skip current cell
-        if (row === this.row && col === this.col) continue;
-
         // check if cell is within bounds
         if (
           row >= 0 &&

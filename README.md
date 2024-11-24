@@ -35,11 +35,11 @@ https://www.gimp.org/
 ## How we satisfied the software requirements
 - [F0.a] The player can control a character over a 2d grid using the arrow keys. The player also uses the mouse to select grid cells to view stats about that grid cell and any applicable buildings that might be placed there. Players can also purchase buildings when a grid cell is selected in the buy menu below the game screen.
 
-- [F0.b] The player cam advance time with the end turn button which is located in the buy menu below the game screen. Each turn causes the sun and water levels of each cell to change as well as any buildings that might be placed to collect resources for that turn. Resources can be accumulated over multiple turns in buildings.
+- [F0.b] The player can advance time with the "end turn" button which is located in the buy menu below the game screen. Each turn randomly generates new sun and water levels for each cell, as well as produces collectable resources for all currently placed buildings. Resources can be accumulated over multiple turns in buildings.
   
-- [F0.c] The player can place buildings at the cost of resources and collect resources from placed buildings after every turn with the amount to collect determined by an equation factoring in that building's level, the cell's water and sun level, and the type of building. The equation is as follows: Sun level + water Level * building multiplier = resource output per turn. The building multiplier at level 1 for the Dril is at 1x, 2x for the Excavator, and 3x for the Demolition Plant. With each increase in level, a 1 is added to that building's multiplier.
+- [F0.c] The player can place buildings and collect resources from them only when they are within one cell from them; in other words, they can only interact with adjacent cells.
   
-- [F0.d] Each grid cell has a sun and water level that is randomly generated. The sun level for any given level is always a random number between 1 and 5. The water level for every cell starts at level 2 but every turn has an equal chance of increasing by 1, decreasing by 1, or staying the same.
+- [F0.d] Each grid cell has a sun and water level that is randomly generated after each turn. The sun level for any given level is always a random number between 1 and 5 and only gets added to cells that contain a building. The water level for every cell starts at level 2 but every turn has an equal chance of increasing by 1, decreasing by 1, or staying the same.
   
 - [F0.e] Each building has a distinct type: Drill, Excavator, or Demolition Plant. All three types of buildings have a level 1, 2, and 3. Levels are unlocked by having a different type of building next to a building.
   

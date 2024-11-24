@@ -20,7 +20,7 @@ class Cell extends Phaser.GameObjects.Sprite {
 
     // initialize sun and water levels
     this.sunLevel = 0;
-    this.waterLevel = 0;
+    this.waterLevel = 2;
 
     // create a graphics object for the border
     this.createBorder();
