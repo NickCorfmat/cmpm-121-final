@@ -58,6 +58,11 @@ class Play extends Phaser.Scene {
         scale: 1.9,
       },
     ];
+
+    // initialize game stats
+    this.buildingsPlaced = 0;
+    this.resourcesCollected = 0;
+    this.turnsPlayed = 0;
   }
 
   create() {
@@ -108,11 +113,13 @@ class Play extends Phaser.Scene {
         this.grid,
         buildingConfig
       );
+      this.buildingsPlaced++; // Increment buildings placed
       this.stats.update(this.grid.selectedCell); // Update stats after buying a building
     }
   }
 
   startNextRound() {
+    this.turnsPlayed++; // Increment turns played
     this.grid.updateCellLevels();
     this.grid.cells.forEach((cell) => {
       if (cell.building) {
@@ -123,6 +130,7 @@ class Play extends Phaser.Scene {
     if (this.grid.selectedCell) {
       this.stats.update(this.grid.selectedCell);
     }
+    this.checkWinCondition();
   }
 
   createNextRoundButton() {
@@ -131,6 +139,16 @@ class Play extends Phaser.Scene {
     button.addEventListener("click", () => {
       this.startNextRound();
     });
+  }
+
+  checkWinCondition() {
+    if (this.player.resources >= 1000) {
+      this.scene.start("sceneWin", {
+        buildingsPlaced: this.buildingsPlaced,
+        resourcesCollected: this.resourcesCollected,
+        turnsPlayed: this.turnsPlayed,
+      });
+    }
   }
 
   update() {
