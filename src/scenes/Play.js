@@ -115,6 +115,7 @@ class Play extends Phaser.Scene {
       );
       this.buildingsPlaced++; // Increment buildings placed
       this.stats.update(this.grid.selectedCell); // Update stats after buying a building
+      this.player.updateResourceDisplay(); // Update resource display
     }
   }
 
@@ -130,6 +131,7 @@ class Play extends Phaser.Scene {
     if (this.grid.selectedCell) {
       this.stats.update(this.grid.selectedCell);
     }
+    this.player.updateResourceDisplay(); // Update resource display
     this.checkWinCondition();
   }
 
