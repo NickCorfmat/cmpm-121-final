@@ -9,9 +9,10 @@ class Grid {
     // create a map to store cells and their row/col keys
     this.cells = new Map();
 
-    // create DataView object to serve as byte array
+    // create DataView object to function as byte array
     this.numItems = this.width * this.height;
     this.bytesPerItem = 8;
+    this.BYTE_OFFSET = 4;
     this.buffer = new ArrayBuffer(this.numItems * this.bytesPerItem);
     this.byteArray = new DataView(this.buffer);
 
@@ -25,34 +26,32 @@ class Grid {
     this.createGrid();
   }
 
+  // refactoring with help from Brace
+  // https://chat.brace.tools/c/cddb0a0d-e4b1-4775-99bb-9d9f5cbf0962
   createGrid() {
-    let row = 0;
-    let col = 0;
     for (let i = 0; i < this.numItems; i++) {
       const offset = i * this.bytesPerItem;
-      // append sun and water level to byte array
-      this.byteArray.setInt32(offset, this.sunLevel, true);
-      this.byteArray.setInt32(offset + 4, this.waterLevel, true);
+      this.changeCellData(offset, this.sunLevel, this.waterLevel);
 
-      this.createCell(offset, row, col);
-
-      col++;
-      if (col >= 8) {
-        col = 0;
-        row++;
-      }
+      const row = Math.floor(i / this.width);
+      const col = i % this.width;
+      this.createCell(
+        row,
+        col,
+        this.byteArray.getInt32(offset, true),
+        this.byteArray.getInt32(offset + this.BYTE_OFFSET, true)
+      );
     }
   }
 
-  createCell(offset, row, col) {
-    const cell = new Cell(
-      this.scene,
-      row,
-      col,
-      this.byteArray.getInt32(offset, true),
-      this.byteArray.getInt32(offset + 4, true),
-      this
-    );
+  // append sun and water level to byte array
+  changeCellData(offset, sunLevel, waterLevel) {
+    this.byteArray.setInt32(offset, sunLevel, true);
+    this.byteArray.setInt32(offset + this.BYTE_OFFSET, waterLevel, true);
+  }
+
+  createCell(row, col, sunLevel, waterLevel) {
+    const cell = new Cell(this.scene, row, col, sunLevel, waterLevel, this);
     this.cells.set(this.generateKey(row, col), cell);
   }
 
@@ -106,30 +105,31 @@ class Grid {
     return `${row}:${col}`;
   }
 
+  // update water and sun levels
+  // refactoring with help from Brace
+  // https://chat.brace.tools/c/cddb0a0d-e4b1-4775-99bb-9d9f5cbf0962
   updateCellLevels() {
-    // update byte array
-    let row = 0;
-    let col = 0;
     for (let i = 0; i < this.numItems; i++) {
       const offset = i * this.bytesPerItem;
 
       this.sunLevel = Phaser.Math.Between(1, 5);
-      this.byteArray.setInt32(offset, this.sunLevel, true);
-
       const change = Phaser.Math.Between(-1, 1);
       this.waterLevel = Math.max(0, Math.min(5, this.waterLevel + change));
-      this.byteArray.setInt32(offset + 4, this.waterLevel, true);
+      this.changeCellData(offset, this.sunLevel, this.waterLevel);
 
-      // update cell in grid
-      const cell = this.getCell(row, col);
-      cell.updateSunLevel(this.byteArray.getInt32(offset, true));
-      cell.updateWaterLevel(this.byteArray.getInt32(offset + 4, true));
-
-      col++;
-      if (col >= 8) {
-        col = 0;
-        row++;
-      }
+      const row = Math.floor(i / this.width);
+      const col = i % this.width;
+      this.updateCellObject(offset, row, col);
     }
+  }
+
+  // update cell in grid
+  updateCellObject(offset, row, col) {
+    const cell = this.getCell(row, col);
+    const sunLevel = this.byteArray.getInt32(offset, true);
+    const waterLevel = this.byteArray.getInt32(offset + this.BYTE_OFFSET, true);
+
+    cell.updateSunLevel(sunLevel);
+    cell.updateWaterLevel(waterLevel);
   }
 }
