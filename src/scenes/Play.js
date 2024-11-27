@@ -1,12 +1,4 @@
 /*
-[F0.a] You control a character moving over a 2D grid.
-[F0.b] You advance time manually in the turn-based simulation.
-[F0.c] You can reap or sow plants on grid cells only when you are near them.
-[F0.d] Grid cells have sun and water levels. The incoming sun and water for each cell is somehow randomly generated each turn. Sun energy cannot be stored in a cell (it is used immediately or lost) while water moisture can be slowly accumulated over several turns.
-[F0.e] Each plant on the grid has a distinct type (e.g. one of 3 species) and a growth level (e.g. “level 1”, “level 2”, “level 3”).
-[F0.f] Simple spatial rules govern plant growth based on sun, water, and nearby plants (growth is unlocked by satisfying conditions).
-[F0.g] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
-
 Mechanics:
 - Player can move one grid tile per turn and place on building per turn
 - Player can only place a building on an empty grid tile (Buttons for each building type near end turn button)
@@ -66,11 +58,8 @@ class Play extends Phaser.Scene {
   }
 
   create() {
-    // set background color
-    this.cameras.main.setBackgroundColor(0x000000);
-
+    // initialize game window
     this.grid = new Grid(this, this.gridConfig);
-
     this.stats = new Stats(
       this,
       this.statsConfig.x,
@@ -79,44 +68,14 @@ class Play extends Phaser.Scene {
       this.statsConfig.height
     );
 
+    // initialize player
     this.player = new Player(this, 0, 0, this.grid);
 
-    this.createNextRoundButton();
+    // initialize buttons
+    this.buttons = new ButtonManager(this, this.BUILDINGS, this.player);
 
-    // add event listeners to building buttons
-    this.createBuyButtons();
-  }
-
-  createBuyButtons() {
-    this.BUILDINGS.forEach((building) => {
-      const button = document.getElementById("buy" + building.type + "Button");
-      button.innerText = `Buy ${building.type}: $${building.cost}`;
-      button.addEventListener("click", () => this.buyBuilding(building.type));
-    });
-  }
-
-  buyBuilding(type) {
-    // find building object based on property. Source: Brace
-    const buildingConfig = this.BUILDINGS.find((b) => b.type === type);
-    // construct building in current cell
-    if (
-      this.grid.selectedCell &&
-      this.player.resources >= buildingConfig.cost &&
-      !this.grid.selectedCell.building
-    ) {
-      this.player.spendResources(buildingConfig.cost);
-      const { row, col } = this.grid.selectedCell.getLogicalCoords();
-      this.grid.selectedCell.building = new Building(
-        this,
-        row,
-        col,
-        this.grid,
-        buildingConfig
-      );
-      this.buildingsPlaced++; // Increment buildings placed
-      this.stats.update(this.grid.selectedCell); // Update stats after buying a building
-      this.player.updateResourceDisplay(); // Update resource display
-    }
+    this.buttons.createPurchaseButtons();
+    this.buttons.createNextRoundButton();
   }
 
   startNextRound() {
@@ -133,14 +92,6 @@ class Play extends Phaser.Scene {
     }
     this.player.updateResourceDisplay(); // Update resource display
     this.checkWinCondition();
-  }
-
-  createNextRoundButton() {
-    const button = document.getElementById("nextRoundButton");
-
-    button.addEventListener("click", () => {
-      this.startNextRound();
-    });
   }
 
   checkWinCondition() {
