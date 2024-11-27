@@ -7,29 +7,29 @@ class Win extends Phaser.Scene {
     this.buildingsPlaced = data.buildingsPlaced;
     this.resourcesCollected = data.resourcesCollected;
     this.turnsPlayed = data.turnsPlayed;
+
+    // tunable text parameters
+    this.textConfig = {
+      fontSize: "32px",
+      fill: "#fff",
+      align: "center",
+      lineSpacing: 10,
+    };
   }
 
   create() {
-    this.add
-      .text(350, 100, "You Win!", { fontSize: "64px", fill: "#fff" })
+    this.text = this.add
+      .text(width / 2, height / 2, this.getWinText(), this.textConfig)
       .setOrigin(0.5);
-    this.add
-      .text(350, 200, `Buildings Placed: ${this.buildingsPlaced}`, {
-        fontSize: "32px",
-        fill: "#fff",
-      })
-      .setOrigin(0.5);
-    this.add
-      .text(350, 250, `Resources Collected: ${this.resourcesCollected}`, {
-        fontSize: "32px",
-        fill: "#fff",
-      })
-      .setOrigin(0.5);
-    this.add
-      .text(350, 300, `Turns Played: ${this.turnsPlayed}`, {
-        fontSize: "32px",
-        fill: "#fff",
-      })
-      .setOrigin(0.5);
+  }
+
+  // Source: Brace, How can I shorten a long string message?
+  getWinText() {
+    return (
+      `You Win!\n` +
+      `Buildings Placed: ${this.buildingsPlaced}\n` +
+      `Resources Collected: ${this.resourcesCollected}\n` +
+      `Turns Played: ${this.turnsPlayed}`
+    );
   }
 }
