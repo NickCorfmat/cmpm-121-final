@@ -78,9 +78,6 @@ class Play extends Phaser.Scene {
 
     this.buttons.createPurchaseButtons();
     this.buttons.createNextRoundButton();
-
-    this.player.resources = 1000;
-    this.checkWinCondition();
   }
 
   startNextRound() {
@@ -103,7 +100,6 @@ class Play extends Phaser.Scene {
   }
 
   checkWinCondition() {
-    console.log(this.player.resources);
     if (this.player.resources >= this.RESOURCE_GOAL) {
       const data = {
         buildingsPlaced: this.buildingsPlaced,
