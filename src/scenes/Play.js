@@ -78,6 +78,9 @@ class Play extends Phaser.Scene {
 
     this.buttons.createPurchaseButtons();
     this.buttons.createNextRoundButton();
+
+    this.player.resources = 1000;
+    this.checkWinCondition();
   }
 
   startNextRound() {
