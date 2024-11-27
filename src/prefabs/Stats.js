@@ -125,9 +125,13 @@ class Stats extends Phaser.GameObjects.Sprite {
   collectResources() {
     if (this.cell.building) {
       const collected = this.cell.building.collectResources();
+
+      // update game states
       this.scene.player.resources += collected;
       this.scene.player.updateResourceDisplay();
-      this.update(this.cell); // Refresh stats display
+      this.update(this.cell);
+
+      this.scene.checkWinCondition();
     }
   }
 }

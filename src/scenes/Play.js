@@ -51,6 +51,8 @@ class Play extends Phaser.Scene {
       },
     ];
 
+    this.RESOURCE_GOAL = 1000;
+
     // initialize game stats
     this.buildingsPlaced = 0;
     this.resourcesCollected = 0;
@@ -79,28 +81,34 @@ class Play extends Phaser.Scene {
   }
 
   startNextRound() {
-    this.turnsPlayed++; // Increment turns played
+    this.turnsPlayed++;
+
+    // generate random sun/water levels
     this.grid.updateCellLevels();
+
+    // update building stages and generate resources
     this.grid.cells.forEach((cell) => {
       if (cell.building) {
-        cell.building.updateLevel(); // Update building level
+        cell.building.updateLevel();
         cell.building.generateResources(cell.sunLevel, cell.waterLevel);
       }
     });
-    if (this.grid.selectedCell) {
-      this.stats.update(this.grid.selectedCell);
-    }
-    this.player.updateResourceDisplay(); // Update resource display
-    this.checkWinCondition();
+
+    // update stats
+    this.stats.update(this.grid.selectedCell);
+    this.player.updateResourceDisplay();
   }
 
   checkWinCondition() {
-    if (this.player.resources >= 1000) {
-      this.scene.start("sceneWin", {
+    console.log(this.player.resources);
+    if (this.player.resources >= this.RESOURCE_GOAL) {
+      const data = {
         buildingsPlaced: this.buildingsPlaced,
         resourcesCollected: this.resourcesCollected,
         turnsPlayed: this.turnsPlayed,
-      });
+      };
+
+      this.scene.start("sceneWin", data);
     }
   }
 
