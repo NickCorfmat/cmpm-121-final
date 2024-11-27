@@ -77,6 +77,30 @@ class Grid {
     }
   }
 
+  getByteArrayString() {
+    // convert byteArray into string for saving to local storage
+    return btoa(String.fromCharCode(...new Uint8Array(this.byteArray.buffer)));
+  }
+
+  loadByteArray(gridData) {
+    // convert string from local storage into byte array
+    const arrayBuffer = Uint8Array.from(atob(gridData), (c) =>
+      c.charCodeAt(0)
+    ).buffer;
+    this.byteArray = new DataView(arrayBuffer);
+    this.loadCellLevels();
+  }
+
+  loadCellLevels() {
+    for (let i = 0; i < this.numItems; i++) {
+      const offset = i * this.bytesPerItem;
+
+      const row = Math.floor(i / this.width);
+      const col = i % this.width;
+      this.updateCellObject(offset, row, col);
+    }
+  }
+
   getCell(row, col) {
     return this.cells.get(this.generateKey(row, col));
   }

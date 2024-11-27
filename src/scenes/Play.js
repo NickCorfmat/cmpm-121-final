@@ -63,6 +63,9 @@ class Play extends Phaser.Scene {
     this.buildingsPlaced = 0;
     this.resourcesCollected = 0;
     this.turnsPlayed = 0;
+
+    // initialize save files
+    this.saveStates = Array.apply(null, Array(5)).map(function () {});
   }
 
   create() {
@@ -85,6 +88,10 @@ class Play extends Phaser.Scene {
 
     // add event listeners to building buttons
     this.createBuyButtons();
+
+    // add event listeners to save and load buttons
+    this.createSaveButton();
+    this.createLoadButton();
   }
 
   createBuyButtons() {
@@ -155,5 +162,60 @@ class Play extends Phaser.Scene {
 
   update() {
     this.player.update();
+  }
+
+  createSaveButton() {
+    const saveButton = document.getElementById("save");
+    saveButton.addEventListener("click", () => this.displaySaveButtons());
+  }
+
+  displaySaveButtons() {
+    document.getElementById("save").classList.add("hidden");
+    document.getElementById("load").classList.add("hidden");
+    const files = ["saveFile0", "saveFile1", "saveFile2"];
+    for (const name of files) {
+      const file = document.getElementById(name);
+      file.classList.remove("hidden");
+      file.addEventListener("click", () => this.saveGame());
+    }
+  }
+
+  saveGame(index) {
+    document.getElementById("save").classList.remove("hidden");
+    document.getElementById("load").classList.remove("hidden");
+    const files = ["saveFile0", "saveFile1", "saveFile2"];
+    for (const name of files) {
+      const file = document.getElementById(name);
+      file.classList.add("hidden");
+    }
+    const saveFile = new Save(this, this.player, this.grid);
+    this.saveStates[index] = saveFile;
+  }
+
+  createLoadButton() {
+    const loadButton = document.getElementById("load");
+    loadButton.addEventListener("click", () => this.displayLoadButtons());
+  }
+
+  displayLoadButtons() {
+    document.getElementById("save").classList.add("hidden");
+    document.getElementById("load").classList.add("hidden");
+    const files = ["loadFile0", "loadFile1", "loadFile2"];
+    for (const name of files) {
+      const file = document.getElementById(name);
+      file.classList.remove("hidden");
+      file.addEventListener("click", () => this.loadGame());
+    }
+  }
+
+  loadGame(index) {
+    document.getElementById("save").classList.remove("hidden");
+    document.getElementById("load").classList.remove("hidden");
+    const files = ["loadFile0", "loadFile1", "loadFile2"];
+    for (const name of files) {
+      const file = document.getElementById(name);
+      file.classList.add("hidden");
+    }
+    this.saveStates[index].loadGame();
   }
 }
