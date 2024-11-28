@@ -60,8 +60,8 @@ class Play extends Phaser.Scene {
       turnsPlayed: 0,
     };
 
-    // initialize save files
-    this.saveStates = Array.apply(null, Array(5)).map(function () {});
+    // initialize 3 save slots
+    this.saveStates = [null, null, null];
   }
 
   create() {

@@ -78,26 +78,26 @@ class ButtonManager {
   displaySaveButtons() {
     this.hideElements(["saveButton", "loadButton"]);
 
-    const saveFiles = ["saveFile0", "saveFile1", "saveFile2"];
+    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
+      const slotButton = document.getElementById(`saveFile${slot}`);
+      slotButton.classList.remove("hidden");
 
-    saveFiles.forEach((file) => {
-      const button = document.getElementById(file);
-      button.classList.remove("hidden");
-
-      button.addEventListener("click", () => this.saveGame());
-    });
+      slotButton.addEventListener("click", () => {
+        this.saveToSlot(slot);
+      });
+    }
   }
 
-  saveGame(index) {
+  saveToSlot(slot) {
     this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
     this.showElements(["saveButton", "loadButton"]);
 
-    //const saveFile = new Save(this, this.player, this.grid);
-    //this.saveStates[index] = saveFile;
+    this.scene.saveStates[slot] = this.scene.gameState;
   }
 
   createLoadButton() {
     const button = document.getElementById("loadButton");
+
     button.addEventListener("click", () => {
       this.displayLoadButtons();
     });
@@ -106,21 +106,21 @@ class ButtonManager {
   displayLoadButtons() {
     this.hideElements(["saveButton", "loadButton"]);
 
-    const loadFiles = ["loadFile0", "loadFile1", "loadFile2"];
+    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
+      const slotButton = document.getElementById(`loadFile${slot}`);
+      slotButton.classList.remove("hidden");
 
-    loadFiles.forEach((file) => {
-      const button = document.getElementById(file);
-      button.classList.remove("hidden");
-
-      button.addEventListener("click", () => this.loadGame());
-    });
+      slotButton.addEventListener("click", () => {
+        this.loadFromSlot(slot);
+      });
+    }
   }
 
-  loadGame(index) {
+  loadFromSlot(slot) {
     this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
     this.showElements(["saveButton", "loadButton"]);
 
-    //this.saveStates[index].loadGame();
+    this.scene.saveStates[slot].load();
   }
 
   // Helpers
