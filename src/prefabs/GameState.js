@@ -15,6 +15,7 @@ class GameState {
   }
 
   save() {
+    console.log("auto save");
     const gameState = {
       grid: this.scene.grid.getByteArrayString(),
       player: this.scene.player.toJSON(),
@@ -25,12 +26,11 @@ class GameState {
   }
 
   load() {
+    console.log("auto load");
     const savedData = localStorage.getItem("saveData");
 
     if (savedData) {
       const gameState = JSON.parse(savedData);
-      if (!gameState) return null;
-
       this.loadFromSnapshot(gameState);
     }
 
@@ -46,17 +46,19 @@ class GameState {
   }
 
   loadFromSnapshot(snapshot) {
-    this.scene.grid.loadByteArray(snapshot.grid);
-    this.scene.player.fromJSON(snapshot.player);
-    this.scene.trackables = { ...snapshot.trackables };
+    if (snapshot) {
+      this.scene.grid.loadByteArray(snapshot.grid);
+      this.scene.player.fromJSON(snapshot.player);
+      this.scene.trackables = { ...snapshot.trackables };
+    } else {
+      console.log("Trying to load from empty slot!");
+    }
   }
 
   refreshGameScene() {
     const { row, col } = this.scene.player;
-    console.log(row, col);
     const currentCell = this.scene.grid.getCell(row, col);
 
-    this.scene.player.updatePlayerCoordinates(row, col);
     this.scene.stats.update(currentCell);
     this.scene.player.updateCellInteractivity();
     this.scene.player.updateResourceDisplay();

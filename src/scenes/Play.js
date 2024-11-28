@@ -83,6 +83,8 @@ class Play extends Phaser.Scene {
 
     // initialize buttons
     this.buttons = new ButtonManager(this, this.BUILDINGS, this.player);
+
+    this.gameState.load();
   }
 
   startNextRound() {
