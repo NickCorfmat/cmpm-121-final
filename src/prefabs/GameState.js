@@ -16,15 +16,6 @@ class GameState {
      * TODO:
      * every placed building and their collected resources
      */
-    // const gameState = {
-    //   playerRow: this.player.row,
-    //   playerCol: this.player.col,
-    //   totalResources: this.player.resources,
-    //   resourcesCollected: this.scene.resourcesCollected,
-    //   turnsPlayed: this.scene.turnsPlayed,
-    //   buildingsPlaced: this.scene.buildingsPlaced,
-    //   gridData: this.grid.getByteArrayString(),
-    // };
 
     const gameState = {
       player: this.scene.player.toJSON(),
@@ -33,34 +24,31 @@ class GameState {
     };
 
     localStorage.setItem("saveData", JSON.stringify(gameState));
+    console.log(JSON.stringify(gameState));
   }
 
   load() {
-    const data = JSON.parse(localStorage.getItem("saveData"));
+    const savedData = localStorage.getItem("saveData");
 
-    // if (data) {
-    //   const player = data.player;
-    //   const grid = data.grid;
-    //   const stats = data.stats;
+    if (savedData) {
+      const gameState = JSON.parse(savedData);
+      if (!gameState) return null;
 
-    //   return { player, grid, stats };
-    // }
+      this.scene.player.fromJSON(gameState.player);
+      this.scene.grid.loadByteArray(gameState.grid);
+      this.scene.trackables = { ...gameState.trackables };
+    }
 
-    this.player.row = data.playerRow;
-    this.player.col = data.playerCol;
-    this.player.resources = data.totalResources;
-    this.scene.resourcesCollected = data.resourcesCollected;
-    this.scene.turnsPlayed = data.turnsPlayed;
-    this.scene.buildingsPlaced = data.buildingsPlaced;
-    this.grid.loadByteArray(data.gridData);
-    this.player.updatePlayerCoordinates(this.player.row, this.player.col);
+    this.refreshGameScene();
+  }
 
-    // display stats of current cell
-    const currentCell = this.grid.getCell(this.player.row, this.player.col);
+  refreshGameScene() {
+    const { row, col } = this.scene.player;
+    const currentCell = this.grid.getCell(row, col);
+
+    this.scene.player.updatePlayerCoordinates(row, col);
     this.scene.stats.update(currentCell);
-    // make adjacent cells interactable
     this.player.updateCellInteractivity();
-
     this.player.updateResourceDisplay();
   }
 }
