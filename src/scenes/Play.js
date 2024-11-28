@@ -65,6 +65,9 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    // initialize game state manager
+    this.gameState = new GameState(this);
+
     // initialize game window
     this.grid = new Grid(this, this.gridConfig);
     this.stats = new Stats(
@@ -80,9 +83,6 @@ class Play extends Phaser.Scene {
 
     // initialize buttons
     this.buttons = new ButtonManager(this, this.BUILDINGS, this.player);
-
-    // initialize game state manager
-    this.gameState = new GameState(this);
   }
 
   startNextRound() {

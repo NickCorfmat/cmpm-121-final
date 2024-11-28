@@ -118,14 +118,18 @@ class ButtonManager {
   }
 
   saveToSlot(slot) {
-    this.scene.saveStates[slot] = this.scene.gameState;
+    console.log("Saved to slot: " + slot);
+    const snapshot = this.scene.gameState.getSnapshot();
+    this.scene.saveStates[slot] = snapshot;
 
     this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
     this.showElements(["saveButton", "loadButton"]);
   }
 
   loadFromSlot(slot) {
-    this.scene.saveStates[slot].load();
+    console.log("Loaded from slot: " + slot);
+    const snapshot = this.scene.saveStates[slot];
+    this.scene.gameState.loadFromSnapshot(snapshot);
 
     this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
     this.showElements(["saveButton", "loadButton"]);

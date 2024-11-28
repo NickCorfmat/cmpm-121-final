@@ -12,8 +12,6 @@
 class GameState {
   constructor(scene) {
     this.scene = scene;
-
-    this.save();
   }
 
   save() {
@@ -33,12 +31,24 @@ class GameState {
       const gameState = JSON.parse(savedData);
       if (!gameState) return null;
 
-      this.scene.grid.loadByteArray(gameState.grid);
-      this.scene.player.fromJSON(gameState.player);
-      this.scene.trackables = { ...gameState.trackables };
+      this.loadFromSnapshot(savedData);
     }
 
     this.refreshGameScene();
+  }
+
+  getSnapshot() {
+    return {
+      grid: this.scene.grid.getByteArrayString(),
+      player: this.scene.player.toJSON(),
+      trackables: this.scene.trackables,
+    };
+  }
+
+  loadFromSnapshot(snapshot) {
+    this.scene.grid.loadByteArray(snapshot.grid);
+    this.scene.player.fromJSON(snapshot.player);
+    this.scene.trackables = { ...snapshot.trackables };
   }
 
   refreshGameScene() {
