@@ -3,6 +3,12 @@ class ButtonManager {
     this.scene = scene;
     this.buildings = buildings;
     this.player = player;
+
+    // create game buttons
+    this.createSaveButton();
+    this.createLoadButton();
+    this.createPurchaseButtons();
+    this.createNextRoundButton();
   }
 
   createPurchaseButtons() {
@@ -39,7 +45,7 @@ class ButtonManager {
       );
 
       // update game stats
-      this.scene.buildingsPlaced++;
+      this.scene.trackables.buildingsPlaced++;
       this.scene.stats.update(grid.selectedCell);
       this.player.updateResourceDisplay();
     }
@@ -58,6 +64,87 @@ class ButtonManager {
 
     button.addEventListener("click", () => {
       this.scene.startNextRound();
+    });
+  }
+
+  createSaveButton() {
+    const button = document.getElementById("saveButton");
+
+    button.addEventListener("click", () => {
+      this.displaySaveButtons();
+    });
+  }
+
+  displaySaveButtons() {
+    this.hideElements(["saveButton", "loadButton"]);
+
+    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
+      const slotButton = document.getElementById(`saveFile${slot}`);
+      slotButton.classList.remove("hidden");
+
+      slotButton.addEventListener("click", () => {
+        this.saveToSlot(slot);
+      });
+    }
+  }
+
+  saveToSlot(slot) {
+    this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
+    this.showElements(["saveButton", "loadButton"]);
+
+    this.scene.saveStates[slot] = this.scene.gameState;
+  }
+
+  createLoadButton() {
+    const button = document.getElementById("loadButton");
+
+    button.addEventListener("click", () => {
+      this.displayLoadButtons();
+    });
+  }
+
+  displayLoadButtons() {
+    this.hideElements(["saveButton", "loadButton"]);
+
+    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
+      const slotButton = document.getElementById(`loadFile${slot}`);
+      slotButton.classList.remove("hidden");
+
+      slotButton.addEventListener("click", () => {
+        this.loadFromSlot(slot);
+      });
+    }
+  }
+
+  loadFromSlot(slot) {
+    this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
+    this.showElements(["saveButton", "loadButton"]);
+
+    this.scene.saveStates[slot].load();
+  }
+
+  // Helpers
+
+  // Source: Brace, https://chat.brace.tools/c/c8b149e6-dcc5-4e61-836d-c184f3fa7ef5
+  hideElements(ids) {
+    ids.forEach((id) => {
+      const element = document.getElementById(id);
+
+      // hide element
+      if (element) {
+        element.classList.add("hidden");
+      }
+    });
+  }
+
+  showElements(ids) {
+    ids.forEach((id) => {
+      const element = document.getElementById(id);
+
+      // show element
+      if (element) {
+        element.classList.remove("hidden");
+      }
     });
   }
 }

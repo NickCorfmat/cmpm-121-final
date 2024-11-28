@@ -54,12 +54,14 @@ class Play extends Phaser.Scene {
     this.RESOURCE_GOAL = 1000;
 
     // initialize game stats
-    this.buildingsPlaced = 0;
-    this.resourcesCollected = 0;
-    this.turnsPlayed = 0;
+    this.trackables = {
+      buildingsPlaced: 0,
+      resourcesCollected: 0,
+      turnsPlayed: 0,
+    };
 
-    // initialize save files
-    this.saveStates = Array.apply(null, Array(5)).map(function () {});
+    // initialize 3 save slots
+    this.saveStates = [null, null, null];
   }
 
   create() {
@@ -79,16 +81,12 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this, this.BUILDINGS, this.player);
 
-    // add event listeners to save and load buttons
-    this.createSaveButton();
-    this.createLoadButton();
-
-    this.buttons.createPurchaseButtons();
-    this.buttons.createNextRoundButton();
+    // initialize game state manager
+    this.gameState = new GameState(this);
   }
 
   startNextRound() {
-    this.turnsPlayed++;
+    this.trackables.turnsPlayed++;
 
     // generate random sun/water levels
     this.grid.updateCellLevels();
@@ -108,10 +106,13 @@ class Play extends Phaser.Scene {
 
   checkWinCondition() {
     if (this.player.resources >= this.RESOURCE_GOAL) {
+      const { buildingsPlaced, resourcesCollected, turnsPlayed } =
+        this.trackables;
+
       const data = {
-        buildingsPlaced: this.buildingsPlaced,
-        resourcesCollected: this.resourcesCollected,
-        turnsPlayed: this.turnsPlayed,
+        buildingsPlaced: buildingsPlaced,
+        resourcesCollected: resourcesCollected,
+        turnsPlayed: turnsPlayed,
       };
 
       this.scene.start("sceneWin", data);
@@ -120,60 +121,5 @@ class Play extends Phaser.Scene {
 
   update() {
     this.player.update();
-  }
-
-  createSaveButton() {
-    const saveButton = document.getElementById("save");
-    saveButton.addEventListener("click", () => this.displaySaveButtons());
-  }
-
-  displaySaveButtons() {
-    document.getElementById("save").classList.add("hidden");
-    document.getElementById("load").classList.add("hidden");
-    const files = ["saveFile0", "saveFile1", "saveFile2"];
-    for (const name of files) {
-      const file = document.getElementById(name);
-      file.classList.remove("hidden");
-      file.addEventListener("click", () => this.saveGame());
-    }
-  }
-
-  saveGame(index) {
-    document.getElementById("save").classList.remove("hidden");
-    document.getElementById("load").classList.remove("hidden");
-    const files = ["saveFile0", "saveFile1", "saveFile2"];
-    for (const name of files) {
-      const file = document.getElementById(name);
-      file.classList.add("hidden");
-    }
-    const saveFile = new Save(this, this.player, this.grid);
-    this.saveStates[index] = saveFile;
-  }
-
-  createLoadButton() {
-    const loadButton = document.getElementById("load");
-    loadButton.addEventListener("click", () => this.displayLoadButtons());
-  }
-
-  displayLoadButtons() {
-    document.getElementById("save").classList.add("hidden");
-    document.getElementById("load").classList.add("hidden");
-    const files = ["loadFile0", "loadFile1", "loadFile2"];
-    for (const name of files) {
-      const file = document.getElementById(name);
-      file.classList.remove("hidden");
-      file.addEventListener("click", () => this.loadGame());
-    }
-  }
-
-  loadGame(index) {
-    document.getElementById("save").classList.remove("hidden");
-    document.getElementById("load").classList.remove("hidden");
-    const files = ["loadFile0", "loadFile1", "loadFile2"];
-    for (const name of files) {
-      const file = document.getElementById(name);
-      file.classList.add("hidden");
-    }
-    this.saveStates[index].loadGame();
   }
 }

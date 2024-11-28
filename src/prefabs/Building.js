@@ -16,7 +16,7 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, config) {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
-    
+
     super(scene, x, y, config.type);
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -47,14 +47,14 @@ class Building extends Phaser.Physics.Arcade.Sprite {
 
   collectResources() {
     const collected = this.resources;
-    this.scene.resourcesCollected += collected;
+    this.scene.trackables.resourcesCollected += collected;
     this.resources = 0;
     return collected;
   }
 
   updateLevel() {
     const adjacentBuildings = this.getAdjacentBuildings();
-    const uniqueTypes = new Set(adjacentBuildings.map(b => b.type));
+    const uniqueTypes = new Set(adjacentBuildings.map((b) => b.type));
     this.level = 1 + uniqueTypes.size;
     this.updateMultiplier();
   }
@@ -62,17 +62,22 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   getAdjacentBuildings() {
     const directions = [
       { row: -1, col: 0 }, // up
-      { row: 1, col: 0 },  // down
+      { row: 1, col: 0 }, // down
       { row: 0, col: -1 }, // left
-      { row: 0, col: 1 }   // right
+      { row: 0, col: 1 }, // right
     ];
 
     const adjacentBuildings = [];
 
-    directions.forEach(dir => {
+    directions.forEach((dir) => {
       const newRow = this.row + dir.row;
       const newCol = this.col + dir.col;
-      if (newRow >= 0 && newRow < this.grid.height && newCol >= 0 && newCol < this.grid.width) {
+      if (
+        newRow >= 0 &&
+        newRow < this.grid.height &&
+        newCol >= 0 &&
+        newCol < this.grid.width
+      ) {
         const cell = this.grid.getCell(newRow, newCol);
         if (cell && cell.building) {
           adjacentBuildings.push(cell.building);
