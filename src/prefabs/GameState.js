@@ -37,5 +37,18 @@ class GameState {
       this.scene.player.fromJSON(gameState.player);
       this.scene.trackables = { ...gameState.trackables };
     }
+
+    this.refreshGameScene();
+  }
+
+  refreshGameScene() {
+    const { row, col } = this.scene.player;
+    console.log(row, col);
+    const currentCell = this.scene.grid.getCell(row, col);
+
+    this.scene.player.updatePlayerCoordinates(row, col);
+    this.scene.stats.update(currentCell);
+    this.scene.player.updateCellInteractivity();
+    this.scene.player.updateResourceDisplay();
   }
 }
