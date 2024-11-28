@@ -24,7 +24,6 @@ class GameState {
     };
 
     localStorage.setItem("saveData", JSON.stringify(gameState));
-    console.log(JSON.stringify(gameState));
   }
 
   load() {

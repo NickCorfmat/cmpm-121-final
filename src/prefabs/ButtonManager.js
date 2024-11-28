@@ -118,7 +118,6 @@ class ButtonManager {
   }
 
   saveToSlot(slot) {
-    console.log("saved to slot: " + slot);
     this.scene.saveStates[slot] = this.scene.gameState;
 
     this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
@@ -126,7 +125,6 @@ class ButtonManager {
   }
 
   loadFromSlot(slot) {
-    console.log("loaded from slot: " + slot);
     this.scene.saveStates[slot].load();
 
     this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
