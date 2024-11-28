@@ -1,3 +1,14 @@
+/* TO SAVE:
+ * placer location
+ * resources
+ * turns
+ * buildings placed
+ * grid data (sun levels, water levels)
+ *
+ * TODO:
+ * every placed building and their collected resources
+ */
+
 class GameState {
   constructor(scene) {
     this.scene = scene;
@@ -6,17 +17,6 @@ class GameState {
   }
 
   save() {
-    /* TO SAVE:
-     * placer location
-     * resources
-     * turns
-     * buildings placed
-     * grid data (sun levels, water levels)
-     *
-     * TODO:
-     * every placed building and their collected resources
-     */
-
     const gameState = {
       grid: this.scene.grid.getByteArrayString(),
       player: this.scene.player.toJSON(),
@@ -24,8 +24,6 @@ class GameState {
     };
 
     localStorage.setItem("saveData", JSON.stringify(gameState));
-    console.log("Save state is:");
-    console.log(JSON.stringify(gameState));
   }
 
   load() {

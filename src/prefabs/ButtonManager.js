@@ -7,6 +7,8 @@ class ButtonManager {
     // create game buttons
     this.createSaveButton();
     this.createLoadButton();
+    this.createSaveSlots();
+    this.createLoadSlots();
     this.createPurchaseButtons();
     this.createNextRoundButton();
   }
@@ -71,16 +73,22 @@ class ButtonManager {
     const button = document.getElementById("saveButton");
 
     button.addEventListener("click", () => {
-      this.displaySaveButtons();
+      this.displaySaveSlots();
     });
   }
 
-  displaySaveButtons() {
-    this.hideElements(["saveButton", "loadButton"]);
+  createLoadButton() {
+    const button = document.getElementById("loadButton");
 
+    button.addEventListener("click", () => {
+      this.displayLoadSlots();
+    });
+  }
+
+  createSaveSlots() {
     for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
       const slotButton = document.getElementById(`saveFile${slot}`);
-      slotButton.classList.remove("hidden");
+      this.hideElements([`saveFile${slot}`]);
 
       slotButton.addEventListener("click", () => {
         this.saveToSlot(slot);
@@ -88,28 +96,10 @@ class ButtonManager {
     }
   }
 
-  saveToSlot(slot) {
-    this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
-    this.showElements(["saveButton", "loadButton"]);
-
-    this.scene.gameState.save();
-    this.scene.saveStates[slot] = this.scene.gameState;
-  }
-
-  createLoadButton() {
-    const button = document.getElementById("loadButton");
-
-    button.addEventListener("click", () => {
-      this.displayLoadButtons();
-    });
-  }
-
-  displayLoadButtons() {
-    this.hideElements(["saveButton", "loadButton"]);
-
+  createLoadSlots() {
     for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
       const slotButton = document.getElementById(`loadFile${slot}`);
-      slotButton.classList.remove("hidden");
+      this.hideElements([`loadFile${slot}`]);
 
       slotButton.addEventListener("click", () => {
         this.loadFromSlot(slot);
@@ -117,11 +107,28 @@ class ButtonManager {
     }
   }
 
+  displaySaveSlots() {
+    this.hideElements(["saveButton", "loadButton"]);
+    this.showElements(["saveFile0", "saveFile1", "saveFile2"]);
+  }
+
+  displayLoadSlots() {
+    this.hideElements(["saveButton", "loadButton"]);
+    this.showElements(["loadFile0", "loadFile1", "loadFile2"]);
+  }
+
+  saveToSlot(slot) {
+    this.scene.saveStates[slot] = this.scene.gameState;
+
+    this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
+    this.showElements(["saveButton", "loadButton"]);
+  }
+
   loadFromSlot(slot) {
+    this.scene.saveStates[slot].load();
+
     this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
     this.showElements(["saveButton", "loadButton"]);
-
-    this.scene.saveStates[slot].load();
   }
 
   // Helpers
