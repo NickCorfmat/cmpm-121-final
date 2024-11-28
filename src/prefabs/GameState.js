@@ -1,3 +1,14 @@
+/* TO SAVE:
+ * placer location
+ * resources
+ * turns
+ * buildings placed
+ * grid data (sun levels, water levels)
+ *
+ * TODO:
+ * every placed building and their collected resources
+ */
+
 class GameState {
   constructor(scene) {
     this.scene = scene;
@@ -6,17 +17,6 @@ class GameState {
   }
 
   save() {
-    /* TO SAVE:
-     * placer location
-     * resources
-     * turns
-     * buildings placed
-     * grid data (sun levels, water levels)
-     *
-     * TODO:
-     * every placed building and their collected resources
-     */
-
     const gameState = {
       grid: this.scene.grid.getByteArrayString(),
       player: this.scene.player.toJSON(),
@@ -38,17 +38,5 @@ class GameState {
       this.scene.player.fromJSON(gameState.player);
       this.scene.trackables = { ...gameState.trackables };
     }
-
-    this.refreshGameScene();
-  }
-
-  refreshGameScene() {
-    const { row, col } = this.scene.player;
-    const currentCell = this.grid.getCell(row, col);
-
-    this.scene.player.updatePlayerCoordinates(row, col);
-    this.scene.stats.update(currentCell);
-    this.player.updateCellInteractivity();
-    this.player.updateResourceDisplay();
   }
 }

@@ -120,6 +120,7 @@ class Play extends Phaser.Scene {
   }
 
   update() {
+    console.log("player: " + this.player);
     this.player.update();
   }
 }
