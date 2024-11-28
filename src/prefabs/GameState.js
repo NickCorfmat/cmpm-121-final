@@ -31,7 +31,7 @@ class GameState {
       const gameState = JSON.parse(savedData);
       if (!gameState) return null;
 
-      this.loadFromSnapshot(savedData);
+      this.loadFromSnapshot(gameState);
     }
 
     this.refreshGameScene();
