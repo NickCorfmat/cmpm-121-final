@@ -15,7 +15,6 @@ class GameState {
   }
 
   save() {
-    console.log("auto save");
     const gameState = {
       grid: this.scene.grid.getByteArrayString(),
       player: this.scene.player.toJSON(),
@@ -26,7 +25,6 @@ class GameState {
   }
 
   load() {
-    console.log("auto load");
     const savedData = localStorage.getItem("saveData");
 
     if (savedData) {

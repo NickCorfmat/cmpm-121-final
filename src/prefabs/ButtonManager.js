@@ -118,7 +118,6 @@ class ButtonManager {
   }
 
   saveToSlot(slot) {
-    console.log("Saved to slot: " + slot);
     const snapshot = this.scene.gameState.getSnapshot();
     this.scene.saveStates[slot] = snapshot;
 
@@ -127,7 +126,6 @@ class ButtonManager {
   }
 
   loadFromSlot(slot) {
-    console.log("Loaded from slot: " + slot);
     const snapshot = this.scene.saveStates[slot];
     this.scene.gameState.loadFromSnapshot(snapshot);
 
