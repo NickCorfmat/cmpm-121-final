@@ -33,7 +33,6 @@ class GameState {
 
       this.loadFromSnapshot(gameState);
     }
-
     this.refreshGameScene();
   }
 
@@ -49,11 +48,11 @@ class GameState {
     this.scene.grid.loadByteArray(snapshot.grid);
     this.scene.player.fromJSON(snapshot.player);
     this.scene.trackables = { ...snapshot.trackables };
+    this.refreshGameScene();
   }
 
   refreshGameScene() {
     const { row, col } = this.scene.player;
-    console.log(row, col);
     const currentCell = this.scene.grid.getCell(row, col);
 
     this.scene.player.updatePlayerCoordinates(row, col);

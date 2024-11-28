@@ -97,10 +97,11 @@ class Play extends Phaser.Scene {
         cell.building.updateLevel();
         cell.building.generateResources(cell.sunLevel, cell.waterLevel);
       }
+
+      this.stats.update(cell);
     });
 
     // update stats
-    this.stats.update(this.grid.selectedCell);
     this.player.updateResourceDisplay();
   }
 
