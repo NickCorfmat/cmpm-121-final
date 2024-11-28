@@ -3,6 +3,12 @@ class ButtonManager {
     this.scene = scene;
     this.buildings = buildings;
     this.player = player;
+
+    // create game buttons
+    this.createSaveButton();
+    this.createLoadButton();
+    this.createPurchaseButtons();
+    this.createNextRoundButton();
   }
 
   createPurchaseButtons() {
@@ -58,6 +64,87 @@ class ButtonManager {
 
     button.addEventListener("click", () => {
       this.scene.startNextRound();
+    });
+  }
+
+  createSaveButton() {
+    const button = document.getElementById("saveButton");
+
+    button.addEventListener("click", () => {
+      this.displaySaveButtons();
+    });
+  }
+
+  displaySaveButtons() {
+    this.hideElements(["saveButton", "loadButton"]);
+
+    const saveFiles = ["saveFile0", "saveFile1", "saveFile2"];
+
+    saveFiles.forEach((file) => {
+      const button = document.getElementById(file);
+      button.classList.remove("hidden");
+
+      button.addEventListener("click", () => this.saveGame());
+    });
+  }
+
+  saveGame(index) {
+    this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
+    this.showElements(["saveButton", "loadButton"]);
+
+    //const saveFile = new Save(this, this.player, this.grid);
+    //this.saveStates[index] = saveFile;
+  }
+
+  createLoadButton() {
+    const button = document.getElementById("loadButton");
+    button.addEventListener("click", () => {
+      this.displayLoadButtons();
+    });
+  }
+
+  displayLoadButtons() {
+    this.hideElements(["saveButton", "loadButton"]);
+
+    const loadFiles = ["loadFile0", "loadFile1", "loadFile2"];
+
+    loadFiles.forEach((file) => {
+      const button = document.getElementById(file);
+      button.classList.remove("hidden");
+
+      button.addEventListener("click", () => this.loadGame());
+    });
+  }
+
+  loadGame(index) {
+    this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
+    this.showElements(["saveButton", "loadButton"]);
+
+    //this.saveStates[index].loadGame();
+  }
+
+  // Helpers
+
+  // Source: Brace, https://chat.brace.tools/c/c8b149e6-dcc5-4e61-836d-c184f3fa7ef5
+  hideElements(ids) {
+    ids.forEach((id) => {
+      const element = document.getElementById(id);
+
+      // hide element
+      if (element) {
+        element.classList.add("hidden");
+      }
+    });
+  }
+
+  showElements(ids) {
+    ids.forEach((id) => {
+      const element = document.getElementById(id);
+
+      // show element
+      if (element) {
+        element.classList.remove("hidden");
+      }
     });
   }
 }

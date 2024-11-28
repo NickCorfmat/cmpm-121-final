@@ -82,11 +82,12 @@ class Grid {
     return btoa(String.fromCharCode(...new Uint8Array(this.byteArray.buffer)));
   }
 
-  loadByteArray(gridData) {
+  loadByteArray(gridData) { 
     // convert string from local storage into byte array
     const arrayBuffer = Uint8Array.from(atob(gridData), (c) =>
       c.charCodeAt(0)
     ).buffer;
+
     this.byteArray = new DataView(arrayBuffer);
     this.loadCellLevels();
   }

@@ -1,13 +1,13 @@
-class Save {
+class GameState {
   constructor(scene, player, grid) {
     this.scene = scene;
     this.player = player;
     this.grid = grid;
 
-    this.saveGame();
+    this.save();
   }
 
-  saveGame() {
+  save() {
     /* TO SAVE:
      * placer location
      * resources
@@ -18,20 +18,35 @@ class Save {
      * TODO:
      * every placed building and their collected resources
      */
+    // const gameState = {
+    //   playerRow: this.player.row,
+    //   playerCol: this.player.col,
+    //   totalResources: this.player.resources,
+    //   resourcesCollected: this.scene.resourcesCollected,
+    //   turnsPlayed: this.scene.turnsPlayed,
+    //   buildingsPlaced: this.scene.buildingsPlaced,
+    //   gridData: this.grid.getByteArrayString(),
+    // };
+
     const gameState = {
-      playerRow: this.player.row,
-      playerCol: this.player.col,
-      totalResources: this.player.resources,
-      resourcesCollected: this.scene.resourcesCollected,
-      turnsPlayed: this.scene.turnsPlayed,
-      buildingsPlaced: this.scene.buildingsPlaced,
-      gridData: this.grid.getByteArrayString(),
+      player: this.player.toJSON(),
+      grid: this.grid.getByteArrayString(),
+      stats: this.stats,
     };
+
     localStorage.setItem("saveData", JSON.stringify(gameState));
   }
 
-  loadGame() {
+  load() {
     const data = JSON.parse(localStorage.getItem("saveData"));
+
+    // if (data) {
+    //   const player = data.player;
+    //   const grid = data.grid;
+    //   const stats = data.stats;
+
+    //   return { player, grid, stats };
+    // }
 
     this.player.row = data.playerRow;
     this.player.col = data.playerCol;

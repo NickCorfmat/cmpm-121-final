@@ -141,4 +141,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.resourcesCollected += amount; // Increment resources collected
     this.updateResourceDisplay();
   }
+
+  toJSON() {
+    return {
+      row: this.row,
+      col: this.col,
+      resources: this.resources,
+    };
+  }
 }
