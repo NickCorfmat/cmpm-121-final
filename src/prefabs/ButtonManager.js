@@ -1,39 +1,90 @@
+// Source: Brace helped refactor ButtonManager to adopt a state approach to
+// displaying save/load buttons, along with their respective slot buttons.
+
 class ButtonManager {
-  constructor(scene, buildings, player) {
+  constructor(scene) {
     this.scene = scene;
-    this.buildings = buildings;
-    this.player = player;
+    this.state = "main";
 
     // create game buttons
-    this.createSaveButton();
-    this.createLoadButton();
-    this.createSaveSlots();
-    this.createLoadSlots();
+    this.initButtons();
+  }
+
+  initButtons() {
+    // create Save/Load buttons
+    this.createButton("saveButton", () => this.showSlot("save"));
+    this.createButton("loadButton", () => this.showSlot("load"));
+
+    // create Save/Load slot buttons
+    for (let i = 0; i < this.scene.saveStates.length; i++) {
+      this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i));
+      this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i));
+    }
+
+    // create "exit slots" button
+    this.createButton("exitButton", () => this.returnToMain());
+
+    // create player action buttons
     this.createPurchaseButtons();
     this.createNextRoundButton();
+
+    this.updateUI();
+  }
+
+  showSlot(type) {
+    this.state = type;
+    this.updateUI();
+  }
+
+  handleSaveSlot(slot) {
+    const snapshot = this.scene.gameState.getSnapshot();
+    this.scene.saveStates[slot] = snapshot;
+
+    this.returnToMain();
+  }
+
+  handleLoadSlot(slot) {
+    const snapshot = this.scene.saveStates[slot];
+    this.scene.gameState.loadFromSnapshot(snapshot);
+
+    this.returnToMain();
+  }
+
+  returnToMain() {
+    this.state = "main";
+    this.updateUI();
+  }
+
+  updateUI() {
+    const isMain = this.state === "main";
+    const isSave = this.state === "save";
+    const isLoad = this.state === "load";
+
+    this.toggleVisibility(["saveButton", "loadButton"], isMain);
+    this.toggleVisibility(["saveSlot0", "saveSlot1", "saveSlot2"], isSave);
+    this.toggleVisibility(["loadSlot0", "loadSlot1", "loadSlot2"], isLoad);
+    this.toggleVisibility(["exitButton"], isSave || isLoad);
   }
 
   createPurchaseButtons() {
     // create purchase buttons for each building type
-    this.buildings.forEach((building) => {
-      const button = document.getElementById("buy" + building.type + "Button");
-      button.innerText = `Buy ${building.type}: $${building.cost}`;
+    this.scene.BUILDINGS.forEach((building) => {
+      const id = `buy${building.type}Button`;
+      const text = `Buy ${building.type}: $${building.cost}`;
 
-      // purchase building on click
-      button.addEventListener("click", () => {
-        this.purchaseBuilding(building.type);
-      });
+      this.createButton(id, () => this.purchaseBuilding(building.type), text);
+      this.toggleVisibility([id], true); // always show
     });
   }
 
   purchaseBuilding(type) {
     // retrieve building config based on building type. Source: Brace
-    const buildingConfig = this.buildings.find((b) => b.type === type);
+    const buildingConfig = this.scene.BUILDINGS.find((b) => b.type === type);
     const grid = this.scene.grid;
 
     // place building in selected cell
     if (this.canPlaceBuilding(buildingConfig.cost)) {
-      this.player.spendResources(buildingConfig.cost);
+      this.scene.player.spendResources(buildingConfig.cost);
 
       const { row, col } = grid.selectedCell.getLogicalCoords();
 
@@ -49,14 +100,14 @@ class ButtonManager {
       // update game stats
       this.scene.trackables.buildingsPlaced++;
       this.scene.stats.update(grid.selectedCell);
-      this.player.updateResourceDisplay();
+      this.scene.player.updateResourceDisplay();
     }
   }
 
   canPlaceBuilding(cost) {
     return (
       this.scene.grid.selectedCell &&
-      this.player.resources >= cost &&
+      this.scene.player.resources >= cost &&
       !this.scene.grid.selectedCell.building
     );
   }
@@ -69,92 +120,19 @@ class ButtonManager {
     });
   }
 
-  createSaveButton() {
-    const button = document.getElementById("saveButton");
-
-    button.addEventListener("click", () => {
-      this.displaySaveSlots();
-    });
-  }
-
-  createLoadButton() {
-    const button = document.getElementById("loadButton");
-
-    button.addEventListener("click", () => {
-      this.displayLoadSlots();
-    });
-  }
-
-  createSaveSlots() {
-    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
-      const slotButton = document.getElementById(`saveFile${slot}`);
-      this.hideElements([`saveFile${slot}`]);
-
-      slotButton.addEventListener("click", () => {
-        this.saveToSlot(slot);
-      });
-    }
-  }
-
-  createLoadSlots() {
-    for (let slot = 0; slot < this.scene.saveStates.length; slot++) {
-      const slotButton = document.getElementById(`loadFile${slot}`);
-      this.hideElements([`loadFile${slot}`]);
-
-      slotButton.addEventListener("click", () => {
-        this.loadFromSlot(slot);
-      });
-    }
-  }
-
-  displaySaveSlots() {
-    this.hideElements(["saveButton", "loadButton"]);
-    this.showElements(["saveFile0", "saveFile1", "saveFile2"]);
-  }
-
-  displayLoadSlots() {
-    this.hideElements(["saveButton", "loadButton"]);
-    this.showElements(["loadFile0", "loadFile1", "loadFile2"]);
-  }
-
-  saveToSlot(slot) {
-    const snapshot = this.scene.gameState.getSnapshot();
-    this.scene.saveStates[slot] = snapshot;
-
-    this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
-    this.showElements(["saveButton", "loadButton"]);
-  }
-
-  loadFromSlot(slot) {
-    const snapshot = this.scene.saveStates[slot];
-    this.scene.gameState.loadFromSnapshot(snapshot);
-
-    this.hideElements(["loadFile0", "loadFile1", "loadFile2"]);
-    this.showElements(["saveButton", "loadButton"]);
-  }
-
   // Helpers
+  createButton(id, handler, text) {
+    const button = document.getElementById(id);
 
-  // Source: Brace, https://chat.brace.tools/c/c8b149e6-dcc5-4e61-836d-c184f3fa7ef5
-  hideElements(ids) {
-    ids.forEach((id) => {
-      const element = document.getElementById(id);
-
-      // hide element
-      if (element) {
-        element.classList.add("hidden");
-      }
-    });
+    if (text) button.innerHTML = text;
+    button.className = "hidden";
+    button.onclick = handler;
   }
 
-  showElements(ids) {
+  toggleVisibility(ids, show) {
     ids.forEach((id) => {
       const element = document.getElementById(id);
-
-      // show element
-      if (element) {
-        element.classList.remove("hidden");
-      }
+      element.classList.toggle("hidden", !show);
     });
   }
 }
