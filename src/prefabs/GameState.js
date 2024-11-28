@@ -18,8 +18,8 @@ class GameState {
      */
 
     const gameState = {
-      player: this.scene.player.toJSON(),
       grid: this.scene.grid.getByteArrayString(),
+      player: this.scene.player.toJSON(),
       trackables: this.scene.trackables,
     };
 
@@ -34,8 +34,8 @@ class GameState {
       const gameState = JSON.parse(savedData);
       if (!gameState) return null;
 
-      this.scene.player.fromJSON(gameState.player);
       this.scene.grid.loadByteArray(gameState.grid);
+      this.scene.player.fromJSON(gameState.player);
       this.scene.trackables = { ...gameState.trackables };
     }
 
