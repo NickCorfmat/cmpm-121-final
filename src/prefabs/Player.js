@@ -72,9 +72,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.isValidMove(newRow, newCol)) {
       this.updatePlayerCoordinates(newRow, newCol);
 
-      // display stats of current cell
-      const currentCell = this.grid.getCell(newRow, newCol);
-      this.scene.stats.update(currentCell);
+      this.displayCurrentCellStats();
 
       // make adjacent cells interactable
       this.updateCellInteractivity();
@@ -110,6 +108,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     return false;
   }
 
+  displayCurrentCellStats() {
+    const currentCell = this.grid.getCell(this.row, this.col);
+    this.scene.stats.update(currentCell);
+  }
+
   updateResourceDisplay() {
     const display = document.getElementById("resourceDisplay");
     display.innerText =
@@ -119,6 +122,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateCellInteractivity() {
+    this.grid.selectedCell = null;
+    this.grid.lastSelectedCell = null;
+
     // disable interactivty on all cells
     this.grid.cells.forEach((cell) => {
       cell.disableClickable();

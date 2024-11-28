@@ -126,7 +126,7 @@ class ButtonManager {
 
     if (text) button.innerHTML = text;
     button.className = "hidden";
-    button.onclick = handler;
+    button.onclick = handler; 
   }
 
   toggleVisibility(ids, show) {

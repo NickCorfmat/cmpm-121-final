@@ -84,7 +84,7 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this);
 
-    this.gameState.load();
+    //this.gameState.load();
   }
 
   startNextRound() {
@@ -99,11 +99,13 @@ class Play extends Phaser.Scene {
         cell.building.updateLevel();
         cell.building.generateResources(cell.sunLevel, cell.waterLevel);
       }
-
-      this.stats.update(cell);
     });
 
-    // update stats
+    // prioritize displaying stats of selected cell
+    this.grid.selectedCell
+      ? this.stats.update(this.grid.selectedCell)
+      : this.player.displayCurrentCellStats();
+
     this.player.updateResourceDisplay();
   }
 

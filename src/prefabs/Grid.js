@@ -64,16 +64,25 @@ class Grid {
       this.selectedCell = cell;
       this.selectedCell.enableBorder();
 
-      // unhighlight previously selected cell
-      if (this.lastSelectedCell) {
-        this.lastSelectedCell.disableBorder();
+      if (this.selectedCell === this.lastSelectedCell) {
+        // deselect cell if previously selected
+        if (this.selectedCell) this.selectedCell.disableBorder();
+        if (this.lastSelectedCell) this.lastSelectedCell.disableBorder();
+
+        this.selectedCell = null;
+        this.lastSelectedCell = null;
+      } else {
+        // unhighlight previously selected cell
+        if (this.lastSelectedCell) {
+          this.lastSelectedCell.disableBorder();
+        }
+
+        // update cell selection tracking
+        this.lastSelectedCell = this.selectedCell;
+
+        // display stats of currently selected cell
+        this.scene.stats.update(this.selectedCell);
       }
-
-      // update cell selection tracking
-      this.lastSelectedCell = this.selectedCell;
-
-      // display stats of currently selected cell
-      this.scene.stats.update(this.selectedCell);
     }
   }
 
@@ -82,7 +91,7 @@ class Grid {
     return btoa(String.fromCharCode(...new Uint8Array(this.byteArray.buffer)));
   }
 
-  loadByteArray(gridData) { 
+  loadByteArray(gridData) {
     // convert string from local storage into byte array
     const arrayBuffer = Uint8Array.from(atob(gridData), (c) =>
       c.charCodeAt(0)
