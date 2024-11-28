@@ -54,9 +54,11 @@ class Play extends Phaser.Scene {
     this.RESOURCE_GOAL = 1000;
 
     // initialize game stats
-    this.buildingsPlaced = 0;
-    this.resourcesCollected = 0;
-    this.turnsPlayed = 0;
+    this.trackables = {
+      buildingsPlaced: 0,
+      resourcesCollected: 0,
+      turnsPlayed: 0,
+    };
 
     // initialize save files
     this.saveStates = Array.apply(null, Array(5)).map(function () {});
@@ -79,12 +81,12 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this, this.BUILDINGS, this.player);
 
-    // initialize game state tracker
-    this.gameState = new GameState(this, this.player, this.grid);
+    // initialize game state manager
+    this.gameState = new GameState(this);
   }
 
   startNextRound() {
-    this.turnsPlayed++;
+    this.trackables.turnsPlayed++;
 
     // generate random sun/water levels
     this.grid.updateCellLevels();
@@ -104,10 +106,13 @@ class Play extends Phaser.Scene {
 
   checkWinCondition() {
     if (this.player.resources >= this.RESOURCE_GOAL) {
+      const { buildingsPlaced, resourcesCollected, turnsPlayed } =
+        this.trackables;
+
       const data = {
-        buildingsPlaced: this.buildingsPlaced,
-        resourcesCollected: this.resourcesCollected,
-        turnsPlayed: this.turnsPlayed,
+        buildingsPlaced: buildingsPlaced,
+        resourcesCollected: resourcesCollected,
+        turnsPlayed: turnsPlayed,
       };
 
       this.scene.start("sceneWin", data);

@@ -45,7 +45,7 @@ class ButtonManager {
       );
 
       // update game stats
-      this.scene.buildingsPlaced++;
+      this.scene.trackables.buildingsPlaced++;
       this.scene.stats.update(grid.selectedCell);
       this.player.updateResourceDisplay();
     }

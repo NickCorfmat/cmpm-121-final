@@ -1,8 +1,6 @@
 class GameState {
-  constructor(scene, player, grid) {
+  constructor(scene) {
     this.scene = scene;
-    this.player = player;
-    this.grid = grid;
 
     this.save();
   }
@@ -29,9 +27,9 @@ class GameState {
     // };
 
     const gameState = {
-      player: this.player.toJSON(),
-      grid: this.grid.getByteArrayString(),
-      stats: this.stats,
+      player: this.scene.player.toJSON(),
+      grid: this.scene.grid.getByteArrayString(),
+      trackables: this.scene.trackables,
     };
 
     localStorage.setItem("saveData", JSON.stringify(gameState));

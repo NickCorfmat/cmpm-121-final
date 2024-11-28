@@ -108,7 +108,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   updateResourceDisplay() {
     const display = document.getElementById("resourceDisplay");
-    display.innerText = `Resources: ${this.resources}\nTurns: ${this.scene.turnsPlayed}\nBuildings Placed: ${this.scene.buildingsPlaced}`;
+    display.innerText =
+      `Resources: ${this.resources}\n` +
+      `Turns: ${this.scene.trackables.turnsPlayed}\n` +
+      `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
   }
 
   updateCellInteractivity() {
@@ -138,7 +141,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
   collectResources(amount) {
     this.resources += amount;
-    this.scene.resourcesCollected += amount; // Increment resources collected
+    this.scene.trackables.resourcesCollected += amount; // Increment resources collected
     this.updateResourceDisplay();
   }
 
