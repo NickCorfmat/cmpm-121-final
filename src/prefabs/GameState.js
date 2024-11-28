@@ -29,8 +29,6 @@ class GameState {
 
     if (savedData) {
       const gameState = JSON.parse(savedData);
-      if (!gameState) return null;
-
       this.loadFromSnapshot(gameState);
     }
     this.refreshGameScene();
@@ -45,17 +43,19 @@ class GameState {
   }
 
   loadFromSnapshot(snapshot) {
-    this.scene.grid.loadByteArray(snapshot.grid);
-    this.scene.player.fromJSON(snapshot.player);
-    this.scene.trackables = { ...snapshot.trackables };
-    this.refreshGameScene();
+    if (snapshot) {
+      this.scene.grid.loadByteArray(snapshot.grid);
+      this.scene.player.fromJSON(snapshot.player);
+      this.scene.trackables = { ...snapshot.trackables };
+    } else {
+      console.log("Trying to load from empty slot!");
+    }
   }
 
   refreshGameScene() {
     const { row, col } = this.scene.player;
     const currentCell = this.scene.grid.getCell(row, col);
 
-    this.scene.player.updatePlayerCoordinates(row, col);
     this.scene.stats.update(currentCell);
     this.scene.player.updateCellInteractivity();
     this.scene.player.updateResourceDisplay();
