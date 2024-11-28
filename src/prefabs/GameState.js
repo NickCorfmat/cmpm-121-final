@@ -24,6 +24,7 @@ class GameState {
     };
 
     localStorage.setItem("saveData", JSON.stringify(gameState));
+    console.log("Save state is:");
     console.log(JSON.stringify(gameState));
   }
 
@@ -44,11 +45,12 @@ class GameState {
 
   refreshGameScene() {
     const { row, col } = this.scene.player;
-    const currentCell = this.grid.getCell(row, col);
+    console.log(row, col);
+    const currentCell = this.scene.grid.getCell(row, col);
 
     this.scene.player.updatePlayerCoordinates(row, col);
     this.scene.stats.update(currentCell);
-    this.player.updateCellInteractivity();
-    this.player.updateResourceDisplay();
+    this.scene.player.updateCellInteractivity();
+    this.scene.player.updateResourceDisplay();
   }
 }

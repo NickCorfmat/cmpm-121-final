@@ -92,6 +92,7 @@ class ButtonManager {
     this.hideElements(["saveFile0", "saveFile1", "saveFile2"]);
     this.showElements(["saveButton", "loadButton"]);
 
+    this.scene.gameState.save();
     this.scene.saveStates[slot] = this.scene.gameState;
   }
 
