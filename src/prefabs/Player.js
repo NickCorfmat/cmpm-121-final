@@ -154,10 +154,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   fromJSON(data) {
-    console.log("before: " + this);
-    this.scene.player = this;
     this.movePlayer(data.row, data.col);
     this.resources = data.resources;
-    console.log("after: " + this);
   }
 }
