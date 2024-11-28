@@ -152,4 +152,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       resources: this.resources,
     };
   }
+
+  fromJSON(data) {
+    this.updatePlayerCoordinates(data.row, data.col);
+    this.resources = data.resources;
+  }
 }
