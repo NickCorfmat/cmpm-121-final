@@ -30,6 +30,7 @@ class Play extends Phaser.Scene {
     this.BUILDINGS = [
       {
         type: "Drill",
+        image: "Drill",
         cost: 10,
         multiplier: 1,
         tint: 0x000000,
@@ -37,6 +38,7 @@ class Play extends Phaser.Scene {
       },
       {
         type: "Excavator",
+        image: "Excavator",
         cost: 30,
         multiplier: 2,
         tint: 0x8b4513,
@@ -44,6 +46,7 @@ class Play extends Phaser.Scene {
       },
       {
         type: "DemolitionPlant",
+        image: "DemolitionPlant",
         cost: 50,
         multiplier: 3,
         tint: 0xff0000,

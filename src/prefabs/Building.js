@@ -16,24 +16,25 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, config) {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
-
-    super(scene, x, y, config.type);
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
-    // sprite configs
-    this.setScale(config.scale);
-
-    // store references
+    super(scene, x, y,config.image);
+        // store references
     this.type = config.type;
     this.cost = config.cost;
     this.baseMultiplier = config.multiplier;
     this.row = row;
     this.col = col;
     this.grid = grid;
-
+    this.image = config.image;
     this.resources = 0;
     this.level = 1;
+    this.updateTexture();
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
+
+    // sprite configs
+    this.setScale(config.scale);
+
+
     this.updateMultiplier();
   }
 
@@ -57,6 +58,15 @@ class Building extends Phaser.Physics.Arcade.Sprite {
     const uniqueTypes = new Set(adjacentBuildings.map((b) => b.type));
     this.level = 1 + uniqueTypes.size;
     this.updateMultiplier();
+    this.updateTexture();
+  }
+
+  updateTexture() {
+    let maxlevel = this.level;
+    if (this.level >= 4 ){
+      maxlevel = 3;
+    }
+    this.setTexture(this.image + maxlevel.toString());
   }
 
   getAdjacentBuildings() {
