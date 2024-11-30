@@ -33,9 +33,10 @@ class Grid {
     }
   }
 
-  // update the grid's state according to the game's logic
+  // progress board state according to game's logic
   step() {
     this.cells.forEach((cell) => cell.step());
+    this.scene.trackables.turnsPlayed++;
   }
 
   selectCell(row, col) {

@@ -90,12 +90,7 @@ class Play extends Phaser.Scene {
     this.player.update();
   }
 
-  startNextRound() {
-    this.trackables.turnsPlayed++;
-
-    // update building levels and generate resources
-    this.grid.step();
-
+  updateUI() {
     // prioritize displaying stats of selected cell
     this.grid.selectedCell
       ? this.stats.update(this.grid.selectedCell)
@@ -104,18 +99,14 @@ class Play extends Phaser.Scene {
     this.player.updatePlayerDisplay();
   }
 
+  startNextRound() {
+    this.grid.step();
+    this.updateUI();
+  }
+
   checkWinCondition() {
     if (this.player.resources >= this.RESOURCE_GOAL) {
-      const { buildingsPlaced, resourcesCollected, turnsPlayed } =
-        this.trackables;
-
-      const data = {
-        buildingsPlaced: buildingsPlaced,
-        resourcesCollected: resourcesCollected,
-        turnsPlayed: turnsPlayed,
-      };
-
-      this.scene.start("sceneWin", data);
+      this.scene.start("sceneWin", this.trackables);
     }
   }
 

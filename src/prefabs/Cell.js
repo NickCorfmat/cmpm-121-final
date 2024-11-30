@@ -97,7 +97,6 @@ class Cell extends Phaser.GameObjects.Sprite {
   updateLevel() {
     if (this.hasBuilding()) {
       const uniqueCount = new Set(this.getAdjacentBuildings()).size;
-      console.log(uniqueCount);
 
       if (uniqueCount >= 2 && !this.maxLevelReached()) {
         this.level++;
