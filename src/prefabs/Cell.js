@@ -1,5 +1,5 @@
 class Cell extends Phaser.GameObjects.Sprite {
-  constructor(scene, row, col, sunLevel, waterLevel, grid, texture = "cell") {
+  constructor(scene, row, col, grid, texture = "cell") {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
 
@@ -14,16 +14,36 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.row = row;
     this.col = col;
-    this.sunLevel = sunLevel;
-    this.waterLevel = waterLevel;
     this.grid = grid;
-    this.building = null;
+
+    // cell game state
+    this.buildingRef = -1; // default: no building
+    this.level = 0;
+    this.sunLevel = 0;
+    this.waterLevel = 0;
+    this.resources = 0;
+
     this.isClickable = false;
 
-    // create a graphics object for the border
+    // cell properties/behaviors
     this.createBorder();
-
     this.enableMouseEvents();
+  }
+
+  createBorder() {
+    this.border = this.scene.add.graphics();
+
+    // set border appearance
+    this.border.lineStyle(2, 0x34eba8, 1);
+    this.border.strokeRect(
+      this.x - this.displayWidth / 2,
+      this.y - this.displayHeight / 2,
+      this.displayWidth,
+      this.displayHeight
+    );
+
+    // hide border when created
+    this.disableBorder();
   }
 
   enableMouseEvents() {
@@ -31,6 +51,58 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.on("pointerdown", () => {
       this.grid.selectCell(this.row, this.col);
     });
+  }
+
+  displayBuilding() {
+    // remove existing building sprite
+    if (this.buildingIcon) {
+      this.buildingIcon.destroy();
+    }
+
+    if (this.hasBuilding()) {
+      const buildingConfig = this.scene.buildings[this.buildingRef];
+      const { type, scale } = buildingConfig;
+
+      //console.log(`(${this.x}, ${this.y}) - ${type + this.level}`);
+
+      // Create the building sprite at the center of the cell
+      this.buildingIcon = this.scene.add.sprite(
+        this.x,
+        this.y,
+        type + this.level
+      );
+
+      // sprite configs
+      this.buildingIcon.setOrigin(0.5);
+      this.buildingIcon.setScale(scale);
+    }
+  }
+
+  // Getters/Setters
+
+  setSunLevel(value) {
+    // only store sun level if cell is occupied
+    if (this.hasBuilding()) {
+      this.sunLevel = value;
+    }
+  }
+
+  setWaterLevel(value) {
+    this.waterLevel = value;
+  }
+
+  setBuilding(ref) {
+    if (!this.hasBuilding() && this.buildingExists(ref)) {
+      this.level++;
+      this.buildingRef = ref;
+
+      this.displayBuilding();
+    }
+  }
+
+  updateLevel() {
+    this.level++;
+    this.displayBuilding();
   }
 
   setClickable() {
@@ -49,31 +121,14 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.border.setVisible(false);
   }
 
-  updateSunLevel(newSunLevel) {
-    // only store sun level if cell is occupied
-    if (this.building) {
-      this.sunLevel = newSunLevel;
-    }
+  // Helpers
+
+  hasBuilding() {
+    return this.buildingRef >= 0;
   }
 
-  updateWaterLevel(newWaterLevel) {
-    this.waterLevel = newWaterLevel;
-  }
-
-  createBorder() {
-    this.border = this.scene.add.graphics();
-
-    // set border appearance
-    this.border.lineStyle(2, 0x34eba8, 1);
-    this.border.strokeRect(
-      this.x - this.displayWidth / 2,
-      this.y - this.displayHeight / 2,
-      this.displayWidth,
-      this.displayHeight
-    );
-
-    // hide border when created
-    this.disableBorder();
+  buildingExists(ref) {
+    return ref >= 0 && ref < this.scene.buildings.length;
   }
 
   getLogicalCoords() {

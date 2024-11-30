@@ -9,12 +9,8 @@ class Grid {
     // create a map to store cells and their row/col keys
     this.cells = new Map();
 
-    // create DataView object to function as byte array
-    this.numItems = this.width * this.height;
-    this.bytesPerItem = 8;
-    this.BYTE_OFFSET = 4;
-    this.buffer = new ArrayBuffer(this.numItems * this.bytesPerItem);
-    this.byteArray = new DataView(this.buffer);
+    this.BYTES_PER_CELL = 12; // 4 bytes each for sunLevel, waterLevel, and buildingIndex
+    this.NUM_CELLS = this.width * this.height;
 
     this.sunLevel = 0;
     this.waterLevel = 2;
@@ -29,30 +25,20 @@ class Grid {
   // refactoring with help from Brace
   // https://chat.brace.tools/c/cddb0a0d-e4b1-4775-99bb-9d9f5cbf0962
   createGrid() {
-    for (let i = 0; i < this.numItems; i++) {
-      const offset = i * this.bytesPerItem;
-      this.changeCellData(offset, this.sunLevel, this.waterLevel);
-
-      const row = Math.floor(i / this.width);
-      const col = i % this.width;
-      this.createCell(
-        row,
-        col,
-        this.byteArray.getInt32(offset, true),
-        this.byteArray.getInt32(offset + this.BYTE_OFFSET, true)
-      );
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        const cell = new Cell(this.scene, row, col, this);
+        this.cells.set(this.generateKey(row, col), cell);
+      }
     }
   }
 
-  // append sun and water level to byte array
-  changeCellData(offset, sunLevel, waterLevel) {
-    this.byteArray.setInt32(offset, sunLevel, true);
-    this.byteArray.setInt32(offset + this.BYTE_OFFSET, waterLevel, true);
-  }
-
-  createCell(row, col, sunLevel, waterLevel) {
-    const cell = new Cell(this.scene, row, col, sunLevel, waterLevel, this);
-    this.cells.set(this.generateKey(row, col), cell);
+  // Update all cells' levels randomly (example game logic)
+  updateCellLevels() {
+    for (let [key, cell] of this.cells.entries()) {
+      cell.sunLevel = Phaser.Math.Between(1, 5);
+      cell.waterLevel = Phaser.Math.Between(0, 5);
+    }
   }
 
   selectCell(row, col) {
@@ -86,29 +72,9 @@ class Grid {
     }
   }
 
-  getByteArrayString() {
-    // convert byteArray into string for saving to local storage
-    return btoa(String.fromCharCode(...new Uint8Array(this.byteArray.buffer)));
-  }
-
-  loadByteArray(gridData) {
-    // convert string from local storage into byte array
-    const arrayBuffer = Uint8Array.from(atob(gridData), (c) =>
-      c.charCodeAt(0)
-    ).buffer;
-
-    this.byteArray = new DataView(arrayBuffer);
-    this.loadCellLevels();
-  }
-
-  loadCellLevels() {
-    for (let i = 0; i < this.numItems; i++) {
-      const offset = i * this.bytesPerItem;
-
-      const row = Math.floor(i / this.width);
-      const col = i % this.width;
-      this.updateCellObject(offset, row, col);
-    }
+  // Extracting key generation to own function idea inspired by Brace
+  generateKey(row, col) {
+    return `${row}:${col}`;
   }
 
   getCell(row, col) {
@@ -134,36 +100,91 @@ class Grid {
     return { x, y };
   }
 
-  // Extracting key generation to own function idea inspired by Brace
-  generateKey(row, col) {
-    return `${row}:${col}`;
-  }
+  getByteArray() {
+    const byteArray = new ArrayBuffer(this.NUM_CELLS * this.BYTES_PER_CELL);
+    const dataView = new DataView(byteArray);
 
-  // update water and sun levels
-  // refactoring with help from Brace
-  // https://chat.brace.tools/c/cddb0a0d-e4b1-4775-99bb-9d9f5cbf0962
-  updateCellLevels() {
-    for (let i = 0; i < this.numItems; i++) {
-      const offset = i * this.bytesPerItem;
+    let byteOffset = 0;
 
-      this.sunLevel = Phaser.Math.Between(1, 5);
-      const change = Phaser.Math.Between(-1, 1);
-      this.waterLevel = Math.max(0, Math.min(5, this.waterLevel + change));
-      this.changeCellData(offset, this.sunLevel, this.waterLevel);
+    // Loop through each cell in row-major order
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        const cell = this.cells.get(this.generateKey(row, col));
 
-      const row = Math.floor(i / this.width);
-      const col = i % this.width;
-      this.updateCellObject(offset, row, col);
+        // write sunLevel (Float32)
+        dataView.setFloat32(byteOffset, cell.sunLevel, true);
+        byteOffset += 4;
+
+        // write waterLevel (Float32)
+        dataView.setFloat32(byteOffset, cell.waterLevel, true);
+        byteOffset += 4;
+
+        // write buildingIndex (Int32)
+        dataView.setInt32(byteOffset, cell.buildingIndex, true);
+        byteOffset += 4;
+      }
     }
+
+    return byteArray;
   }
 
-  // update cell in grid
-  updateCellObject(offset, row, col) {
-    const cell = this.getCell(row, col);
-    const sunLevel = this.byteArray.getInt32(offset, true);
-    const waterLevel = this.byteArray.getInt32(offset + this.BYTE_OFFSET, true);
+  loadByteArray(byteArray) {
+    const dataView = new DataView(byteArray);
+    let byteOffset = 0;
 
-    cell.updateSunLevel(sunLevel);
-    cell.updateWaterLevel(waterLevel);
+    const cells = new Map(); // Reconstruct the cells map
+
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        // read sunLevel (Float32)
+        const sunLevel = dataView.getFloat32(byteOffset, true);
+        byteOffset += 4;
+
+        // read waterLevel (Float32)
+        const waterLevel = dataView.getFloat32(byteOffset, true);
+        byteOffset += 4;
+
+        // read buildingIndex (Int32)
+        const buildingIndex = dataView.getInt32(byteOffset, true);
+        byteOffset += 4;
+
+        // restore the cell
+        const cell = new Cell(this.scene, row, col, this);
+        cell.setBuilding(buildingRef);
+        cell.setBuildingLevel(buildingLevel);
+        cell.setWaterLevel(waterLevel);
+        cell.setSunLevel(sunLevel);
+
+        cells.set(this.generateKey(row, col), cell);
+      }
+    }
+
+    this.cells = cells;
+  }
+
+  arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+  }
+
+  base64ToArrayBuffer(base64) {
+    const binary = atob(base64);
+    const buffer = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+
+    return buffer.buffer;
+  }
+
+  toJSON() {
+    const byteArray = this.getByteArray();
+    return this.arrayBufferToBase64(byteArray);
+  }
+
+  fromJSON(gridData) {
+    const byteArray = this.base64ToArrayBuffer(gridData);
+    this.loadByteArray(byteArray);
   }
 }

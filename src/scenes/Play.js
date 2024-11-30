@@ -27,30 +27,24 @@ class Play extends Phaser.Scene {
       height: height,
     };
 
-    this.BUILDINGS = [
+    this.buildings = [
       {
         type: "Drill",
-        image: "Drill",
         cost: 10,
         multiplier: 1,
-        tint: 0x000000,
-        scale: 1.9,
+        scale: 1.6,
       },
       {
         type: "Excavator",
-        image: "Excavator",
         cost: 30,
         multiplier: 2,
-        tint: 0x8b4513,
-        scale: 1.9,
+        scale: 1.6,
       },
       {
         type: "DemolitionPlant",
-        image: "DemolitionPlant",
         cost: 50,
         multiplier: 3,
-        tint: 0xff0000,
-        scale: 1.9,
+        scale: 1.6,
       },
     ];
 
@@ -89,7 +83,7 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this);
 
-    this.launchGame();
+    //this.launchGame();
   }
 
   update() {
