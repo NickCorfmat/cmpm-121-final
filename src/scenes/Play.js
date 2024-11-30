@@ -32,22 +32,19 @@ class Play extends Phaser.Scene {
         type: "Drill",
         cost: 10,
         multiplier: 1,
-        tint: 0x000000,
-        scale: 1.7,
+        scale: 1.6,
       },
       {
         type: "Excavator",
         cost: 30,
         multiplier: 2,
-        tint: 0x8b4513,
-        scale: 1.7,
+        scale: 1.6,
       },
       {
         type: "DemolitionPlant",
         cost: 50,
         multiplier: 3,
-        tint: 0xff0000,
-        scale: 1.7,
+        scale: 1.6,
       },
     ];
 
