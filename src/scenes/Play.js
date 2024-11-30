@@ -102,6 +102,7 @@ class Play extends Phaser.Scene {
   startNextRound() {
     this.grid.step();
     this.updateUI();
+    this.gameState.save();
   }
 
   checkWinCondition() {

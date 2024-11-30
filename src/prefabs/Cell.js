@@ -119,7 +119,6 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
-    console.log("cell restored");
     this.setBuilding(buildingRef);
     this.setLevel(level);
     this.setSunLevel(sunLevel);
@@ -148,6 +147,8 @@ class Cell extends Phaser.GameObjects.Sprite {
       this.level++;
 
       this.displayBuilding();
+
+      this.scene.gameState.save();
     }
   }
 

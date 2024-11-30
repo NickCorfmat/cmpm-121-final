@@ -16,6 +16,7 @@ class GameState {
   }
 
   save() {
+    console.log("save");
     const gameState = this.getSnapshot();
     localStorage.setItem(this.key, JSON.stringify(gameState));
   }

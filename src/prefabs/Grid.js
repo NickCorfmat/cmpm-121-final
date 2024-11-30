@@ -149,10 +149,6 @@ class Grid {
       }
     }
 
-    cells.forEach((value, key) => {
-      console.log(`Key: ${key}, Value:`, value);
-    });
-
     this.cells = cells;
   }
 
