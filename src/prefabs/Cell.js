@@ -54,19 +54,21 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    const { scale } = this.scene.buildings[this.buildingRef];
-    const texture = this.getTexture();
+    if (this.hasBuilding()) {
+      const { scale } = this.scene.buildings[this.buildingRef];
+      const texture = this.getTexture();
 
-    if (this.buildingIcon) {
-      // redraw sprite if one exists
-      this.buildingIcon.setTexture(texture);
-    } else {
-      // create new sprite
-      this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
+      if (this.buildingIcon) {
+        // redraw sprite if one exists
+        this.buildingIcon.setTexture(texture);
+      } else {
+        // create new sprite
+        this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
 
-      // sprite configs
-      this.buildingIcon.setOrigin(0.5);
-      this.buildingIcon.setScale(scale);
+        // sprite configs
+        this.buildingIcon.setOrigin(0.5);
+        this.buildingIcon.setScale(scale);
+      }
     }
   }
 
@@ -117,6 +119,7 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
+    console.log("cell restored");
     this.setBuilding(buildingRef);
     this.setLevel(level);
     this.setSunLevel(sunLevel);

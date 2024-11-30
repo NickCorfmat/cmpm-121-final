@@ -55,6 +55,6 @@ class GameState {
 
     this.scene.stats.update(currentCell);
     this.scene.player.updateCellInteractivity();
-    this.scene.player.updateResourceDisplay();
+    this.scene.player.updatePlayerDisplay();
   }
 }
