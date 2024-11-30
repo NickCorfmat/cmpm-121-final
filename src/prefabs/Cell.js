@@ -54,23 +54,14 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    // remove existing building sprite
+    const buildingConfig = this.scene.buildings[this.buildingRef];
+    const { type, scale } = buildingConfig;
+    const texture = type + this.level;
+
     if (this.buildingIcon) {
-      this.buildingIcon.destroy();
-    }
-
-    if (this.hasBuilding()) {
-      const buildingConfig = this.scene.buildings[this.buildingRef];
-      const { type, scale } = buildingConfig;
-
-      //console.log(`(${this.x}, ${this.y}) - ${type + this.level}`);
-
-      // Create the building sprite at the center of the cell
-      this.buildingIcon = this.scene.add.sprite(
-        this.x,
-        this.y,
-        type + this.level
-      );
+      this.buildingIcon.setTexture(texture);
+    } else {
+      this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
 
       // sprite configs
       this.buildingIcon.setOrigin(0.5);
@@ -93,10 +84,8 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   setBuilding(ref) {
     if (!this.hasBuilding() && this.buildingExists(ref)) {
-      this.level++;
       this.buildingRef = ref;
-
-      this.displayBuilding();
+      this.updateLevel();
     }
   }
 
