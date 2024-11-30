@@ -40,6 +40,8 @@ class ButtonManager {
     const snapshot = this.scene.gameState.getSnapshot();
     this.scene.saveStates[slot] = snapshot;
 
+    //alert(`Game saved successfully to slot: ${slot + 1}`);
+
     this.returnToMain();
   }
 
@@ -126,7 +128,7 @@ class ButtonManager {
 
     if (text) button.innerHTML = text;
     button.className = "hidden";
-    button.onclick = handler; 
+    button.onclick = handler;
   }
 
   toggleVisibility(ids, show) {

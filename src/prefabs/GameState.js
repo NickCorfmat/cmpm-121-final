@@ -16,11 +16,9 @@ class GameState {
   }
 
   save() {
-    const gameState = {
-      grid: this.scene.grid.getByteArrayString(),
-      player: this.scene.player.toJSON(),
-      trackables: this.scene.trackables,
-    };
+    const gameState = this.getSnapshot();
+
+    console.log(this.scene.grid.getByteArray());
 
     localStorage.setItem(this.key, JSON.stringify(gameState));
   }
@@ -37,7 +35,7 @@ class GameState {
 
   getSnapshot() {
     return {
-      grid: this.scene.grid.getByteArrayString(),
+      grid: this.scene.grid.toJSON(),
       player: this.scene.player.toJSON(),
       trackables: this.scene.trackables,
     };
@@ -49,7 +47,7 @@ class GameState {
       this.scene.player.fromJSON(snapshot.player);
       this.scene.trackables = { ...snapshot.trackables };
     } else {
-      console.log("Trying to load from empty slot!");
+      alert("Trying to load from empty slot!");
     }
   }
 

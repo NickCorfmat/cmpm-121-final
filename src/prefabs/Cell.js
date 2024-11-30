@@ -1,5 +1,5 @@
 class Cell extends Phaser.GameObjects.Sprite {
-  constructor(scene, row, col, sunLevel, waterLevel, grid, texture = "cell") {
+  constructor(scene, row, col, grid, texture = "cell") {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
 
@@ -14,11 +14,11 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.row = row;
     this.col = col;
-    this.sunLevel = sunLevel;
-    this.waterLevel = waterLevel;
     this.grid = grid;
     this.building = null;
     this.isClickable = false;
+    this.sunLevel = 0;
+    this.waterLevel = 0;
 
     // create a graphics object for the border
     this.createBorder();
