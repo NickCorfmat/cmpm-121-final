@@ -63,6 +63,8 @@ class Play extends Phaser.Scene {
       turnsPlayed: 0,
     };
 
+    this.local_storage_key = "saveData";
+
     // initialize 3 save slots
     this.saveStates = [null, null, null];
   }
@@ -87,7 +89,11 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this);
 
-    //this.gameState.load();
+    this.launchGame();
+  }
+
+  update() {
+    this.player.update();
   }
 
   startNextRound() {
@@ -127,7 +133,12 @@ class Play extends Phaser.Scene {
     }
   }
 
-  update() {
-    this.player.update();
+  launchGame() {
+    const savedData = localStorage.getItem(this.local_storage_key);
+
+    // prompt user to continue from auto-save or start new game
+    if (savedData && confirm("Do you want to continue where you left off?")) {
+      this.gameState.load();
+    }
   }
 }

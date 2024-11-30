@@ -12,6 +12,7 @@
 class GameState {
   constructor(scene) {
     this.scene = scene;
+    this.key = this.scene.local_storage_key;
   }
 
   save() {
@@ -21,11 +22,11 @@ class GameState {
       trackables: this.scene.trackables,
     };
 
-    localStorage.setItem("saveData", JSON.stringify(gameState));
+    localStorage.setItem(this.key, JSON.stringify(gameState));
   }
 
   load() {
-    const savedData = localStorage.getItem("saveData");
+    const savedData = localStorage.getItem(this.key);
 
     if (savedData) {
       const gameState = JSON.parse(savedData);
