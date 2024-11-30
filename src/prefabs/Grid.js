@@ -149,7 +149,12 @@ class Grid {
         byteOffset += 4;
 
         // restore the cell
-        const cell = new Cell(row, col, sunLevel, waterLevel, buildingIndex);
+        const cell = new Cell(this.scene, row, col, this);
+        cell.setBuilding(buildingRef);
+        cell.setBuildingLevel(buildingLevel);
+        cell.setWaterLevel(waterLevel);
+        cell.setSunLevel(sunLevel);
+
         cells.set(this.generateKey(row, col), cell);
       }
     }

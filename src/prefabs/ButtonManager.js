@@ -70,7 +70,7 @@ class ButtonManager {
 
   createPurchaseButtons() {
     // create purchase buttons for each building type
-    this.scene.BUILDINGS.forEach((building) => {
+    this.scene.buildings.forEach((building) => {
       const id = `buy${building.type}Button`;
       const text = `Buy ${building.type}: $${building.cost}`;
 
@@ -81,7 +81,7 @@ class ButtonManager {
 
   purchaseBuilding(type) {
     // retrieve building config based on building type. Source: Brace
-    const buildingConfig = this.scene.BUILDINGS.find((b) => b.type === type);
+    const buildingConfig = this.scene.buildings.find((b) => b.type === type);
     const grid = this.scene.grid;
 
     // place building in selected cell

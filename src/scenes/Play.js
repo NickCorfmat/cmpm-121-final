@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
       height: height,
     };
 
-    this.BUILDINGS = [
+    this.buildings = [
       {
         type: "Drill",
         image: "Drill",

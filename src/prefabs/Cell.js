@@ -15,15 +15,34 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.row = row;
     this.col = col;
     this.grid = grid;
-    this.building = null;
-    this.isClickable = false;
+
+    // cell game state
+    this.buildingRef = -1; // default: no building
+    this.level = 0;
     this.sunLevel = 0;
     this.waterLevel = 0;
 
-    // create a graphics object for the border
-    this.createBorder();
+    this.isClickable = false;
 
+    // cell properties/behaviors
+    this.createBorder();
     this.enableMouseEvents();
+  }
+
+  createBorder() {
+    this.border = this.scene.add.graphics();
+
+    // set border appearance
+    this.border.lineStyle(2, 0x34eba8, 1);
+    this.border.strokeRect(
+      this.x - this.displayWidth / 2,
+      this.y - this.displayHeight / 2,
+      this.displayWidth,
+      this.displayHeight
+    );
+
+    // hide border when created
+    this.disableBorder();
   }
 
   enableMouseEvents() {
@@ -31,6 +50,19 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.on("pointerdown", () => {
       this.grid.selectCell(this.row, this.col);
     });
+  }
+
+  // Getters/Setters
+
+  setSunLevel(value) {
+    // only store sun level if cell is occupied
+    if (this.hasBuilding()) {
+      this.sunLevel = value;
+    }
+  }
+
+  setWaterLevel(value) {
+    this.waterLevel = value;
   }
 
   setClickable() {
@@ -49,31 +81,10 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.border.setVisible(false);
   }
 
-  setSunLevel(value) {
-    // only store sun level if cell is occupied
-    if (this.building) {
-      this.sunLevel = value;
-    }
-  }
+  // Helpers
 
-  setWaterLevel(value) {
-    this.waterLevel = value;
-  }
-
-  createBorder() {
-    this.border = this.scene.add.graphics();
-
-    // set border appearance
-    this.border.lineStyle(2, 0x34eba8, 1);
-    this.border.strokeRect(
-      this.x - this.displayWidth / 2,
-      this.y - this.displayHeight / 2,
-      this.displayWidth,
-      this.displayHeight
-    );
-
-    // hide border when created
-    this.disableBorder();
+  hasBuilding() {
+    return this.buildingRef >= 0;
   }
 
   getLogicalCoords() {
