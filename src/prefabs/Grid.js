@@ -100,11 +100,86 @@ class Grid {
     return { x, y };
   }
 
-  getByteArray() {}
+  getByteArray() {
+    const byteArray = new ArrayBuffer(this.NUM_CELLS * this.BYTES_PER_CELL);
+    const dataView = new DataView(byteArray);
 
-  loadByteArray(byteArray) {}
+    let byteOffset = 0;
 
-  toJSON() {}
+    // Loop through each cell in row-major order
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        const cell = this.cells.get(this.generateKey(row, col));
 
-  fromJSON(state) {}
+        // write sunLevel (Float32)
+        dataView.setFloat32(byteOffset, cell.sunLevel, true);
+        byteOffset += 4;
+
+        // write waterLevel (Float32)
+        dataView.setFloat32(byteOffset, cell.waterLevel, true);
+        byteOffset += 4;
+
+        // write buildingIndex (Int32)
+        dataView.setInt32(byteOffset, cell.buildingIndex, true);
+        byteOffset += 4;
+      }
+    }
+
+    return byteArray;
+  }
+
+  loadByteArray(byteArray) {
+    const dataView = new DataView(byteArray);
+    let byteOffset = 0;
+
+    const cells = new Map(); // Reconstruct the cells map
+
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
+        // read sunLevel (Float32)
+        const sunLevel = dataView.getFloat32(byteOffset, true);
+        byteOffset += 4;
+
+        // read waterLevel (Float32)
+        const waterLevel = dataView.getFloat32(byteOffset, true);
+        byteOffset += 4;
+
+        // read buildingIndex (Int32)
+        const buildingIndex = dataView.getInt32(byteOffset, true);
+        byteOffset += 4;
+
+        // restore the cell
+        const cell = new Cell(row, col, sunLevel, waterLevel, buildingIndex);
+        cells.set(this.generateKey(row, col), cell);
+      }
+    }
+
+    this.cells = cells;
+  }
+
+  arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+  }
+
+  base64ToArrayBuffer(base64) {
+    const binary = atob(base64);
+    const buffer = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+
+    return buffer.buffer;
+  }
+
+  toJSON() {
+    const byteArray = this.getByteArray();
+    return this.arrayBufferToBase64(byteArray);
+  }
+
+  fromJSON(gridData) {
+    const byteArray = this.base64ToArrayBuffer(gridData);
+    this.loadByteArray(byteArray);
+  }
 }

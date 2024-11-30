@@ -49,15 +49,15 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.border.setVisible(false);
   }
 
-  updateSunLevel(newSunLevel) {
+  setSunLevel(value) {
     // only store sun level if cell is occupied
     if (this.building) {
-      this.sunLevel = newSunLevel;
+      this.sunLevel = value;
     }
   }
 
-  updateWaterLevel(newWaterLevel) {
-    this.waterLevel = newWaterLevel;
+  setWaterLevel(value) {
+    this.waterLevel = value;
   }
 
   createBorder() {

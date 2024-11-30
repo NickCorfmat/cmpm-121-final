@@ -17,9 +17,6 @@ class GameState {
 
   save() {
     const gameState = this.getSnapshot();
-
-    console.log(this.scene.grid.getByteArray());
-
     localStorage.setItem(this.key, JSON.stringify(gameState));
   }
 
@@ -43,7 +40,7 @@ class GameState {
 
   loadFromSnapshot(snapshot) {
     if (snapshot) {
-      this.scene.grid.loadByteArray(snapshot.grid);
+      this.scene.grid.fromJSON(snapshot.grid);
       this.scene.player.fromJSON(snapshot.player);
       this.scene.trackables = { ...snapshot.trackables };
     } else {
