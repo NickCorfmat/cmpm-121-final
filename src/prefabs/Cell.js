@@ -54,8 +54,7 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    const buildingConfig = this.scene.buildings[this.buildingRef];
-    const { type, scale } = buildingConfig;
+    const { type, scale } = this.scene.buildings[this.buildingRef];
     const texture = type + this.level;
 
     if (this.buildingIcon) {
@@ -68,6 +67,13 @@ class Cell extends Phaser.GameObjects.Sprite {
       // sprite configs
       this.buildingIcon.setOrigin(0.5);
       this.buildingIcon.setScale(scale);
+    }
+  }
+
+  generateResources() {
+    if (this.hasBuilding()) {
+      const { rate } = this.scene.buildings[this.buildingRef];
+      this.resources += (this.sunLevel + this.waterLevel) * this.rate;
     }
   }
 
@@ -92,8 +98,14 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   updateLevel() {
-    this.level++;
-    this.displayBuilding();
+    if (this.hasBuilding()) {
+      const uniqueCount = new Set(this.getAdjacentBuildings()).size;
+
+      if (uniqueCount >= 2) {
+        this.level++;
+        this.displayBuilding();
+      }
+    }
   }
 
   setClickable() {
@@ -110,6 +122,34 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   disableBorder() {
     this.border.setVisible(false);
+  }
+
+  getAdjacentBuildings() {
+    const directions = [
+      { row: -1, col: 0 }, // up
+      { row: 1, col: 0 }, // down
+      { row: 0, col: -1 }, // left
+      { row: 0, col: 1 }, // right
+    ];
+
+    const adjacentBuildings = [];
+
+    directions.forEach((dir) => {
+      const newRow = this.row + dir.row;
+      const newCol = this.col + dir.col;
+      if (
+        newRow >= 0 &&
+        newRow < this.grid.height &&
+        newCol >= 0 &&
+        newCol < this.grid.width
+      ) {
+        const cell = this.grid.getCell(newRow, newCol);
+
+        if (cell.hasBuilding()) {
+          adjacentBuildings.push(cell.buildingRef);
+        }
+      }
+    });
   }
 
   // Helpers

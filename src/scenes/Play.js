@@ -31,19 +31,19 @@ class Play extends Phaser.Scene {
       {
         type: "Drill",
         cost: 10,
-        multiplier: 1,
+        rate: 1,
         scale: 1.6,
       },
       {
         type: "Excavator",
         cost: 30,
-        multiplier: 2,
+        rate: 1.5,
         scale: 1.6,
       },
       {
         type: "DemolitionPlant",
         cost: 50,
-        multiplier: 3,
+        rate: 2,
         scale: 1.6,
       },
     ];
@@ -98,9 +98,9 @@ class Play extends Phaser.Scene {
 
     // update building stages and generate resources
     this.grid.cells.forEach((cell) => {
-      if (cell.building) {
-        cell.building.updateLevel();
-        cell.building.generateResources(cell.sunLevel, cell.waterLevel);
+      if (cell.hasBuilding()) {
+        cell.updateLevel();
+        cell.generateResources();
       }
     });
 
