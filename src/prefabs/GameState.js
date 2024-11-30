@@ -27,6 +27,7 @@ class GameState {
       const gameState = JSON.parse(savedData);
       this.loadFromSnapshot(gameState);
     }
+
     this.refreshGameScene();
   }
 

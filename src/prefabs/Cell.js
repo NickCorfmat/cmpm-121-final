@@ -116,6 +116,16 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.resources = 0;
   }
 
+  restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
+    this.setBuilding(buildingRef);
+    this.setLevel(level);
+    this.setSunLevel(sunLevel);
+    this.setWaterLevel(waterLevel);
+    this.setResources(resources);
+
+    this.displayBuilding();
+  }
+
   // Getters/Setters
 
   setSunLevel(value) {
@@ -136,6 +146,15 @@ class Cell extends Phaser.GameObjects.Sprite {
 
       this.displayBuilding();
     }
+  }
+
+  setLevel(level) {
+    this.level = level;
+    this.displayBuilding();
+  }
+
+  setResources(value) {
+    this.resources = value;
   }
 
   setClickable() {

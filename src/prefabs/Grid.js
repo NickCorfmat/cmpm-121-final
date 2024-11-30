@@ -9,11 +9,8 @@ class Grid {
     // create a map to store cells and their row/col keys
     this.cells = new Map();
 
-    this.BYTES_PER_CELL = 12; // 4 bytes each for sunLevel, waterLevel, and buildingIndex
+    this.BYTES_PER_CELL = 20;
     this.NUM_CELLS = this.width * this.height;
-
-    this.sunLevel = 0;
-    this.waterLevel = 2;
 
     // track cell selection
     this.selectedCell = null;
@@ -107,18 +104,18 @@ class Grid {
     // Loop through each cell in row-major order
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        const cell = this.cells.get(this.generateKey(row, col));
+        const cell = this.getCell(row, col);
 
-        // write sunLevel (Float32)
-        dataView.setFloat32(byteOffset, cell.sunLevel, true);
+        // write properties to byte array
+        dataView.setInt32(byteOffset, cell.buildingRef, true);
         byteOffset += 4;
-
-        // write waterLevel (Float32)
-        dataView.setFloat32(byteOffset, cell.waterLevel, true);
+        dataView.setInt32(byteOffset, cell.level, true);
         byteOffset += 4;
-
-        // write buildingIndex (Int32)
-        dataView.setInt32(byteOffset, cell.buildingIndex, true);
+        dataView.setInt32(byteOffset, cell.sunLevel, true);
+        byteOffset += 4;
+        dataView.setInt32(byteOffset, cell.waterLevel, true);
+        byteOffset += 4;
+        dataView.setInt32(byteOffset, cell.resources, true);
         byteOffset += 4;
       }
     }
@@ -129,29 +126,24 @@ class Grid {
   loadByteArray(byteArray) {
     const dataView = new DataView(byteArray);
     let byteOffset = 0;
-
-    const cells = new Map(); // Reconstruct the cells map
+    const cells = new Map();
 
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        // read sunLevel (Float32)
-        const sunLevel = dataView.getFloat32(byteOffset, true);
+        const buildingRef = dataView.getInt32(byteOffset, true);
         byteOffset += 4;
-
-        // read waterLevel (Float32)
-        const waterLevel = dataView.getFloat32(byteOffset, true);
+        const level = dataView.getInt32(byteOffset, true);
         byteOffset += 4;
-
-        // read buildingIndex (Int32)
-        const buildingIndex = dataView.getInt32(byteOffset, true);
+        const sunLevel = dataView.getInt32(byteOffset, true);
+        byteOffset += 4;
+        const waterLevel = dataView.getInt32(byteOffset, true);
+        byteOffset += 4;
+        const resources = dataView.getInt32(byteOffset, true);
         byteOffset += 4;
 
         // restore the cell
         const cell = new Cell(this.scene, row, col, this);
-        cell.setBuilding(buildingRef);
-        cell.setBuildingLevel(buildingLevel);
-        cell.setWaterLevel(waterLevel);
-        cell.setSunLevel(sunLevel);
+        cell.restore({ buildingRef, level, sunLevel, waterLevel, resources });
 
         cells.set(this.generateKey(row, col), cell);
       }
