@@ -59,8 +59,10 @@ class Cell extends Phaser.GameObjects.Sprite {
     const texture = type + this.level;
 
     if (this.buildingIcon) {
+      // redraw sprite if one exists
       this.buildingIcon.setTexture(texture);
     } else {
+      // create new sprite
       this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
 
       // sprite configs

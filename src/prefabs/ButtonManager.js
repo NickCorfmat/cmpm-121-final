@@ -80,24 +80,19 @@ class ButtonManager {
   }
 
   purchaseBuilding(index) {
-    // retrieve building config based on building type. Source: Brace
-    const buildingConfig = this.scene.buildings[index];
-    const grid = this.scene.grid;
+    const building = this.scene.buildings[index];
+    const { grid, player, stats, trackables } = this.scene;
 
-    console.log("cost: " + buildingConfig.cost);
+    if (this.canPlaceBuilding(building.cost)) {
+      player.spendResources(building.cost);
 
-    // place building in selected cell
-    if (this.canPlaceBuilding(buildingConfig.cost)) {
-      this.scene.player.spendResources(buildingConfig.cost);
-
-      const { row, col } = grid.selectedCell.getLogicalCoords();
-
+      // place building
       grid.selectedCell.setBuilding(index);
 
       // update game stats
-      this.scene.trackables.buildingsPlaced++;
-      this.scene.stats.update(grid.selectedCell);
-      this.scene.player.updateResourceDisplay();
+      trackables.buildingsPlaced++;
+      stats.update(grid.selectedCell);
+      player.updateResourceDisplay();
     }
   }
 
