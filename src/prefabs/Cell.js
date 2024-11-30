@@ -21,6 +21,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.level = 0;
     this.sunLevel = 0;
     this.waterLevel = 0;
+    this.resources = 0;
 
     this.isClickable = false;
 
@@ -52,6 +53,35 @@ class Cell extends Phaser.GameObjects.Sprite {
     });
   }
 
+  displayBuilding() {
+    console.log("displayed building");
+    // remove existing building sprite
+    if (this.buildingIcon) {
+      this.buildingIcon.destroy();
+      console.log("removed old sprite");
+    }
+
+    if (this.hasBuilding()) {
+      console.log("updated current");
+      const buildingConfig = this.scene.buildings[this.buildingRef];
+      const { type, tint, scale } = buildingConfig;
+
+      console.log(type + " " + tint + " " + scale);
+
+      // Create the building sprite at the center of the cell
+      this.buildingIcon = this.scene.add.sprite(
+        this.x,
+        this.y,
+        type + this.level
+      );
+
+      // sprite configs
+      this.buildingIcon.setOrigin(0.5);
+      this.buildingIcon.setDisplaySize(scale, scale);
+      this.buildingIcon.setTint(tint);
+    }
+  }
+
   // Getters/Setters
 
   setSunLevel(value) {
@@ -63,6 +93,20 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   setWaterLevel(value) {
     this.waterLevel = value;
+  }
+
+  setBuilding(ref) {
+    if (!this.hasBuilding() && this.buildingExists(ref)) {
+      this.level++;
+      this.buildingRef = ref;
+
+      this.displayBuilding();
+    }
+  }
+
+  updateLevel() {
+    this.level++;
+    this.displayBuilding();
   }
 
   setClickable() {
@@ -85,6 +129,10 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   hasBuilding() {
     return this.buildingRef >= 0;
+  }
+
+  buildingExists(ref) {
+    return ref >= 0 && ref < this.scene.buildings.length;
   }
 
   getLogicalCoords() {

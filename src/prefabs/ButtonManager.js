@@ -70,19 +70,21 @@ class ButtonManager {
 
   createPurchaseButtons() {
     // create purchase buttons for each building type
-    this.scene.buildings.forEach((building) => {
+    this.scene.buildings.forEach((building, index) => {
       const id = `buy${building.type}Button`;
       const text = `Buy ${building.type}: $${building.cost}`;
 
-      this.createButton(id, () => this.purchaseBuilding(building.type), text);
+      this.createButton(id, () => this.purchaseBuilding(index), text);
       this.toggleVisibility([id], true); // always show
     });
   }
 
-  purchaseBuilding(type) {
+  purchaseBuilding(index) {
     // retrieve building config based on building type. Source: Brace
-    const buildingConfig = this.scene.buildings.find((b) => b.type === type);
+    const buildingConfig = this.scene.buildings[index];
     const grid = this.scene.grid;
+
+    console.log("cost: " + buildingConfig.cost);
 
     // place building in selected cell
     if (this.canPlaceBuilding(buildingConfig.cost)) {
@@ -90,14 +92,7 @@ class ButtonManager {
 
       const { row, col } = grid.selectedCell.getLogicalCoords();
 
-      // assign building to selected cell
-      grid.selectedCell.building = new Building(
-        this.scene,
-        row,
-        col,
-        grid,
-        buildingConfig
-      );
+      grid.selectedCell.setBuilding(index);
 
       // update game stats
       this.scene.trackables.buildingsPlaced++;
