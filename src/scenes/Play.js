@@ -31,19 +31,19 @@ class Play extends Phaser.Scene {
       {
         type: "Drill",
         cost: 10,
-        multiplier: 1,
+        rate: 1,
         scale: 1.6,
       },
       {
         type: "Excavator",
         cost: 30,
-        multiplier: 2,
+        rate: 1.5,
         scale: 1.6,
       },
       {
         type: "DemolitionPlant",
         cost: 50,
-        multiplier: 3,
+        rate: 2,
         scale: 1.6,
       },
     ];
@@ -90,40 +90,23 @@ class Play extends Phaser.Scene {
     this.player.update();
   }
 
-  startNextRound() {
-    this.trackables.turnsPlayed++;
-
-    // generate random sun/water levels
-    this.grid.updateCellLevels();
-
-    // update building stages and generate resources
-    this.grid.cells.forEach((cell) => {
-      if (cell.building) {
-        cell.building.updateLevel();
-        cell.building.generateResources(cell.sunLevel, cell.waterLevel);
-      }
-    });
-
+  updateUI() {
     // prioritize displaying stats of selected cell
     this.grid.selectedCell
       ? this.stats.update(this.grid.selectedCell)
       : this.player.displayCurrentCellStats();
 
-    this.player.updateResourceDisplay();
+    this.player.updatePlayerDisplay();
+  }
+
+  startNextRound() {
+    this.grid.step();
+    this.updateUI();
   }
 
   checkWinCondition() {
     if (this.player.resources >= this.RESOURCE_GOAL) {
-      const { buildingsPlaced, resourcesCollected, turnsPlayed } =
-        this.trackables;
-
-      const data = {
-        buildingsPlaced: buildingsPlaced,
-        resourcesCollected: resourcesCollected,
-        turnsPlayed: turnsPlayed,
-      };
-
-      this.scene.start("sceneWin", data);
+      this.scene.start("sceneWin", this.trackables);
     }
   }
 

@@ -25,7 +25,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     // initialize resources
     this.resources = 100;
-    this.updateResourceDisplay();
+    this.updatePlayerDisplay();
 
     // set player depth to ensure it is above everything else
     this.setDepth(10);
@@ -101,11 +101,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   spendResources(cost) {
     if (this.resources >= cost) {
       this.resources -= cost;
-      this.updateResourceDisplay();
+      this.updatePlayerDisplay();
       return true;
     }
 
     return false;
+  }
+
+  collectResourcesFromCell(cell) {
+    if (cell.hasBuilding()) {
+      const collected = cell.resources;
+      cell.resetResources();
+
+      this.resources += collected;
+      this.scene.trackables.resourcesCollected += collected;
+
+      this.updatePlayerDisplay();
+      this.scene.stats.update(cell);
+
+      this.scene.checkWinCondition();
+    }
   }
 
   displayCurrentCellStats() {
@@ -113,8 +128,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.stats.update(currentCell);
   }
 
-  updateResourceDisplay() {
-    const display = document.getElementById("resourceDisplay");
+  updatePlayerDisplay() {
+    const display = document.getElementById("playerDisplay");
     display.innerText =
       `Resources: ${this.resources}\n` +
       `Turns: ${this.scene.trackables.turnsPlayed}\n` +
@@ -147,12 +162,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
       }
     }
-  }
-
-  collectResources(amount) {
-    this.resources += amount;
-    this.scene.trackables.resourcesCollected += amount; // Increment resources collected
-    this.updateResourceDisplay();
   }
 
   toJSON() {

@@ -54,13 +54,14 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    const buildingConfig = this.scene.buildings[this.buildingRef];
-    const { type, scale } = buildingConfig;
-    const texture = type + this.level;
+    const { scale } = this.scene.buildings[this.buildingRef];
+    const texture = this.getTexture();
 
     if (this.buildingIcon) {
+      // redraw sprite if one exists
       this.buildingIcon.setTexture(texture);
     } else {
+      // create new sprite
       this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
 
       // sprite configs
@@ -69,10 +70,56 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
   }
 
+  step() {
+    this.updateLevel();
+    this.updateSunLevel();
+    this.updateWaterLevel();
+    this.generateResources();
+  }
+
+  generateResources() {
+    if (this.hasBuilding()) {
+      const { rate } = this.scene.buildings[this.buildingRef];
+      this.resources += (this.sunLevel + this.waterLevel) * rate;
+    }
+  }
+
+  updateSunLevel() {
+    const value = Phaser.Math.Between(1, 5);
+    this.setSunLevel(value);
+  }
+
+  updateWaterLevel() {
+    const value = Phaser.Math.Between(0, 5);
+    this.setWaterLevel(value);
+  }
+
+  updateLevel() {
+    if (this.hasBuilding()) {
+      const uniqueCount = new Set(this.getAdjacentBuildings()).size;
+
+      if (uniqueCount >= 2 && !this.maxLevelReached()) {
+        this.level++;
+        this.displayBuilding();
+      }
+    }
+  }
+
+  collectResources() {
+    this.scene.trackables.resourcesCollected += collected;
+    this.resources = 0;
+
+    return;
+  }
+
+  resetResources() {
+    this.resources = 0;
+  }
+
   // Getters/Setters
 
   setSunLevel(value) {
-    // only store sun level if cell is occupied
+    // only store sun level if cell is has building
     if (this.hasBuilding()) {
       this.sunLevel = value;
     }
@@ -85,13 +132,10 @@ class Cell extends Phaser.GameObjects.Sprite {
   setBuilding(ref) {
     if (!this.hasBuilding() && this.buildingExists(ref)) {
       this.buildingRef = ref;
-      this.updateLevel();
-    }
-  }
+      this.level++;
 
-  updateLevel() {
-    this.level++;
-    this.displayBuilding();
+      this.displayBuilding();
+    }
   }
 
   setClickable() {
@@ -110,6 +154,55 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.border.setVisible(false);
   }
 
+  getAdjacentBuildings() {
+    const directions = [
+      { row: -1, col: 0 }, // up
+      { row: 1, col: 0 }, // down
+      { row: 0, col: -1 }, // left
+      { row: 0, col: 1 }, // right
+    ];
+
+    const adjacentBuildings = [];
+
+    directions.forEach((dir) => {
+      const newRow = this.row + dir.row;
+      const newCol = this.col + dir.col;
+      if (
+        newRow >= 0 &&
+        newRow < this.grid.height &&
+        newCol >= 0 &&
+        newCol < this.grid.width
+      ) {
+        const cell = this.grid.getCell(newRow, newCol);
+
+        if (cell.hasBuilding()) {
+          adjacentBuildings.push(cell.buildingRef);
+        }
+      }
+    });
+
+    return adjacentBuildings;
+  }
+
+  getName() {
+    if (this.buildingRef == -1) {
+      return "Empty";
+    } else {
+      return this.scene.buildings[this.buildingRef].type;
+    }
+  }
+
+  getTexture() {
+    if (this.hasBuilding()) {
+      const { type } = this.scene.buildings[this.buildingRef];
+      return type + this.level;
+    }
+  }
+
+  getLogicalCoords() {
+    return { row: this.row, col: this.col };
+  }
+
   // Helpers
 
   hasBuilding() {
@@ -120,7 +213,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     return ref >= 0 && ref < this.scene.buildings.length;
   }
 
-  getLogicalCoords() {
-    return { row: this.row, col: this.col };
+  maxLevelReached() {
+    return this.level >= 3;
   }
 }
