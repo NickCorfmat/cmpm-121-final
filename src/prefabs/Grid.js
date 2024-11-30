@@ -33,12 +33,9 @@ class Grid {
     }
   }
 
-  // Update all cells' levels randomly (example game logic)
-  updateCellLevels() {
-    for (let [key, cell] of this.cells.entries()) {
-      cell.sunLevel = Phaser.Math.Between(1, 5);
-      cell.waterLevel = Phaser.Math.Between(0, 5);
-    }
+  // update the grid's state according to the game's logic
+  step() {
+    this.cells.forEach((cell) => cell.step());
   }
 
   selectCell(row, col) {

@@ -93,16 +93,8 @@ class Play extends Phaser.Scene {
   startNextRound() {
     this.trackables.turnsPlayed++;
 
-    // generate random sun/water levels
-    this.grid.updateCellLevels();
-
-    // update building stages and generate resources
-    this.grid.cells.forEach((cell) => {
-      if (cell.hasBuilding()) {
-        cell.updateLevel();
-        cell.generateResources();
-      }
-    });
+    // update building levels and generate resources
+    this.grid.step();
 
     // prioritize displaying stats of selected cell
     this.grid.selectedCell

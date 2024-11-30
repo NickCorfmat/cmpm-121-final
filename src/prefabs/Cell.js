@@ -77,10 +77,26 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
   }
 
+  updateSunLevel() {
+    const value = Phaser.Math.Between(1, 5);
+    this.setSunLevel(value);
+  }
+
+  updateWaterLevel() {
+    const value = Phaser.Math.Between(0, 5);
+    this.setWaterLevel(value);
+  }
+
+  step() {
+    this.updateLevel();
+    this.updateSunLevel();
+    this.updateWaterLevel();
+  }
+
   // Getters/Setters
 
   setSunLevel(value) {
-    // only store sun level if cell is occupied
+    // only store sun level if cell is has building
     if (this.hasBuilding()) {
       this.sunLevel = value;
     }
@@ -93,13 +109,16 @@ class Cell extends Phaser.GameObjects.Sprite {
   setBuilding(ref) {
     if (!this.hasBuilding() && this.buildingExists(ref)) {
       this.buildingRef = ref;
-      this.updateLevel();
+      this.level++;
+
+      this.displayBuilding();
     }
   }
 
   updateLevel() {
     if (this.hasBuilding()) {
       const uniqueCount = new Set(this.getAdjacentBuildings()).size;
+      console.log(uniqueCount);
 
       if (uniqueCount >= 2) {
         this.level++;
@@ -150,6 +169,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
       }
     });
+
+    return adjacentBuildings;
   }
 
   // Helpers
