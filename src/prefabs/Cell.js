@@ -54,19 +54,21 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    const { scale } = this.scene.buildings[this.buildingRef];
-    const texture = this.getTexture();
+    if (this.hasBuilding()) {
+      const { scale } = this.scene.buildings[this.buildingRef];
+      const texture = this.getTexture();
 
-    if (this.buildingIcon) {
-      // redraw sprite if one exists
-      this.buildingIcon.setTexture(texture);
-    } else {
-      // create new sprite
-      this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
+      if (this.buildingIcon) {
+        // redraw sprite if one exists
+        this.buildingIcon.setTexture(texture);
+      } else {
+        // create new sprite
+        this.buildingIcon = this.scene.add.sprite(this.x, this.y, texture);
 
-      // sprite configs
-      this.buildingIcon.setOrigin(0.5);
-      this.buildingIcon.setScale(scale);
+        // sprite configs
+        this.buildingIcon.setOrigin(0.5);
+        this.buildingIcon.setScale(scale);
+      }
     }
   }
 
@@ -116,6 +118,16 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.resources = 0;
   }
 
+  restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
+    this.setBuilding(buildingRef);
+    this.setLevel(level);
+    this.setSunLevel(sunLevel);
+    this.setWaterLevel(waterLevel);
+    this.setResources(resources);
+
+    this.displayBuilding();
+  }
+
   // Getters/Setters
 
   setSunLevel(value) {
@@ -135,7 +147,18 @@ class Cell extends Phaser.GameObjects.Sprite {
       this.level++;
 
       this.displayBuilding();
+
+      this.scene.gameState.save();
     }
+  }
+
+  setLevel(level) {
+    this.level = level;
+    this.displayBuilding();
+  }
+
+  setResources(value) {
+    this.resources = value;
   }
 
   setClickable() {

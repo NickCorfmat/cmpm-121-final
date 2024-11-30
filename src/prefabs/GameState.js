@@ -16,6 +16,7 @@ class GameState {
   }
 
   save() {
+    console.log("save");
     const gameState = this.getSnapshot();
     localStorage.setItem(this.key, JSON.stringify(gameState));
   }
@@ -27,6 +28,7 @@ class GameState {
       const gameState = JSON.parse(savedData);
       this.loadFromSnapshot(gameState);
     }
+
     this.refreshGameScene();
   }
 
@@ -54,6 +56,6 @@ class GameState {
 
     this.scene.stats.update(currentCell);
     this.scene.player.updateCellInteractivity();
-    this.scene.player.updateResourceDisplay();
+    this.scene.player.updatePlayerDisplay();
   }
 }
