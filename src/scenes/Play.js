@@ -101,7 +101,7 @@ class Play extends Phaser.Scene {
       ? this.stats.update(this.grid.selectedCell)
       : this.player.displayCurrentCellStats();
 
-    this.player.updateResourceDisplay();
+    this.player.updatePlayerDisplay();
   }
 
   checkWinCondition() {

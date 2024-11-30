@@ -54,8 +54,8 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   displayBuilding() {
-    const { type, scale } = this.scene.buildings[this.buildingRef];
-    const texture = type + this.level;
+    const { scale } = this.scene.buildings[this.buildingRef];
+    const texture = this.getTexture();
 
     if (this.buildingIcon) {
       // redraw sprite if one exists
@@ -70,10 +70,17 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
   }
 
+  step() {
+    this.updateLevel();
+    this.updateSunLevel();
+    this.updateWaterLevel();
+    this.generateResources();
+  }
+
   generateResources() {
     if (this.hasBuilding()) {
       const { rate } = this.scene.buildings[this.buildingRef];
-      this.resources += (this.sunLevel + this.waterLevel) * this.rate;
+      this.resources += (this.sunLevel + this.waterLevel) * rate;
     }
   }
 
@@ -87,10 +94,27 @@ class Cell extends Phaser.GameObjects.Sprite {
     this.setWaterLevel(value);
   }
 
-  step() {
-    this.updateLevel();
-    this.updateSunLevel();
-    this.updateWaterLevel();
+  updateLevel() {
+    if (this.hasBuilding()) {
+      const uniqueCount = new Set(this.getAdjacentBuildings()).size;
+      console.log(uniqueCount);
+
+      if (uniqueCount >= 2 && !this.maxLevelReached()) {
+        this.level++;
+        this.displayBuilding();
+      }
+    }
+  }
+
+  collectResources() {
+    this.scene.trackables.resourcesCollected += collected;
+    this.resources = 0;
+
+    return;
+  }
+
+  resetResources() {
+    this.resources = 0;
   }
 
   // Getters/Setters
@@ -112,18 +136,6 @@ class Cell extends Phaser.GameObjects.Sprite {
       this.level++;
 
       this.displayBuilding();
-    }
-  }
-
-  updateLevel() {
-    if (this.hasBuilding()) {
-      const uniqueCount = new Set(this.getAdjacentBuildings()).size;
-      console.log(uniqueCount);
-
-      if (uniqueCount >= 2) {
-        this.level++;
-        this.displayBuilding();
-      }
     }
   }
 
@@ -173,6 +185,25 @@ class Cell extends Phaser.GameObjects.Sprite {
     return adjacentBuildings;
   }
 
+  getName() {
+    if (this.buildingRef == -1) {
+      return "Empty";
+    } else {
+      return this.scene.buildings[this.buildingRef].type;
+    }
+  }
+
+  getTexture() {
+    if (this.hasBuilding()) {
+      const { type } = this.scene.buildings[this.buildingRef];
+      return type + this.level;
+    }
+  }
+
+  getLogicalCoords() {
+    return { row: this.row, col: this.col };
+  }
+
   // Helpers
 
   hasBuilding() {
@@ -183,7 +214,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     return ref >= 0 && ref < this.scene.buildings.length;
   }
 
-  getLogicalCoords() {
-    return { row: this.row, col: this.col };
+  maxLevelReached() {
+    return this.level >= 3;
   }
 }

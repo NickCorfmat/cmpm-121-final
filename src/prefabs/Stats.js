@@ -5,11 +5,9 @@ class Stats extends Phaser.GameObjects.Sprite {
 
     // store references
     this.scene = scene;
-    this.x = x;
-    this.y = y;
     this.width = width;
     this.height = height;
-    this.cell = null;
+    this.cell = -1;
 
     // stats display configs
     this.setOrigin(0);
@@ -53,7 +51,9 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.collectButton.setVisible(false);
 
     this.collectButton.setInteractive();
-    this.collectButton.on("pointerdown", () => this.collectResources());
+    this.collectButton.on("pointerdown", () =>
+      this.scene.player.collectResourcesFromCell(this.cell)
+    );
   }
 
   update(cell) {
@@ -70,13 +70,8 @@ class Stats extends Phaser.GameObjects.Sprite {
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.1;
 
-    let text =
-      this.cell.building == null
-        ? "Cell: Empty"
-        : `Cell: ${this.cell.building.type}`;
-
     this.name.setPosition(x, y);
-    this.name.setText(text);
+    this.name.setText(this.cell.getName());
   }
 
   displayCellIcon() {
@@ -84,13 +79,18 @@ class Stats extends Phaser.GameObjects.Sprite {
     const y = this.height * 0.365;
     const size = this.width * 0.5;
 
+    // icon background
     this.iconframe = this.scene.add
       .sprite(x, y, "cell")
       .setDisplaySize(size, size);
 
-    if (this.cell.building) {
-      this.icon = this.scene.add.image(x, y, this.cell.building.texture);
+    // display building sprite if cell contains one
+    if (this.cell.hasBuilding()) {
+      this.icon = this.scene.add.image(x, y, this.cell.getTexture());
+
+      // sprite configs
       this.icon.setDisplaySize(size, size);
+      this.icon.setOrigin(0.5);
     }
   }
 
@@ -98,10 +98,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
-
-    this.level = this.cell.building
-      ? `Level: ${this.cell.building.level}`
-      : "Level: 0";
+    this.level = `Level: ${this.cell.level}`;
   }
 
   displayDescription() {
@@ -111,7 +108,7 @@ class Stats extends Phaser.GameObjects.Sprite {
   }
 
   displayCollectButton() {
-    if (this.cell.building && this.cell.building.resources > 0) {
+    if (this.cell.hasBuilding() && this.cell.resources > 0) {
       const x = this.x + this.width * 0.5;
       const y = this.height - 30;
 
@@ -119,19 +116,6 @@ class Stats extends Phaser.GameObjects.Sprite {
       this.collectButton.setVisible(true);
     } else {
       this.collectButton.setVisible(false);
-    }
-  }
-
-  collectResources() {
-    if (this.cell.building) {
-      const collected = this.cell.building.collectResources();
-
-      // update game states
-      this.scene.player.resources += collected;
-      this.scene.player.updateResourceDisplay();
-      this.update(this.cell);
-
-      this.scene.checkWinCondition();
     }
   }
 }

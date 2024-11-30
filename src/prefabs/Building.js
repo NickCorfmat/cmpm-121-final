@@ -46,10 +46,8 @@ class Building extends Phaser.Physics.Arcade.Sprite {
   }
 
   collectResources() {
-    const collected = this.resources;
-    this.scene.trackables.resourcesCollected += collected;
+    this.scene.trackables.resourcesCollected += this.resources;
     this.resources = 0;
-    return collected;
   }
 
   updateLevel() {

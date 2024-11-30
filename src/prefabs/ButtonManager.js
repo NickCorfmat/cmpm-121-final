@@ -92,7 +92,7 @@ class ButtonManager {
       // update game stats
       trackables.buildingsPlaced++;
       stats.update(grid.selectedCell);
-      player.updateResourceDisplay();
+      player.updatePlayerDisplay();
     }
   }
 
