@@ -33,34 +33,57 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     checkForInput() {
         const { KEYS } = this;
 
-        if (KEYS.LEFT.isDown) {
-            this.movePlayer(-1, 0);
-        } else if (KEYS.RIGHT.isDown) {
-            this.movePlayer(1, 0);
-        } else if (KEYS.UP.isDown) {
-            this.movePlayer(0, -1);
-        } else if (KEYS.DOWN.isDown) {
-            this.movePlayer(0, 1);
-        }
+    switch (true) {
+      case Phaser.Input.Keyboard.JustDown(KEYS.LEFT):
+        this.movePlayer(-1, 0);
+        this.scene.gameState.saveState();
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.RIGHT):
+        this.movePlayer(1, 0);
+        this.scene.gameState.saveState();
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.UP):
+        this.movePlayer(0, -1);
+        this.scene.gameState.saveState();
+        break;
+      case Phaser.Input.Keyboard.JustDown(KEYS.DOWN):
+        this.movePlayer(0, 1);
+        this.scene.gameState.saveState();
+        break;
+      default:
+        break;
     }
+  }
 
-    movePlayer(dx, dy) {
-        const newX = this.x + dx * this.gridConfig.size;
-        const newY = this.y + dy * this.gridConfig.size;
+  movePlayer(dRow, dCol) {
+    const newRow = this.row + dRow;
+    const newCol = this.col + dCol;
 
-        if (this.isValidMove(newX, newY)) {
-            this.x = newX;
-            this.y = newY;
+    if (this.isValidMove(newRow, newCol)) {
+      this.updatePlayerCoordinates(newRow, newCol);
 
-            this.scene.isPlayerTurn = false;
-        }
+      this.displayCurrentCellStats();
+
+      // make adjacent cells interactable
+      this.updateCellInteractivity();
     }
+  }
 
-    isValidMove(x, y) {
-        const { width, height, size } = this.gridConfig;
+  updatePlayerCoordinates(newRow, newCol) {
+    // update player logical coordinates
+    this.row = newRow;
+    this.col = newCol;
 
-        const isWithinWidth = x >= 0 && x < width * size;
-        const isWithinHeight = y >= 0 && y < height * size;
+    // update player pixel coordinates
+    const coords = this.grid.logicalToPixelCoords(newRow, newCol);
+
+    this.x = coords.x;
+    this.y = coords.y;
+  }
+
+  isValidMove(row, col) {
+    const isWithinWidth = row >= 0 && row < this.grid.width;
+    const isWithinHeight = col >= 0 && col < this.grid.height;
 
         return isWithinWidth && isWithinHeight;
     }

@@ -41,74 +41,45 @@ class Play extends Phaser.Scene {
       cell.on('pointerdown', () => this.selectCell(cell));
     });
 
-    // add event listeners to building buttons
-    this.createBuildingButtons();
-  }
+    // initialize buttons
+    this.buttons = new ButtonManager(this);
 
-  createBuildingButtons() {
-    const buyBuildingButtons = ["buyDrillButton", "buyExcavatorButton", "buyDemolitionPlantButton"];
-    buyBuildingButtons.forEach(type => {
-      document.getElementById(type).addEventListener('click', () => this.buyBuilding(type));
-    });
-  }
+    this.gameState.saveState();
 
-  selectCell(cell) {
-    const playerCell = this.grid.getCell(
-      Math.floor(this.player.x / this.gridConfig.size),
-      Math.floor(this.player.y / this.gridConfig.size)
-    );
-
-    const isAdjacent = Math.abs(cell.gridX - playerCell.gridX) <= 1 && Math.abs(cell.gridY - playerCell.gridY) <= 1;
-
-    if (isAdjacent) {
-      if (this.previousSelectedCell) {
-        this.previousSelectedCell.clearTint();
-      }
-
-      this.selectedCell = cell;
-      this.selectedCell.setTint(0x00ff00); // Highlight the selected cell with green tint
-      this.previousSelectedCell = this.selectedCell;
-    }
-  }
-
-  buyBuilding(type) {
-    if (this.selectedCell && this.player.spendResources(50)) {
-      const { x, y } = this.selectedCell.getCenter();
-      let building;
-      let tint;
-
-      switch (type) {
-        case 'buyDrillButton':
-          building = new Drill(this, x, y, 'cell');
-          tint = 0x000000; // Black
-          break;
-        case 'buyExcavatorButton':
-          building = new Excavator(this, x, y, 'cell');
-          tint = 0x8B4513; // Brown
-          break;
-        case 'buyDemolitionPlantButton':
-          building = new DemolitionPlant(this, x, y, 'cell');
-          tint = 0xFF0000; // Red
-          break;
-      }
-
-      this.selectedCell.setTexture('cell');
-      this.selectedCell.building = building;
-      this.selectedCell.setTint(tint); // Set the tint color for the building
-      this.selectedCell.setDepth(1); // Ensure buildings are below the player
-      this.selectedCell = null;
-      this.previousSelectedCell = null;
-    }
-  }
-
-  endTurn() {
-    this.isPlayerTurn = true;
-    // Add logic for advancing time and updating grid cells
+    this.launchGame();
   }
 
   update() {
-    if (this.isPlayerTurn) {
-      this.player.update();
+    this.player.update();
+  }
+
+  updateUI() {
+    // prioritize displaying stats of selected cell
+    this.grid.selectedCell
+      ? this.stats.update(this.grid.selectedCell)
+      : this.player.displayCurrentCellStats();
+
+    this.player.updatePlayerDisplay();
+  }
+
+  startNextRound() {
+    this.grid.step();
+    this.updateUI();
+    this.gameState.saveState();
+  }
+
+  checkWinCondition() {
+    if (this.player.resources >= this.RESOURCE_GOAL) {
+      this.scene.start("sceneWin", this.trackables);
+    }
+  }
+
+  launchGame() {
+    const savedData = localStorage.getItem(this.local_storage_key);
+
+    // prompt user to continue from auto-save or start new game
+    if (savedData && confirm("Do you want to continue where you left off?")) {
+      this.gameState.load();
     }
   }
 }
