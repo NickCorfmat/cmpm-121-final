@@ -86,7 +86,7 @@ class ButtonManager {
 
   purchaseBuilding(index) {
     const building = this.scene.buildings[index];
-    const { grid, player, stats, trackables } = this.scene;
+    const { grid, player, gameState, stats, trackables } = this.scene;
 
     if (this.canPlaceBuilding(building.cost)) {
       player.spendResources(building.cost);
@@ -99,6 +99,8 @@ class ButtonManager {
       stats.update(grid.selectedCell);
       player.updatePlayerDisplay();
     }
+
+    gameState.save();
   }
 
   canPlaceBuilding(cost) {

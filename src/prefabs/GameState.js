@@ -7,11 +7,17 @@ class GameState {
     this.saveStates = [null, null, null];
 
     this.stateHistory = [];
+    this.currentStateIndex = -1;
   }
 
   save() {
+    console.log("save");
     const snapshot = this.getSnapshot();
     localStorage.setItem(this.key, snapshot);
+
+    this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
+    this.stateHistory.push(snapshot);
+    this.currentStateIndex++;
   }
 
   load() {
@@ -19,9 +25,21 @@ class GameState {
     this.loadFromSnapshot(snapshot);
   }
 
-  undo() {}
+  undo() {
+    if (this.currentStateIndex > 0) {
+      this.currentStateIndex--;
+      const snapshot = this.stateHistory[this.currentStateIndex];
+      this.loadFromSnapshot(snapshot);
+    }
+  }
 
-  redo() {}
+  redo() {
+    if (this.currentStateIndex < this.stateHistory.length - 1) {
+      this.currentStateIndex++;
+      const snapshot = this.stateHistory[this.currentStateIndex];
+      this.loadFromSnapshot(snapshot);
+    }
+  }
 
   getSnapshot() {
     return JSON.stringify({
