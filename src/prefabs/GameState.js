@@ -9,6 +9,7 @@ class GameState {
   save() {
     console.log("auto-save");
     const snapshot = this.getSnapshot();
+    console.log(snapshot);
     localStorage.setItem("AUTO_SAVE", snapshot);
 
     this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);

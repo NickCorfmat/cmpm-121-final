@@ -9,7 +9,7 @@ class Grid {
     // create a map to store cells and their row/col keys
     this.cells = new Map();
 
-    this.BYTES_PER_CELL = 20;
+    this.BYTES_PER_CELL = 4;
     this.NUM_CELLS = this.width * this.height;
 
     // track cell selection
@@ -106,17 +106,19 @@ class Grid {
       for (let col = 0; col < this.width; col++) {
         const cell = this.getCell(row, col);
 
-        // write properties to byte array
-        dataView.setInt32(byteOffset, cell.buildingRef, true);
-        byteOffset += 4;
-        dataView.setInt32(byteOffset, cell.level, true);
-        byteOffset += 4;
-        dataView.setInt32(byteOffset, cell.sunLevel, true);
-        byteOffset += 4;
-        dataView.setInt32(byteOffset, cell.waterLevel, true);
-        byteOffset += 4;
-        dataView.setInt32(byteOffset, cell.resources, true);
-        byteOffset += 4;
+        // Pack buildingRef (1 byte)
+        dataView.setInt8(byteOffset++, cell.buildingRef);
+
+        // Pack level, sunLevel, waterLevel into 1 byte
+        const packedLevels =
+          (cell.level & 0b11) | // 2 bits for level
+          ((cell.sunLevel & 0b111) << 2) | // 3 bits for sunLevel
+          ((cell.waterLevel & 0b111) << 5); // 3 bits for waterLevel
+        dataView.setUint8(byteOffset++, packedLevels);
+
+        // Pack resources (2 bytes)
+        dataView.setUint16(byteOffset, cell.resources, true);
+        byteOffset += 2;
       }
     }
 
@@ -130,19 +132,21 @@ class Grid {
 
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        const buildingRef = dataView.getInt32(byteOffset, true);
-        byteOffset += 4;
-        const level = dataView.getInt32(byteOffset, true);
-        byteOffset += 4;
-        const sunLevel = dataView.getInt32(byteOffset, true);
-        byteOffset += 4;
-        const waterLevel = dataView.getInt32(byteOffset, true);
-        byteOffset += 4;
-        const resources = dataView.getInt32(byteOffset, true);
-        byteOffset += 4;
+        // Load buildingRef (1 byte)
+        const buildingRef = dataView.getInt8(byteOffset++);
 
-        // restore the cell
-        const cell = new Cell(this.scene, row, col, this);
+        // Load packed level, sunLevel, and waterLevel (1 byte)
+        const packedLevels = dataView.getUint8(byteOffset++);
+        const level = packedLevels & 0b11; // Extract 2 bits for level
+        const sunLevel = (packedLevels >> 2) & 0b111; // Extract next 3 bits for sunLevel
+        const waterLevel = (packedLevels >> 5) & 0b111; // Extract next 3 bits for waterLevel
+
+        // Load resources (2 bytes)
+        const resources = dataView.getUint16(byteOffset, true);
+        byteOffset += 2;
+
+        // Restore the cell
+        const cell = this.getCell(row, col);
         cell.restore({ buildingRef, level, sunLevel, waterLevel, resources });
 
         cells.set(this.generateKey(row, col), cell);
