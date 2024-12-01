@@ -46,19 +46,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     switch (true) {
       case Phaser.Input.Keyboard.JustDown(KEYS.LEFT):
         this.movePlayer(-1, 0);
-        this.scene.gameState.saveState();
+        this.scene.gameState.save();
         break;
       case Phaser.Input.Keyboard.JustDown(KEYS.RIGHT):
         this.movePlayer(1, 0);
-        this.scene.gameState.saveState();
+        this.scene.gameState.save();
         break;
       case Phaser.Input.Keyboard.JustDown(KEYS.UP):
         this.movePlayer(0, -1);
-        this.scene.gameState.saveState();
+        this.scene.gameState.save();
         break;
       case Phaser.Input.Keyboard.JustDown(KEYS.DOWN):
         this.movePlayer(0, 1);
-        this.scene.gameState.saveState();
+        this.scene.gameState.save();
         break;
       default:
         break;
