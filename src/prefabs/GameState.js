@@ -13,6 +13,9 @@ class GameState {
   constructor(scene) {
     this.scene = scene;
     this.key = this.scene.local_storage_key;
+
+    // initialize 3 save slots
+    this.saveStates = [null, null, null];
   }
 
   save() {
@@ -31,6 +34,10 @@ class GameState {
 
     this.refreshGameScene();
   }
+
+  undo() {}
+
+  redo() {}
 
   getSnapshot() {
     return {

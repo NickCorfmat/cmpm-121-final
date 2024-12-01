@@ -58,9 +58,6 @@ class Play extends Phaser.Scene {
     };
 
     this.local_storage_key = "saveData";
-
-    // initialize 3 save slots
-    this.saveStates = [null, null, null];
   }
 
   create() {
