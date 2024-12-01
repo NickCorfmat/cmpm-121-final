@@ -56,8 +56,6 @@ class Play extends Phaser.Scene {
       resourcesCollected: 0,
       turnsPlayed: 0,
     };
-
-    this.local_storage_key = "saveData";
   }
 
   create() {
@@ -79,7 +77,7 @@ class Play extends Phaser.Scene {
 
     // initialize buttons
     this.buttons = new ButtonManager(this);
-    
+
     this.launchGame();
   }
 
@@ -109,7 +107,7 @@ class Play extends Phaser.Scene {
   }
 
   launchGame() {
-    const savedData = localStorage.getItem(this.local_storage_key);
+    const savedData = localStorage.getItem("AUTO_SAVE");
 
     // prompt user to continue from auto-save or start new game
     if (savedData && confirm("Do you want to continue where you left off?")) {

@@ -16,7 +16,7 @@ class ButtonManager {
     this.createButton("loadButton", () => this.showSlot("load"));
 
     // create Save/Load slot buttons
-    for (let i = 0; i < this.scene.gameState.saveStates.length; i++) {
+    for (let i = 1; i < 4; i++) {
       this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i));
       this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i));
     }
@@ -40,18 +40,12 @@ class ButtonManager {
   }
 
   handleSaveSlot(slot) {
-    const snapshot = this.scene.gameState.getSnapshot();
-    this.scene.gameState.saveStates[slot] = snapshot;
-
-    //alert(`Game saved successfully to slot: ${slot + 1}`);
-
+    this.scene.gameState.saveToSlot(slot);
     this.returnToMain();
   }
 
   handleLoadSlot(slot) {
-    const snapshot = this.scene.gameState.saveStates[slot];
-    this.scene.gameState.loadFromSnapshot(snapshot);
-
+    this.scene.gameState.loadFromSlot(slot);
     this.returnToMain();
   }
 
@@ -66,8 +60,8 @@ class ButtonManager {
     const isLoad = this.state === "load";
 
     this.toggleVisibility(["saveButton", "loadButton"], isMain);
-    this.toggleVisibility(["saveSlot0", "saveSlot1", "saveSlot2"], isSave);
-    this.toggleVisibility(["loadSlot0", "loadSlot1", "loadSlot2"], isLoad);
+    this.toggleVisibility(["saveSlot1", "saveSlot2", "saveSlot3"], isSave);
+    this.toggleVisibility(["loadSlot1", "loadSlot2", "loadSlot3"], isLoad);
     this.toggleVisibility(["exitButton"], isSave || isLoad);
     this.toggleVisibility(["undoButton"], !isSave && !isLoad);
     this.toggleVisibility(["redoButton"], !isSave && !isLoad);
