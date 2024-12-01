@@ -80,7 +80,7 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this);
 
-    this.gameState.save();
+    this.gameState.saveState();
 
     this.launchGame();
   }
@@ -101,7 +101,7 @@ class Play extends Phaser.Scene {
   startNextRound() {
     this.grid.step();
     this.updateUI();
-    this.gameState.save();
+    this.gameState.saveState();
   }
 
   checkWinCondition() {
