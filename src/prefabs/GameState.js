@@ -71,10 +71,4 @@ class GameState {
     this.scene.player.updateCellInteractivity();
     this.scene.player.updatePlayerDisplay();
   }
-
-  saveState() {
-    const snapshot = this.getSnapshot();
-    this.stateHistory.push(snapshot);
-    this.redoHistory = []; // Clear redo history on new action
-  }
 }

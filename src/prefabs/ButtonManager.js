@@ -99,10 +99,8 @@ class ButtonManager {
       stats.update(grid.selectedCell);
       player.updatePlayerDisplay();
 
-      this.scene.gameState.saveState();
+      gameState.save();
     }
-
-    gameState.save();
   }
 
   canPlaceBuilding(cost) {
