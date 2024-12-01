@@ -49,3 +49,34 @@ https://www.gimp.org/
 
 ## Reflection
 There were many changes we had to make in order to satisfy the F0 requirements. For example, we had to change the design of the machines and their resource collection. We had initially planned to oil the machines manually with the player so that the player has some control over how well the machines take in resources. This oil mechanic was planned to take the place of the water mechanic currently implemented. Because the water and sun had to be random in some way we had to adjust our design of our game in order to fit these requirements. We had also planned on a separate mechanic on how to level up machines using the resources they collected. However, this again had to be adjusted because of the requirements stating that growth had to be determined spatially. Our tools and materials used were the same ones we stated in the previous devlog. The familiarity with these tools aided us in our development and not many adjustments were made in this regard. Our roles were kept intact throughout this development as well.
+
+# Devlog Entry - 11/30/24
+
+## How we satisfied the software requirements
+
+- [F0.a] Same as last week.
+
+- [F0.b] Same as last week.
+  
+- [F0.c] Same as last week.
+  
+- [F0.d] Same as last week.
+  
+- [F0.e] Same as last week.
+  
+- [F0.f] Same as last week.
+  
+- [F0.g] Same as last week.
+
+- [F1.a] Our game satisfies this requirement by using a single contiguous byte array to store the grid state and providing methods to serialize and deserialize this byte array. The byte array format is the primary format for storing the grid state, and other formats (such as the cell objects in the grid) are derived from this byte array as needed. The game's grid state is closer to the Array-of-Structures (AoS) format. Each cell's properties are stored together in the byte array, and the entire grid state is represented as a single contiguous byte array. This allows for efficient serialization and deserialization of the grid state. Each row contains the property of each cell which within it contains  a building reerence, building level, sun level, water level, and resources.
+
+  (Add image here)
+  
+- [F1.b] The game provides functionality to manually save and load the game state using multiple save slots. The GameState class includes methods to save the current game state to local storage and load it back, allowing the player to continue from where they left off even after quitting the game. Additionally, the ButtonManager class manages the save and load buttons, enabling the player to select different save slots for storing and retrieving their game progress.
+  
+- [F1.c] An implicit auto-save system is included that automatically saves the game state at specific actions. The GameState class includes methods to save the current game state to local storage, and the game checks for an auto-save entry upon launch. If an auto-save entry is present, the game prompts the player with an option to continue from where they left off, ensuring recovery from unexpected quits.
+  
+- [F1.d] The player can undo and redo action with the associated buttons in the menu. The GameState class maintains a stateHistory array to track the sequence of game states and to manage redo operations. The undo and redo methods enable the player to navigate through these histories, restoring previous states as needed.
+
+## Reflection
+Looking back on how you achieved the new F1 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
