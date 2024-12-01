@@ -79,9 +79,7 @@ class Play extends Phaser.Scene {
 
     // initialize buttons
     this.buttons = new ButtonManager(this);
-
-    this.gameState.saveState();
-
+    
     this.launchGame();
   }
 
@@ -117,5 +115,7 @@ class Play extends Phaser.Scene {
     if (savedData && confirm("Do you want to continue where you left off?")) {
       this.gameState.load();
     }
+
+    this.gameState.save();
   }
 }

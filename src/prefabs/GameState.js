@@ -7,12 +7,17 @@ class GameState {
     this.saveStates = [null, null, null];
 
     this.stateHistory = [];
-    this.redoHistory = [];
+    this.currentStateIndex = -1;
   }
 
   save() {
+    console.log("save");
     const snapshot = this.getSnapshot();
     localStorage.setItem(this.key, snapshot);
+
+    this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
+    this.stateHistory.push(snapshot);
+    this.currentStateIndex++;
   }
 
   load() {
@@ -21,21 +26,18 @@ class GameState {
   }
 
   undo() {
-    if (this.stateHistory.length > 1) {
-      const currentState = this.stateHistory.pop();
-      this.redoHistory.push(currentState);
-      const previousState = this.stateHistory[this.stateHistory.length - 1];
-      this.loadFromSnapshot(previousState);
-      this.scene.stats.update(this.scene.grid.selectedCell);
+    if (this.currentStateIndex > 0) {
+      this.currentStateIndex--;
+      const snapshot = this.stateHistory[this.currentStateIndex];
+      this.loadFromSnapshot(snapshot);
     }
   }
 
   redo() {
-    if (this.redoHistory.length > 0) {
-      const nextState = this.redoHistory.pop();
-      this.stateHistory.push(nextState);
-      this.loadFromSnapshot(nextState);
-      this.scene.stats.update(this.scene.grid.selectedCell);
+    if (this.currentStateIndex < this.stateHistory.length - 1) {
+      this.currentStateIndex++;
+      const snapshot = this.stateHistory[this.currentStateIndex];
+      this.loadFromSnapshot(snapshot);
     }
   }
 

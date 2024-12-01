@@ -147,8 +147,6 @@ class Cell extends Phaser.GameObjects.Sprite {
       this.level++;
 
       this.displayBuilding();
-
-      this.scene.gameState.save();
     }
   }
 
