@@ -3,42 +3,44 @@ class GameState {
     this.scene = scene;
 
     this.stateHistory = [];
-    this.currentStateIndex = -1;
+    this.stateIndex = -1;
   }
 
   save() {
-    console.log("auto-save");
-    const snapshot = this.getSnapshot();
-    console.log(snapshot);
+    const snapshot = this.getBoardSnapshot();
     localStorage.setItem("AUTO_SAVE", snapshot);
 
-    this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
+    this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1);
     this.stateHistory.push(snapshot);
-    this.currentStateIndex++;
+    this.stateIndex++;
+
+    this.saveUndoHistory("AUTO_SAVE_HISTORY");
   }
 
   load() {
     const snapshot = localStorage.getItem("AUTO_SAVE");
-    this.loadFromSnapshot(snapshot);
+    this.loadBoardSnapshot(snapshot);
+
+    this.loadUndoHistory("AUTO_SAVE");
   }
 
   undo() {
-    if (this.currentStateIndex > 0) {
-      this.currentStateIndex--;
-      const snapshot = this.stateHistory[this.currentStateIndex];
-      this.loadFromSnapshot(snapshot);
+    if (this.stateIndex > 0) {
+      this.stateIndex--;
+      const snapshot = this.stateHistory[this.stateIndex];
+      this.loadBoardSnapshot(snapshot);
     }
   }
 
   redo() {
-    if (this.currentStateIndex < this.stateHistory.length - 1) {
-      this.currentStateIndex++;
-      const snapshot = this.stateHistory[this.currentStateIndex];
-      this.loadFromSnapshot(snapshot);
+    if (this.stateIndex < this.stateHistory.length - 1) {
+      this.stateIndex++;
+      const snapshot = this.stateHistory[this.stateIndex];
+      this.loadBoardSnapshot(snapshot);
     }
   }
 
-  getSnapshot() {
+  getBoardSnapshot() {
     return JSON.stringify({
       grid: this.scene.grid.toJSON(),
       player: this.scene.player.toJSON(),
@@ -46,7 +48,7 @@ class GameState {
     });
   }
 
-  loadFromSnapshot(snapshot) {
+  loadBoardSnapshot(snapshot) {
     if (snapshot) {
       const gameState = JSON.parse(snapshot);
 
@@ -60,16 +62,43 @@ class GameState {
     }
   }
 
+  saveUndoHistory(key) {
+    const undoHistorySnapshot = JSON.stringify({
+      stateHistory: this.stateHistory,
+      stateIndex: this.stateIndex,
+    });
+
+
+    localStorage.setItem(key, undoHistorySnapshot);
+  }
+
+  loadUndoHistory(key) {
+    const undoHistorySnapshot = localStorage.getItem(key);
+
+    console.log(undoHistorySnapshot)
+
+    if (undoHistorySnapshot) {
+      const history = JSON.parse(undoHistorySnapshot)
+      this.stateHistory = history.stateHistory;
+      this.stateIndex = history.stateIndex;
+    }
+
+    console.log(this.stateHistory);
+    console.log(this.stateIndex)
+  }
+
   saveToSlot(slot) {
-    console.log(`saved to slot: ${slot}`);
-    const snapshot = this.getSnapshot();
+    const snapshot = this.getBoardSnapshot();
     localStorage.setItem(`SLOT_${slot}`, snapshot);
+
+    this.saveUndoHistory(`SLOT_${slot}_HISTORY`);
   }
 
   loadFromSlot(slot) {
-    console.log(`loaded from slot: ${slot}`);
     const snapshot = localStorage.getItem(`SLOT_${slot}`);
-    this.loadFromSnapshot(snapshot);
+    this.loadBoardSnapshot(snapshot);
+
+    this.loadUndoHistory(`SLOT_${slot}_HISTORY`);
   }
 
   refreshGameScene() {
