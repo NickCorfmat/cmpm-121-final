@@ -16,7 +16,7 @@ class ButtonManager {
     this.createButton("loadButton", () => this.showSlot("load"));
 
     // create Save/Load slot buttons
-    for (let i = 0; i < this.scene.saveStates.length; i++) {
+    for (let i = 0; i < this.scene.gameState.saveStates.length; i++) {
       this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i));
       this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i));
     }
@@ -28,6 +28,9 @@ class ButtonManager {
     this.createPurchaseButtons();
     this.createNextRoundButton();
 
+    this.createUndoButton();
+    this.createRedoButton();
+
     this.updateUI();
   }
 
@@ -38,7 +41,7 @@ class ButtonManager {
 
   handleSaveSlot(slot) {
     const snapshot = this.scene.gameState.getSnapshot();
-    this.scene.saveStates[slot] = snapshot;
+    this.scene.gameState.saveStates[slot] = snapshot;
 
     //alert(`Game saved successfully to slot: ${slot + 1}`);
 
@@ -46,7 +49,7 @@ class ButtonManager {
   }
 
   handleLoadSlot(slot) {
-    const snapshot = this.scene.saveStates[slot];
+    const snapshot = this.scene.gameState.saveStates[slot];
     this.scene.gameState.loadFromSnapshot(snapshot);
 
     this.returnToMain();
@@ -66,6 +69,8 @@ class ButtonManager {
     this.toggleVisibility(["saveSlot0", "saveSlot1", "saveSlot2"], isSave);
     this.toggleVisibility(["loadSlot0", "loadSlot1", "loadSlot2"], isLoad);
     this.toggleVisibility(["exitButton"], isSave || isLoad);
+    this.toggleVisibility(["undoButton"], !isSave && !isLoad);
+    this.toggleVisibility(["redoButton"], !isSave && !isLoad);
   }
 
   createPurchaseButtons() {
@@ -109,6 +114,22 @@ class ButtonManager {
 
     button.addEventListener("click", () => {
       this.scene.startNextRound();
+    });
+  }
+
+  createUndoButton() {
+    const undoButton = document.getElementById("undoButton");
+
+    undoButton.addEventListener("click", () => {
+      this.scene.gameState.undo();
+    });
+  }
+
+  createRedoButton() {
+    const redoButton = document.getElementById("redoButton");
+
+    redoButton.addEventListener("click", () => {
+      this.scene.gameState.redo();
     });
   }
 
