@@ -57,7 +57,6 @@ class Stats extends Phaser.GameObjects.Sprite {
   }
 
   update(cell) {
-    console.log("Stats update called with cell:", cell);
     this.cell = cell;
     this.getCellInfo();
 
@@ -96,7 +95,6 @@ class Stats extends Phaser.GameObjects.Sprite {
   }
 
   getCellInfo() {
-    console.log("getCellInfo called with cell:", this.cell);
     this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;

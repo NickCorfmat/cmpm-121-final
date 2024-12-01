@@ -1,45 +1,81 @@
 /*
-[F0.a] You control a character moving over a 2D grid.
-[F0.b] You advance time manually in the turn-based simulation.
-[F0.c] You can reap or sow plants on grid cells only when you are near them.
-[F0.d] Grid cells have sun and water levels. The incoming sun and water for each cell is somehow randomly generated each turn. Sun energy cannot be stored in a cell (it is used immediately or lost) while water moisture can be slowly accumulated over several turns.
-[F0.e] Each plant on the grid has a distinct type (e.g. one of 3 species) and a growth level (e.g. “level 1”, “level 2”, “level 3”).
-[F0.f] Simple spatial rules govern plant growth based on sun, water, and nearby plants (growth is unlocked by satisfying conditions).
-[F0.g] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
+Mechanics:
+- Player can move one grid tile per turn and place on building per turn
+- Player can only place a building on an empty grid tile (Buttons for each building type near end turn button)
+- Player can only place a building if they have enough resources
+- Player starts with enough resources for 2 buildings
+- Player can harvest resources from buildings (must be within one grid cell)
+- Each turn player receives the same resources from buildings with different rates based on the type (Drill, Ecavator, DemolitionPlant)
+- Player can oil buildings to increase their oil level (must be within one grid cell)
+- At the end of the turn, each cell is updated with a sun level, if a building is present, the building recieves the sun level (otherwise the sun level is wasted) and the cell is updated with resources based on the sun and oil level of the cell
+- Player cannot oil cells with no buildings
+- Buildings use 1 oil level per turn and may be oiled to a maximum of 5
 */
+
 class Play extends Phaser.Scene {
   constructor() {
     super("scenePlay");
   }
 
   init() {
-    this.gridConfig = { width: 8, height: 8, size: 40 };
-    this.isPlayerTurn = true;
-    this.selectedCell = null;
-    this.previousSelectedCell = null;
+    // set game display parameters
+    this.gridConfig = { width: 8, height: 8, size: 50 };
+    this.statsConfig = {
+      x: this.gridConfig.width * this.gridConfig.size,
+      y: 0,
+      width: width - this.gridConfig.width * this.gridConfig.size,
+      height: height,
+    };
+
+    this.buildings = [
+      {
+        type: "Drill",
+        cost: 10,
+        rate: 1,
+        scale: 1.6,
+      },
+      {
+        type: "Excavator",
+        cost: 30,
+        rate: 1.5,
+        scale: 1.6,
+      },
+      {
+        type: "DemolitionPlant",
+        cost: 50,
+        rate: 2,
+        scale: 1.6,
+      },
+    ];
+
+    this.RESOURCE_GOAL = 1000;
+
+    // initialize game stats
+    this.trackables = {
+      buildingsPlaced: 0,
+      resourcesCollected: 0,
+      turnsPlayed: 0,
+    };
+
+    this.local_storage_key = "saveData";
   }
 
   create() {
-    // set background color
-    this.cameras.main.setBackgroundColor(0x000000);
+    // initialize game state manager
+    this.gameState = new GameState(this);
 
+    // initialize game window
     this.grid = new Grid(this, this.gridConfig);
+    this.stats = new Stats(
+      this,
+      this.statsConfig.x,
+      this.statsConfig.y,
+      this.statsConfig.width,
+      this.statsConfig.height
+    );
 
-    const cell = this.grid.getCell(0, 0);
-    const cellCenter = cell.getCenter();
-
-    this.player = new Player(this, cellCenter.x, cellCenter.y, this.gridConfig);
-
-    // add event listener to end turn button
-    document
-      .getElementById("endTurnButton")
-      .addEventListener("click", () => this.endTurn());
-
-    // add event listener to grid cells
-    this.grid.grid.forEach(cell => {
-      cell.setInteractive();
-      cell.on('pointerdown', () => this.selectCell(cell));
-    });
+    // initialize player
+    this.player = new Player(this, 0, 0, this.grid);
 
     // initialize buttons
     this.buttons = new ButtonManager(this);

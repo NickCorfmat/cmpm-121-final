@@ -43,19 +43,14 @@ class ButtonManager {
     const snapshot = this.scene.gameState.getSnapshot();
     this.scene.gameState.saveStates[slot] = snapshot;
 
-    // Save the current state to the history
-    this.scene.gameState.saveState();
+    //alert(`Game saved successfully to slot: ${slot + 1}`);
 
     this.returnToMain();
   }
 
   handleLoadSlot(slot) {
-    console.log("Loading save slot:", slot);
     const snapshot = this.scene.gameState.saveStates[slot];
     this.scene.gameState.loadFromSnapshot(snapshot);
-
-    // Load the state history from the snapshot
-    this.scene.gameState.loadStateHistory(snapshot);
 
     this.returnToMain();
   }

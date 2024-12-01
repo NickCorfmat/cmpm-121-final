@@ -1,37 +1,47 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, gridConfig, texture = "player") {
-        super(scene, x, y, texture);
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
+  constructor(scene, row, col, grid, texture = "player") {
+    // convert logical to pixel for displaying cell
+    const { x, y } = grid.logicalToPixelCoords(row, col);
 
-        // sprite configs
-        const converage = 0.75;
+    super(scene, x, y, texture);
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
 
-        this.setOrigin(0.5);
-        this.setDisplaySize(
-            gridConfig.size * converage,
-            gridConfig.size * converage
-        );
+    // sprite configs
+    const converage = 1;
 
-        // store references
-        this.scene = scene;
-        this.gridConfig = gridConfig;
-        this.KEYS = scene.scene.get("sceneKeys").KEYS;
+    this.setOrigin(0.5);
+    this.setDisplaySize(grid.size * converage, grid.size * converage);
 
-        // initialize resources
-        this.resources = 100;
-        this.updateResourceDisplay();
+    // store references
+    this.scene = scene;
+    this.grid = grid;
+    this.row = row; // player logical coords
+    this.col = col;
+    this.x = x; // player pixel coords
+    this.y = y;
 
-        // set player depth to ensure it is above everything else
-        this.setDepth(10);
-    }
+    this.KEYS = scene.scene.get("sceneKeys").KEYS;
 
-    update() {
-        this.checkForInput();
-    }
+    // initialize resources
+    this.resources = 100;
+    this.updatePlayerDisplay();
 
-    checkForInput() {
-        const { KEYS } = this;
+    // set player depth to ensure it is above everything else
+    this.setDepth(10);
+
+    this.anims.play("idle");
+
+    // spawn player at current cell
+    this.movePlayer(0, 0);
+  }
+
+  update() {
+    this.checkForInput();
+  }
+
+  checkForInput() {
+    const { KEYS } = this;
 
     switch (true) {
       case Phaser.Input.Keyboard.JustDown(KEYS.LEFT):
@@ -85,23 +95,85 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     const isWithinWidth = row >= 0 && row < this.grid.width;
     const isWithinHeight = col >= 0 && col < this.grid.height;
 
-        return isWithinWidth && isWithinHeight;
+    return isWithinWidth && isWithinHeight;
+  }
+
+  spendResources(cost) {
+    if (this.resources >= cost) {
+      this.resources -= cost;
+      this.updatePlayerDisplay();
+      return true;
     }
 
-    canAfford(cost) {
-        return this.resources >= cost;
-    }
+    return false;
+  }
 
-    spendResources(cost) {
-        if (this.canAfford(cost)) {
-            this.resources -= cost;
-            this.updateResourceDisplay();
-            return true;
+  collectResourcesFromCell(cell) {
+    if (cell.hasBuilding()) {
+      const collected = cell.resources;
+      cell.resetResources();
+
+      this.resources += collected;
+      this.scene.trackables.resourcesCollected += collected;
+
+      this.updatePlayerDisplay();
+      this.scene.stats.update(cell);
+
+      this.scene.checkWinCondition();
+    }
+  }
+
+  displayCurrentCellStats() {
+    const currentCell = this.grid.getCell(this.row, this.col);
+    this.scene.stats.update(currentCell);
+  }
+
+  updatePlayerDisplay() {
+    const display = document.getElementById("playerDisplay");
+    display.innerText =
+      `Resources: ${this.resources}\n` +
+      `Turns: ${this.scene.trackables.turnsPlayed}\n` +
+      `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
+  }
+
+  updateCellInteractivity() {
+    this.grid.selectedCell = null;
+    this.grid.lastSelectedCell = null;
+
+    // disable interactivty on all cells
+    this.grid.cells.forEach((cell) => {
+      cell.disableClickable();
+      cell.disableBorder();
+    });
+
+    // loop through all adjacent cells
+    for (let row = this.row - 1; row < this.row + 2; row++) {
+      for (let col = this.col - 1; col < this.col + 2; col++) {
+        // check if cell is within bounds
+        if (
+          row >= 0 &&
+          row < this.grid.width &&
+          col >= 0 &&
+          col < this.grid.height
+        ) {
+          // enable cell interactivity on adjacent cells
+          const cell = this.grid.getCell(row, col);
+          cell.setClickable();
         }
-        return false;
+      }
     }
+  }
 
-    updateResourceDisplay() {
-        document.getElementById('resourceDisplay').innerText = `Resources: ${this.resources}`;
-    }
+  toJSON() {
+    return {
+      row: this.row,
+      col: this.col,
+      resources: this.resources,
+    };
+  }
+
+  fromJSON(data) {
+    this.updatePlayerCoordinates(data.row, data.col);
+    this.resources = data.resources;
+  }
 }

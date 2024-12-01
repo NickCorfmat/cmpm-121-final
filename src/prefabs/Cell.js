@@ -148,7 +148,7 @@ class Cell extends Phaser.GameObjects.Sprite {
 
       this.displayBuilding();
 
-      this.scene.gameState.saveState(); // Save the game state after placing a building
+      this.scene.gameState.save();
     }
   }
 

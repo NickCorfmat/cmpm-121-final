@@ -1,35 +1,86 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  background-color: rgb(166, 159, 173);
+}
+
+.hidden {
+  display: none;
+}
+
 body {
-    background-color: rgb(38, 88, 44);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2.4em;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.6em;
+  color: #102c42;
+  text-align: center;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  border: 8px solid black;
+  border-radius: 10px;
+}
+
+#phaser-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 710px;
+  height: 410px;
+  background-color: rgb(130, 138, 255);
+}
+
+#info-panel {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgb(114, 117, 168);
+  border: 6px solid rgb(130, 138, 255);
+}
+
+#info-panel-left,
+#info-panel-middle,
+#info-panel-right {
+  display: flex;
+  flex-direction: column;
+  width: 33.33%;
+  padding: 10px;
+  justify-content: center;
 }
 
 button {
-    position: absolute;
-    left: 10px; /* Adjust this value based on your game window size */
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #0f0;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: rgb(156, 167, 206);
+  box-shadow: 0px 4px 0 0 rgb(0, 0, 0);
+  border-radius: 4px;
+  border: 3px solid black;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 button:hover {
-    background-color: #68e1ff;
-    transform: scale(1.05);
+  background-color: #74adf7;
+  transform: scale(1.05);
 }
 
-#endTurnButton {
-    top: 10px; /* Adjust this value based on your game window size */
-}
-
-#buyDrillButton {
-    top: 60px; /* Adjust this value based on your game window size */
-}
-
-#buyExcavatorButton {
-    top: 110px; /* Adjust this value based on your game window size */
-}
-
-#buyDemolitionPlantButton {
-    top: 160px; /* Adjust this value based on your game window size */
+#playerDisplay {
+  text-align: center;
+  font-size: 1.5em;
+  color: #fff;
 }

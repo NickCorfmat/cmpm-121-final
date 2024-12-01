@@ -2,13 +2,11 @@
 
 let config = {
   type: Phaser.AUTO,
-  width: 320,
-  height: 320,
+  width: 700,
+  height: 400,
+  parent: "phaser-game",
   render: {
     pixelArt: true,
-  },
-  scale: {
-    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   physics: {
     default: "arcade",
@@ -16,7 +14,7 @@ let config = {
       debug: false,
     },
   },
-  scene: [Load, Keys, Play],
+  scene: [Load, Keys, Play, Win],
 };
 
 let game = new Phaser.Game(config);
