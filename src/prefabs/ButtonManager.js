@@ -98,6 +98,8 @@ class ButtonManager {
       trackables.buildingsPlaced++;
       stats.update(grid.selectedCell);
       player.updatePlayerDisplay();
+
+      this.scene.gameState.saveState();
     }
 
     gameState.save();
