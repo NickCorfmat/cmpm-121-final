@@ -1,19 +1,15 @@
 class GameState {
   constructor(scene) {
     this.scene = scene;
-    this.key = this.scene.local_storage_key;
-
-    // initialize 3 save slots
-    this.saveStates = [null, null, null];
 
     this.stateHistory = [];
     this.currentStateIndex = -1;
   }
 
   save() {
-    console.log("save");
+    console.log("auto-save");
     const snapshot = this.getSnapshot();
-    localStorage.setItem(this.key, snapshot);
+    localStorage.setItem("AUTO_SAVE", snapshot);
 
     this.stateHistory = this.stateHistory.slice(0, this.currentStateIndex + 1);
     this.stateHistory.push(snapshot);
@@ -21,7 +17,7 @@ class GameState {
   }
 
   load() {
-    const snapshot = localStorage.getItem(this.key);
+    const snapshot = localStorage.getItem("AUTO_SAVE");
     this.loadFromSnapshot(snapshot);
   }
 
@@ -61,6 +57,18 @@ class GameState {
     } else {
       alert("Trying to load from empty slot!");
     }
+  }
+
+  saveToSlot(slot) {
+    console.log(`saved to slot: ${slot}`);
+    const snapshot = this.getSnapshot();
+    localStorage.setItem(`SLOT_${slot}`, snapshot);
+  }
+
+  loadFromSlot(slot) {
+    console.log(`loaded from slot: ${slot}`);
+    const snapshot = localStorage.getItem(`SLOT_${slot}`);
+    this.loadFromSnapshot(snapshot);
   }
 
   refreshGameScene() {
