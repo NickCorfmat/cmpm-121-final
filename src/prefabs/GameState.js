@@ -1,14 +1,3 @@
-/* TO SAVE:
- * placer location
- * resources
- * turns
- * buildings placed
- * grid data (sun levels, water levels)
- *
- * TODO:
- * every placed building and their collected resources
- */
-
 class GameState {
   constructor(scene) {
     this.scene = scene;
@@ -17,24 +6,44 @@ class GameState {
     // initialize 3 save slots
     this.saveStates = [null, null, null];
 
-    this.stateHistory = [];
+    this.undoStack = [];
+    this.redoStack = [];
   }
 
   save() {
     const snapshot = this.getSnapshot();
+
+    this.undoStack.push(snapshot);
+    this.redoStack = [];
+
     localStorage.setItem(this.key, snapshot);
-    this.stateHistory.push(snapshot);
   }
 
   load() {
     const snapshot = localStorage.getItem(this.key);
     this.loadFromSnapshot(snapshot);
-    this.refreshGameScene();
   }
 
-  undo() {}
+  undo() {
+    if (this.undoStack.length > 0) {
+      const snapshot = this.undoStack.pop();
+      this.redoStack.push(snapshot);
+      const previousState = this.undoStack[this.undoStack.length - 1];
 
-  redo() {}
+      if (previousState) {
+        this.loadFromSnapshot(previousState);
+      }
+    }
+  }
+
+  redo() {
+    if (this.redoStack.length > 0) {
+      const snapshot = this.redoStack.pop();
+      this.undoStack.push(snapshot);
+
+      this.loadFromSnapshot(snapshot);
+    }
+  }
 
   getSnapshot() {
     return JSON.stringify({
@@ -51,6 +60,8 @@ class GameState {
       this.scene.grid.fromJSON(gameState.grid);
       this.scene.player.fromJSON(gameState.player);
       this.scene.trackables = { ...gameState.trackables };
+
+      this.refreshGameScene();
     } else {
       alert("Trying to load from empty slot!");
     }
