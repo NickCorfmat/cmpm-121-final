@@ -80,6 +80,8 @@ class Play extends Phaser.Scene {
     // initialize buttons
     this.buttons = new ButtonManager(this);
 
+    this.gameState.save();
+
     this.launchGame();
   }
 

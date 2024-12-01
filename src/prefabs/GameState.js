@@ -6,16 +6,11 @@ class GameState {
     // initialize 3 save slots
     this.saveStates = [null, null, null];
 
-    this.undoStack = [];
-    this.redoStack = [];
+    this.stateHistory = [];
   }
 
   save() {
     const snapshot = this.getSnapshot();
-
-    this.undoStack.push(snapshot);
-    this.redoStack = [];
-
     localStorage.setItem(this.key, snapshot);
   }
 
@@ -24,26 +19,9 @@ class GameState {
     this.loadFromSnapshot(snapshot);
   }
 
-  undo() {
-    if (this.undoStack.length > 0) {
-      const snapshot = this.undoStack.pop();
-      this.redoStack.push(snapshot);
-      const previousState = this.undoStack[this.undoStack.length - 1];
+  undo() {}
 
-      if (previousState) {
-        this.loadFromSnapshot(previousState);
-      }
-    }
-  }
-
-  redo() {
-    if (this.redoStack.length > 0) {
-      const snapshot = this.redoStack.pop();
-      this.undoStack.push(snapshot);
-
-      this.loadFromSnapshot(snapshot);
-    }
-  }
+  redo() {}
 
   getSnapshot() {
     return JSON.stringify({
