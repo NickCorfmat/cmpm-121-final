@@ -4,20 +4,6 @@ import { Player } from "../prefabs/Player";
 import { Stats } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
 
-/*
-Mechanics:
-- Player can move one grid tile per turn and place on building per turn
-- Player can only place a building on an empty grid tile (Buttons for each building type near end turn button)
-- Player can only place a building if they have enough resources
-- Player starts with enough resources for 2 buildings
-- Player can harvest resources from buildings (must be within one grid cell)
-- Each turn player receives the same resources from buildings with different rates based on the type (Drill, Ecavator, DemolitionPlant)
-- Player can oil buildings to increase their oil level (must be within one grid cell)
-- At the end of the turn, each cell is updated with a sun level, if a building is present, the building recieves the sun level (otherwise the sun level is wasted) and the cell is updated with resources based on the sun and oil level of the cell
-- Player cannot oil cells with no buildings
-- Buildings use 1 oil level per turn and may be oiled to a maximum of 5
-*/
-
 class Play extends Phaser.Scene {
   private gridConfig: { width: number; height: number; size: number };
   private statsConfig: { x: number; y: number; width: number; height: number };

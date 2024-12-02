@@ -1,11 +1,12 @@
+import { Grid } from "./Grid";
 import { Cell } from "./Cell";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  private grid: Grid;
-  private scene: Phaser.Scene;
-  private row: number;
-  private col: number;
-  private resources: number;
+  public grid: Grid;
+  public scene: Phaser.Scene;
+  public row: number;
+  public col: number;
+  public resources: number;
 
   constructor(
     scene: Phaser.Scene,
@@ -19,7 +20,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture);
 
     scene.add.existing(this);
-    scene.physics.add.existing(this);
 
     // sprite configs
     const converage = 1;
