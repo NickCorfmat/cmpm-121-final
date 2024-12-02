@@ -2,7 +2,10 @@
 // displaying save/load buttons, along with their respective slot buttons.
 
 export class ButtonManager {
-  constructor(scene) {
+  public scene: Phaser.Scene;
+  private state: string;
+
+  constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.state = "main";
 
@@ -16,7 +19,7 @@ export class ButtonManager {
     this.createButton("loadButton", () => this.showSlot("load"));
 
     // create Save/Load slot buttons
-    for (let i = 1; i < 4; i++) {
+    for (let i = 1; i <= 3; i++) {
       this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i));
       this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i));
     }
@@ -27,24 +30,23 @@ export class ButtonManager {
     // create player action buttons
     this.createPurchaseButtons();
     this.createNextRoundButton();
-
     this.createUndoButton();
     this.createRedoButton();
 
     this.updateUI();
   }
 
-  showSlot(type): void {
+  showSlot(type: string): void {
     this.state = type;
     this.updateUI();
   }
 
-  handleSaveSlot(slot): void {
+  handleSaveSlot(slot: number): void {
     this.scene.gameState.saveToSlot(slot);
     this.returnToMain();
   }
 
-  handleLoadSlot(slot): void {
+  handleLoadSlot(slot: number): void {
     this.scene.gameState.loadFromSlot(slot);
     this.returnToMain();
   }
@@ -78,7 +80,7 @@ export class ButtonManager {
     });
   }
 
-  purchaseBuilding(index): void {
+  purchaseBuilding(index: number): void {
     const building = this.scene.buildings[index];
     const { grid, player, gameState, stats, trackables } = this.scene;
 
@@ -97,7 +99,7 @@ export class ButtonManager {
     }
   }
 
-  canPlaceBuilding(cost): boolean {
+  canPlaceBuilding(cost: number): boolean {
     return (
       this.scene.grid.selectedCell &&
       this.scene.player.resources >= cost &&
@@ -108,7 +110,7 @@ export class ButtonManager {
   createNextRoundButton(): void {
     const button = document.getElementById("nextRoundButton");
 
-    button.addEventListener("click", () => {
+    button?.addEventListener("click", () => {
       this.scene.startNextRound();
     });
   }
@@ -116,7 +118,7 @@ export class ButtonManager {
   createUndoButton(): void {
     const undoButton = document.getElementById("undoButton");
 
-    undoButton.addEventListener("click", () => {
+    undoButton?.addEventListener("click", () => {
       this.scene.gameState.undo();
     });
   }
@@ -124,7 +126,7 @@ export class ButtonManager {
   createRedoButton(): void {
     const redoButton = document.getElementById("redoButton");
 
-    redoButton.addEventListener("click", () => {
+    redoButton?.addEventListener("click", () => {
       this.scene.gameState.redo();
     });
   }
@@ -133,15 +135,17 @@ export class ButtonManager {
   createButton(id: string, handler, text): void {
     const button = document.getElementById(id);
 
-    if (text) button.innerHTML = text;
-    button.className = "hidden";
-    button.onclick = handler;
+    if (button) {
+      if (text) button.innerHTML = text;
+      button.className = "hidden";
+      button.onclick = handler;
+    }
   }
 
   toggleVisibility(ids, show): void {
     ids.forEach((id) => {
       const element = document.getElementById(id);
-      element.classList.toggle("hidden", !show);
+      element?.classList.toggle("hidden", !show);
     });
   }
 }
