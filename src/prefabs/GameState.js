@@ -7,40 +7,39 @@ class GameState {
   }
 
   save() {
-    const snapshot = this.getBoardSnapshot();
-    localStorage.setItem("AUTO_SAVE", snapshot);
+    console.log("save")
+    const boardState = this.getBoardState();
+    localStorage.setItem("AUTO_SAVE", boardState);
 
-    this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1);
-    this.stateHistory.push(snapshot);
+    this.trimStateHistory();
+    this.stateHistory.push(boardState);
     this.stateIndex++;
 
-    this.saveUndoHistory("AUTO_SAVE_HISTORY");
+    this.saveStateHistory("AUTO_SAVE_HISTORY");
   }
 
   load() {
-    const snapshot = localStorage.getItem("AUTO_SAVE");
-    this.loadBoardSnapshot(snapshot);
+    const boardState = localStorage.getItem("AUTO_SAVE");
+    this.loadBoardState(boardState);
 
-    this.loadUndoHistory("AUTO_SAVE");
+    this.loadStateHistory("AUTO_SAVE_HISTORY");
   }
 
   undo() {
     if (this.stateIndex > 0) {
-      this.stateIndex--;
-      const snapshot = this.stateHistory[this.stateIndex];
-      this.loadBoardSnapshot(snapshot);
+      const boardState = this.historyRewind();
+      this.loadBoardState(boardState);
     }
   }
 
   redo() {
     if (this.stateIndex < this.stateHistory.length - 1) {
-      this.stateIndex++;
-      const snapshot = this.stateHistory[this.stateIndex];
-      this.loadBoardSnapshot(snapshot);
+      const boardState = this.historyAdvance();
+      this.loadBoardState(boardState);
     }
   }
 
-  getBoardSnapshot() {
+  getBoardState() {
     return JSON.stringify({
       grid: this.scene.grid.toJSON(),
       player: this.scene.player.toJSON(),
@@ -48,13 +47,13 @@ class GameState {
     });
   }
 
-  loadBoardSnapshot(snapshot) {
-    if (snapshot) {
-      const gameState = JSON.parse(snapshot);
+  loadBoardState(boardState) {
+    if (boardState) {
+      const state = JSON.parse(boardState);
 
-      this.scene.grid.fromJSON(gameState.grid);
-      this.scene.player.fromJSON(gameState.player);
-      this.scene.trackables = { ...gameState.trackables };
+      this.scene.grid.fromJSON(state.grid);
+      this.scene.player.fromJSON(state.player);
+      this.scene.trackables = { ...state.trackables };
 
       this.refreshGameScene();
     } else {
@@ -62,38 +61,55 @@ class GameState {
     }
   }
 
-  saveUndoHistory(key) {
-    const undoHistorySnapshot = JSON.stringify({
+  saveStateHistory(key) {
+    const undoHistory = JSON.stringify({
       stateHistory: this.stateHistory,
       stateIndex: this.stateIndex,
     });
 
 
-    localStorage.setItem(key, undoHistorySnapshot);
+    localStorage.setItem(key, undoHistory);
   }
 
-  loadUndoHistory(key) {
-    const undoHistorySnapshot = localStorage.getItem(key);
+  loadStateHistory(key) {
+    const undoHistory = localStorage.getItem(key);
 
-    if (undoHistorySnapshot) {
-      const history = JSON.parse(undoHistorySnapshot)
-      this.stateHistory = history.stateHistory;
-      this.stateIndex = history.stateIndex;
+    if (undoHistory) {
+      const state = JSON.parse(undoHistory)
+
+      this.stateHistory = state.stateHistory;
+      this.stateIndex = state.stateIndex;
     }
   }
 
   saveToSlot(slot) {
-    const snapshot = this.getBoardSnapshot();
-    localStorage.setItem(`SLOT_${slot}`, snapshot);
+    const boardState = this.getBoardState();
+    localStorage.setItem(`SLOT_${slot}`, boardState);
 
-    this.saveUndoHistory(`SLOT_${slot}_HISTORY`);
+    this.saveStateHistory(`SLOT_${slot}_HISTORY`);
   }
 
   loadFromSlot(slot) {
-    const snapshot = localStorage.getItem(`SLOT_${slot}`);
-    this.loadBoardSnapshot(snapshot);
+    const boardState = localStorage.getItem(`SLOT_${slot}`);
+    this.loadBoardState(boardState);
 
-    this.loadUndoHistory(`SLOT_${slot}_HISTORY`);
+    this.loadStateHistory(`SLOT_${slot}_HISTORY`);
+  }
+
+  // Helpers
+
+  historyAdvance() {
+    this.stateIndex++;
+    return this.stateHistory[this.stateIndex];
+  }
+
+  historyRewind() {
+    this.stateIndex--;
+    return this.stateHistory[this.stateIndex];
+  }
+
+  trimStateHistory() {
+    this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1)
   }
 
   refreshGameScene() {
