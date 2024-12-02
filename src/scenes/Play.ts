@@ -1,12 +1,14 @@
 import { GameState } from "../prefabs/GameState";
 import { Grid } from "../prefabs/Grid";
+import { GridConfig } from "../prefabs/Grid";
 import { Player } from "../prefabs/Player";
 import { Stats } from "../prefabs/Stats";
+import { StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
 
 class Play extends Phaser.Scene {
-  private gridConfig: { width: number; height: number; size: number };
-  private statsConfig: { x: number; y: number; width: number; height: number };
+  private gridConfig: GridConfig;
+  private statsConfig: StatsConfig;
   public buildings: Array<{
     type: string;
     cost: number;

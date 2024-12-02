@@ -116,7 +116,7 @@ export class Grid {
     // Loop through each cell in row-major order
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        const cell = this.getCell(row, col);
+        const cell = this.getCell(row, col)!;
 
         // Pack buildingRef (1 byte)
         dataView.setInt8(byteOffset++, cell.buildingRef);
@@ -158,7 +158,7 @@ export class Grid {
         byteOffset += 2;
 
         // Restore the cell
-        const cell = this.getCell(row, col);
+        const cell = this.getCell(row, col)!;
         cell.restore({ buildingRef, level, sunLevel, waterLevel, resources });
 
         cells.set(this.generateKey(row, col), cell);

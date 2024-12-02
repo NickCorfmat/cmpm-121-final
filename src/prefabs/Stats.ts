@@ -1,3 +1,10 @@
+export interface StatsConfig {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export class Stats extends Phaser.GameObjects.Sprite {
   private scene: Scene;
   private width: number;

@@ -138,10 +138,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   updatePlayerDisplay(): void {
     const display = document.getElementById("playerDisplay");
-    display.innerText =
-      `Resources: ${this.resources}\n` +
-      `Turns: ${this.scene.trackables.turnsPlayed}\n` +
-      `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
+
+    if (display) {
+      display.innerText =
+        `Resources: ${this.resources}\n` +
+        `Turns: ${this.scene.trackables.turnsPlayed}\n` +
+        `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
+    }
   }
 
   updateCellInteractivity(): void {
@@ -165,7 +168,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           col < this.grid.height
         ) {
           // enable cell interactivity on adjacent cells
-          const cell = this.grid.getCell(row, col);
+          const cell = this.grid.getCell(row, col)!;
           cell.setClickable();
         }
       }
