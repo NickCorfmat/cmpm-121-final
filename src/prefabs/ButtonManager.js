@@ -101,7 +101,7 @@ class ButtonManager {
     return (
       this.scene.grid.selectedCell &&
       this.scene.player.resources >= cost &&
-      !this.scene.grid.selectedCell.building
+      this.scene.grid.selectedCell.buildingRef < 0
     );
   }
 
