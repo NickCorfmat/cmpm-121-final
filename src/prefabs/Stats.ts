@@ -1,3 +1,6 @@
+import { PlayScene } from "../scenes/Play";
+import { Cell } from "./Cell";
+
 export interface StatsConfig {
   x: number;
   y: number;
@@ -6,7 +9,7 @@ export interface StatsConfig {
 }
 
 export class Stats extends Phaser.GameObjects.Sprite {
-  private scene: Scene;
+  private scene: PlayScene;
   private width: number;
   private height: number;
   private cell: Cell | null = null;
@@ -24,7 +27,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
   private level: string = "";
 
   constructor(
-    scene: Phaser.Scene,
+    scene: PlayScene,
     x: number,
     y: number,
     width: number,

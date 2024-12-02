@@ -1,9 +1,11 @@
+import { PlayScene } from "../scenes/Play";
+
 export class GameState {
-  private scene: Phaser.Scene;
+  private scene: PlayScene;
   private stateHistory: string[] = [];
   private stateIndex: number = -1;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: PlayScene) {
     this.scene = scene;
   }
 

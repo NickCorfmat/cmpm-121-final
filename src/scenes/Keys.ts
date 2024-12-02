@@ -1,4 +1,4 @@
-class Keys extends Phaser.Scene {
+export class Keys extends Phaser.Scene {
   private KEYS;
 
   constructor() {

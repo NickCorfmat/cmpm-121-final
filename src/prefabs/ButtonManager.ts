@@ -1,11 +1,13 @@
+import { PlayScene } from "../scenes/Play";
+
 // Source: Brace helped refactor ButtonManager to adopt a state approach to
 // displaying save/load buttons, along with their respective slot buttons.
 
 export class ButtonManager {
-  public scene: Phaser.Scene;
+  public scene: PlayScene;
   private state: string;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: PlayScene) {
     this.scene = scene;
     this.state = "main";
 

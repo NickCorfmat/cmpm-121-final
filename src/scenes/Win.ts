@@ -1,9 +1,17 @@
-class Win extends Phaser.Scene {
+import { Trackables } from "../prefabs/Types";
+
+export class Win extends Phaser.Scene {
+  private buildingsPlaced: number;
+  private resourcesCollected: number;
+  private turnsPlayed: number;
+  private textConfig: Phaser.Types.GameObjects.Text.TextConfig;
+  private text: Phaser.Types.GameObjects.Text;
+
   constructor() {
     super("sceneWin");
   }
 
-  init(data): void {
+  init(data: Trackables): void {
     this.buildingsPlaced = data.buildingsPlaced;
     this.resourcesCollected = data.resourcesCollected;
     this.turnsPlayed = data.turnsPlayed;
@@ -19,12 +27,17 @@ class Win extends Phaser.Scene {
 
   create(): void {
     this.text = this.add
-      .text(width / 2, height / 2, this.getWinText(), this.textConfig)
+      .text(
+        this.game.scale.width / 2,
+        this.game.scale.height / 2,
+        this.getWinText(),
+        this.textConfig
+      )
       .setOrigin(0.5);
   }
 
   // Source: Brace, How can I shorten a long string message?
-  getWinText(): void {
+  getWinText(): string {
     return (
       `You Win!\n` +
       `Buildings Placed: ${this.buildingsPlaced}\n` +

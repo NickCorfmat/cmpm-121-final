@@ -1,14 +1,13 @@
-import { GameState } from "../prefabs/GameState";
-import { Grid } from "../prefabs/Grid";
-import { GridConfig } from "../prefabs/Grid";
 import { Player } from "../prefabs/Player";
-import { Stats } from "../prefabs/Stats";
-import { StatsConfig } from "../prefabs/Stats";
+import { GameState } from "../prefabs/GameState";
+import { Grid, GridConfig } from "../prefabs/Grid";
+import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
+import { Trackables } from "../prefabs/Types";
 
-class Play extends Phaser.Scene {
-  private gridConfig: GridConfig;
-  private statsConfig: StatsConfig;
+export class PlayScene extends Phaser.Scene {
+  public gridConfig: GridConfig;
+  public statsConfig: StatsConfig;
   public buildings: Array<{
     type: string;
     cost: number;
@@ -16,17 +15,13 @@ class Play extends Phaser.Scene {
     scale: number;
   }>;
   public RESOURCE_GOAL: number;
-  public trackables: {
-    buildingsPlaced: number;
-    resourcesCollected: number;
-    turnsPlayed: number;
-  };
+  public trackables: Trackables;
 
   public gameState!: GameState;
-  public grid!: Grid;
-  public stats!: Stats;
-  public player!: Player;
-  private buttons!: ButtonManager;
+  public grid: Grid;
+  public stats: Stats;
+  public player: Player;
+  public buttons: ButtonManager;
 
   constructor() {
     super("scenePlay");
@@ -75,10 +70,7 @@ class Play extends Phaser.Scene {
   }
 
   create(): void {
-    // initialize game state manager
     this.gameState = new GameState(this);
-
-    // initialize game window
     this.grid = new Grid(this, this.gridConfig);
     this.stats = new Stats(
       this,
@@ -87,11 +79,7 @@ class Play extends Phaser.Scene {
       this.statsConfig.width,
       this.statsConfig.height
     );
-
-    // initialize player
     this.player = new Player(this, 0, 0, this.grid);
-
-    // initialize buttons
     this.buttons = new ButtonManager(this);
 
     this.launchGame();

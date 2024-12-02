@@ -1,9 +1,11 @@
 import { Grid } from "./Grid";
+import { PlayScene } from "../scenes/Play";
 
 export class Cell extends Phaser.GameObjects.Sprite {
+  public scene: PlayScene;
   public row: number;
   public col: number;
-  private grid: Grid;
+  public grid: Grid;
 
   public buildingRef: number = -1;
   public level: number = 0;
@@ -16,7 +18,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
   private buildingIcon?: Phaser.GameObjects.Sprite;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: PlayScene,
     row: number,
     col: number,
     grid: Grid,

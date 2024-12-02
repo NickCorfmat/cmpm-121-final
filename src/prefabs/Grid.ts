@@ -1,4 +1,5 @@
 import { Cell } from "./Cell";
+import { PlayScene } from "../scenes/Play";
 
 export interface GridConfig {
   width: number;
@@ -7,7 +8,7 @@ export interface GridConfig {
 }
 
 export class Grid {
-  public scene: Phaser.Scene;
+  public scene: PlayScene;
   public width: number;
   public height: number;
   public size: number;
@@ -17,7 +18,7 @@ export class Grid {
   public selectedCell: Cell | null = null;
   public lastSelectedCell: Cell | null = null;
 
-  constructor(scene: Phaser.Scene, gridConfig: GridConfig) {
+  constructor(scene: PlayScene, gridConfig: GridConfig) {
     // store references
     this.scene = scene;
     this.width = gridConfig.width;

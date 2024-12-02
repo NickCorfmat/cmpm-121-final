@@ -1,15 +1,16 @@
 import { Grid } from "./Grid";
 import { Cell } from "./Cell";
+import { PlayScene } from "../scenes/Play";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   public grid: Grid;
-  public scene: Phaser.Scene;
+  public scene: PlayScene;
   public row: number;
   public col: number;
   public resources: number;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: PlayScene,
     row: number,
     col: number,
     grid: Grid,
