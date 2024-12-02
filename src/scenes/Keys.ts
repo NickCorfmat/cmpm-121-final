@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 export class KeyScene extends Phaser.Scene {
   public KEYS!: {
     LEFT: Phaser.Input.Keyboard.Key;

@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { Player } from "../prefabs/Player";
 import { GameState } from "../prefabs/GameState";
 import { Grid, GridConfig } from "../prefabs/Grid";

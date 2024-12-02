@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { Grid } from "./Grid";
 import { PlayScene } from "../scenes/Play";
 

@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { Trackables } from "./Play";
 
 export class WinScene extends Phaser.Scene {
