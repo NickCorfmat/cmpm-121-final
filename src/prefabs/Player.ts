@@ -179,7 +179,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
   }
 
-  toJSON(): { row: number; col: number; resources: number } {
+  serialize(): { row: number; col: number; resources: number } {
     return {
       row: this.row,
       col: this.col,
@@ -187,7 +187,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     };
   }
 
-  fromJSON(data: { row: number; col: number; resources: number }): void {
+  deserialize(data: { row: number; col: number; resources: number }): void {
     this.updatePlayerCoordinates(data.row, data.col);
     this.resources = data.resources;
   }
