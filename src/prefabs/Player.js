@@ -2,35 +2,28 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, texture = "player") {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
-
     super(scene, x, y, texture);
+
     scene.add.existing(this);
-    scene.physics.add.existing(this);
 
     // sprite configs
     const converage = 1;
-
     this.setOrigin(0.5);
+    this.setDepth(10);
     this.setDisplaySize(grid.size * converage, grid.size * converage);
+    this.anims.play("idle");
 
     // store references
     this.scene = scene;
     this.grid = grid;
     this.row = row; // player logical coords
     this.col = col;
-    this.x = x; // player pixel coords
-    this.y = y;
 
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
 
     // initialize resources
     this.resources = 100;
     this.updatePlayerDisplay();
-
-    // set player depth to ensure it is above everything else
-    this.setDepth(10);
-
-    this.anims.play("idle");
 
     // spawn player at current cell
     this.movePlayer(0, 0);

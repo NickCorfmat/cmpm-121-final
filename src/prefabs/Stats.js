@@ -7,7 +7,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.width = width;
     this.height = height;
-    this.cell = -1;
+    this.cell = null;
 
     // stats display configs
     this.setOrigin(0);
@@ -49,8 +49,8 @@ class Stats extends Phaser.GameObjects.Sprite {
     // collect button configs
     this.collectButton.setOrigin(0.5);
     this.collectButton.setVisible(false);
-
     this.collectButton.setInteractive();
+
     this.collectButton.on("pointerdown", () =>
       this.scene.player.collectResourcesFromCell(this.cell)
     );
@@ -58,8 +58,8 @@ class Stats extends Phaser.GameObjects.Sprite {
 
   update(cell) {
     this.cell = cell;
+    
     this.getCellInfo();
-
     this.displayCellName();
     this.displayCellIcon();
     this.displayDescription();
