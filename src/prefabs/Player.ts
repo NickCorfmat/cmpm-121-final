@@ -133,7 +133,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   displayCurrentCellStats(): void {
-    const currentCell = this.grid.getCell(this.row, this.col);
+    const currentCell = this.grid.getCell(this.row, this.col)!;
     this.scene.stats.update(currentCell);
   }
 

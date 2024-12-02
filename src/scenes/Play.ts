@@ -3,7 +3,12 @@ import { GameState } from "../prefabs/GameState";
 import { Grid, GridConfig } from "../prefabs/Grid";
 import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
-import { Trackables } from "../prefabs/Types";
+
+export interface Trackables {
+  buildingsPlaced: number;
+  resourcesCollected: number;
+  turnsPlayed: number;
+}
 
 export class PlayScene extends Phaser.Scene {
   public gridConfig: GridConfig;

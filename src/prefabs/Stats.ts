@@ -9,11 +9,11 @@ export interface StatsConfig {
 }
 
 export class Stats extends Phaser.GameObjects.Sprite {
-  private scene: PlayScene;
-  private width: number;
-  private height: number;
+  public scene: PlayScene;
+  public width: number;
+  public height: number;
   private cell: Cell | null = null;
-  private name: Phaser.GameObjects.Text;
+  private title: Phaser.GameObjects.Text;
   private description: Phaser.GameObjects.Text;
   private icon: Phaser.GameObjects.Image | null = null;
   private iconframe: Phaser.GameObjects.Sprite | null = null;
@@ -57,7 +57,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     };
 
     // create text elements
-    this.name = this.scene.add.text(0, 0, "", this.textConfig);
+    this.title = this.scene.add.text(0, 0, "", this.textConfig);
     this.description = this.scene.add.text(
       this.x + this.width * 0.5,
       this.height * 0.75,
@@ -66,7 +66,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     );
 
     // center text
-    this.name.setOrigin(0.5);
+    this.title.setOrigin(0.5);
     this.description.setOrigin(0.5);
 
     // declare icon sprite
@@ -75,7 +75,6 @@ export class Stats extends Phaser.GameObjects.Sprite {
     // create collect button
     this.collectButton = this.scene.add.text(0, 0, "Collect Resources", {
       fontSize: "16px",
-      fill: "#0f0",
       backgroundColor: "#000",
       padding: { x: 10, y: 5 },
     });
@@ -108,8 +107,8 @@ export class Stats extends Phaser.GameObjects.Sprite {
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.1;
 
-    this.name.setPosition(x, y);
-    this.name.setText(this.cell.getName());
+    this.title.setPosition(x, y);
+    this.title.setText(this.cell.getName());
   }
 
   displayCellIcon(): void {

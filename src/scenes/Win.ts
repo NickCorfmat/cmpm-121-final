@@ -1,4 +1,4 @@
-import { Trackables } from "../prefabs/Types";
+import { Trackables } from "./Play";
 
 export class Win extends Phaser.Scene {
   private buildingsPlaced: number;

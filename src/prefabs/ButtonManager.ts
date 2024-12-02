@@ -90,11 +90,11 @@ export class ButtonManager {
       player.spendResources(building.cost);
 
       // place building
-      grid.selectedCell.setBuilding(index);
+      grid.selectedCell?.setBuilding(index);
 
       // update game stats
       trackables.buildingsPlaced++;
-      stats.update(grid.selectedCell);
+      stats.update(grid.selectedCell!);
       player.updatePlayerDisplay();
 
       gameState.save();

@@ -1,7 +1,7 @@
 import { PlayScene } from "../scenes/Play";
 
 export class GameState {
-  private scene: PlayScene;
+  public scene: PlayScene;
   private stateHistory: string[] = [];
   private stateIndex: number = -1;
 
@@ -115,7 +115,7 @@ export class GameState {
 
   refreshGameScene(): void {
     const { row, col } = this.scene.player;
-    const currentCell = this.scene.grid.getCell(row, col);
+    const currentCell = this.scene.grid.getCell(row, col)!;
 
     this.scene.stats.update(currentCell);
     this.scene.player.updateCellInteractivity();
