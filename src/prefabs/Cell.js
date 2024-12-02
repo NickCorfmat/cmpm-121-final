@@ -241,7 +241,6 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   removeBuildingSprite() {
     if (this.buildingIcon) {
-      console.log("destroyed building sprite");
       this.buildingIcon.destroy();
       this.buildingIcon = null;
     }
