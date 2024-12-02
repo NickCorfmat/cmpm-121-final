@@ -18,7 +18,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
   private icon: Phaser.GameObjects.Image | null = null;
   private iconframe: Phaser.GameObjects.Sprite | null = null;
   private collectButton: Phaser.GameObjects.Text;
-  private textConfig: Phaser.Types.GameObjects.Text.TextConfig;
+  private textConfig: Phaser.Types.GameObjects.Text.TextStyle;
 
   // Additional properties for cell info display
   private location: string = "";
@@ -50,9 +50,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     // tunable text parameters
     this.textConfig = {
       fontSize: "20px",
-      fill: "#fff",
       backgroundColor: "000",
-      padding: 10,
       lineSpacing: 10,
     };
 
