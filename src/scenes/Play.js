@@ -113,7 +113,5 @@ class Play extends Phaser.Scene {
     if (savedData && confirm("Do you want to continue where you left off?")) {
       this.gameState.load();
     }
-
-    this.gameState.save();
   }
 }
