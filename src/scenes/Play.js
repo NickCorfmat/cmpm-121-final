@@ -71,12 +71,8 @@ class Play extends Phaser.Scene {
       this.statsConfig.width,
       this.statsConfig.height
     );
-
-    // initialize player
-    this.player = new Player(this, 0, 0, this.grid);
-
-    // initialize buttons
     this.buttons = new ButtonManager(this);
+    this.player = new Player(this, 0, 0, this.grid);
 
     this.launchGame();
   }
