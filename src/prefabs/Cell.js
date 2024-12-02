@@ -107,13 +107,6 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
   }
 
-  collectResources() {
-    this.scene.trackables.resourcesCollected += collected;
-    this.resources = 0;
-
-    return;
-  }
-
   resetResources() {
     this.resources = 0;
   }
@@ -121,7 +114,7 @@ class Cell extends Phaser.GameObjects.Sprite {
   restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
     this.buildingRef = buildingRef;
     this.level = level;
-    this.sunLevel = level;
+    this.sunLevel = sunLevel;
     this.waterLevel = waterLevel;
     this.resources = resources;
 
