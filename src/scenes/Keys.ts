@@ -1,12 +1,14 @@
 import Phaser from "phaser";
 
+export interface KEYS {
+  LEFT: Phaser.Input.Keyboard.Key;
+  RIGHT: Phaser.Input.Keyboard.Key;
+  UP: Phaser.Input.Keyboard.Key;
+  DOWN: Phaser.Input.Keyboard.Key;
+}
+
 export class KeyScene extends Phaser.Scene {
-  public KEYS!: {
-    LEFT: Phaser.Input.Keyboard.Key;
-    RIGHT: Phaser.Input.Keyboard.Key;
-    UP: Phaser.Input.Keyboard.Key;
-    DOWN: Phaser.Input.Keyboard.Key;
-  };
+  public KEYS!: KEYS;
 
   constructor() {
     super("sceneKeys");
@@ -21,7 +23,7 @@ export class KeyScene extends Phaser.Scene {
       RIGHT: KeyCodes.RIGHT,
       UP: KeyCodes.UP,
       DOWN: KeyCodes.DOWN,
-    }) as KeyScene["KEYS"];
+    }) as KEYS;
 
     this.scene.launch("scenePlay");
   }

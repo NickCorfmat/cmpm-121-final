@@ -1,7 +1,7 @@
 import { Grid } from "./Grid";
 import { Cell } from "./Cell";
 import { PlayScene } from "../scenes/Play";
-import { KeyScene as Keys } from "../scenes/Keys";
+import { KeyScene, KEYS } from "../scenes/Keys";
 
 export class Player extends Phaser.GameObjects.Sprite {
   public scene: PlayScene;
@@ -10,7 +10,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   public grid: Grid;
 
   public resources: number;
-  private KEYS: Keys;
+  private KEYS: KEYS;
 
   constructor(
     scene: PlayScene,
@@ -38,7 +38,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.row = row; // player logical coords
     this.col = col;
 
-    this.KEYS = scene.scene.get("sceneKeys").KEYS;
+    this.KEYS = (scene.scene.get("sceneKeys") as KeyScene).KEYS;
 
     // initialize resources
     this.resources = 100;

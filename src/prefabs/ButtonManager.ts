@@ -134,7 +134,7 @@ export class ButtonManager {
   }
 
   // Helpers
-  createButton(id: string, handler, text?: string): void {
+  createButton(id: string, handler: (this: GlobalEventHandlers, ev: MouseEvent) => any, text?: string): void {
     const button = document.getElementById(id);
 
     if (button) {
@@ -144,7 +144,7 @@ export class ButtonManager {
     }
   }
 
-  toggleVisibility(ids, show): void {
+  toggleVisibility(ids: string[], show: boolean): void {
     ids.forEach((id) => {
       const element = document.getElementById(id);
       element?.classList.toggle("hidden", !show);
