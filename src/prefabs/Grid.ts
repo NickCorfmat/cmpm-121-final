@@ -1,20 +1,32 @@
-class Grid {
-  constructor(scene, gridConfig) {
+import { Cell } from "./Cell";
+
+export interface GridConfig {
+  width: number;
+  height: number;
+  size: number;
+}
+
+export class Grid {
+  private scene: Phaser.Scene;
+  private width: number;
+  private height: number;
+  private size: number;
+  private cells: Map<string, Cell>;
+  private BYTES_PER_CELL: number = 4;
+  private NUM_CELLS: number;
+  private selectedCell: Cell | null = null;
+  private lastSelectedCell: Cell | null = null;
+
+  constructor(scene: Phaser.Scene, gridConfig: GridConfig) {
     // store references
     this.scene = scene;
     this.width = gridConfig.width;
     this.height = gridConfig.height;
     this.size = gridConfig.size;
+    this.NUM_CELLS = this.width * this.height;
 
     // create a map to store cells and their row/col keys
     this.cells = new Map();
-
-    this.BYTES_PER_CELL = 4;
-    this.NUM_CELLS = this.width * this.height;
-
-    // track cell selection
-    this.selectedCell = null;
-    this.lastSelectedCell = null;
 
     this.createGrid();
   }
@@ -36,12 +48,12 @@ class Grid {
     this.scene.trackables.turnsPlayed++;
   }
 
-  selectCell(row, col): void {
+  selectCell(row: number, col: number): void {
     // retrieve selected cell
     const cell = this.getCell(row, col);
 
     // select cell only if game deems it selectable
-    if (cell.isClickable) {
+    if (cell && cell.isClickable) {
       this.selectedCell = cell;
       this.selectedCell.enableBorder();
 
@@ -68,27 +80,27 @@ class Grid {
   }
 
   // Extracting key generation to own function idea inspired by Brace
-  generateKey(row, col): string {
+  generateKey(row: number, col: number): string {
     return `${row}:${col}`;
   }
 
-  getCell(row, col): Cell {
+  getCell(row: number, col: number): Cell | undefined {
     return this.cells.get(this.generateKey(row, col));
   }
 
-  getCellFromPixelCoords(x, y): Cell {
+  getCellFromPixelCoords(x: number, y: number): Cell | undefined {
     const { row, col } = this.pixelToLogicalCoords(x, y);
     return this.getCell(row, col);
   }
 
-  pixelToLogicalCoords(x, y): {row: number, col: number} {
+  pixelToLogicalCoords(x: number, y: number): { row: number; col: number } {
     return {
       row: Math.floor(x / this.size),
       col: Math.floor(y / this.size),
     };
   }
 
-  logicalToPixelCoords(row, col): { x: number, y: number } {
+  logicalToPixelCoords(row: number, col: number): { x: number; y: number } {
     const x = row * this.size + this.size / 2;
     const y = col * this.size + this.size / 2;
 
@@ -156,12 +168,12 @@ class Grid {
     this.cells = cells;
   }
 
-  arrayBufferToBase64(buffer): string {
+  arrayBufferToBase64(buffer: ArrayBuffer): string {
     const binary = String.fromCharCode(...new Uint8Array(buffer));
     return btoa(binary);
   }
 
-  base64ToArrayBuffer(base64): ArrayBuffer {
+  base64ToArrayBuffer(base64: string): ArrayBuffer {
     const binary = atob(base64);
     const buffer = new Uint8Array(binary.length);
 
@@ -177,7 +189,7 @@ class Grid {
     return this.arrayBufferToBase64(byteArray);
   }
 
-  fromJSON(gridData): void {
+  fromJSON(gridData: string): void {
     const byteArray = this.base64ToArrayBuffer(gridData);
     this.loadByteArray(byteArray);
   }
