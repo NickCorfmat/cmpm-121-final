@@ -7,15 +7,15 @@ export interface GridConfig {
 }
 
 export class Grid {
-  private scene: Phaser.Scene;
+  public scene: Phaser.Scene;
   public width: number;
   public height: number;
   public size: number;
-  private cells: Map<string, Cell>;
+  public cells: Map<string, Cell>;
   private BYTES_PER_CELL: number = 4;
   private NUM_CELLS: number;
-  private selectedCell: Cell | null = null;
-  private lastSelectedCell: Cell | null = null;
+  public selectedCell: Cell | null = null;
+  public lastSelectedCell: Cell | null = null;
 
   constructor(scene: Phaser.Scene, gridConfig: GridConfig) {
     // store references

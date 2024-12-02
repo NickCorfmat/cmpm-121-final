@@ -1,17 +1,17 @@
 import { Grid } from "./Grid";
 
 export class Cell extends Phaser.GameObjects.Sprite {
-  private row: number;
-  private col: number;
+  public row: number;
+  public col: number;
   private grid: Grid;
 
-  private buildingRef: number = -1;
-  private level: number = 0;
-  private sunLevel: number = 0;
-  private waterLevel: number = 0;
-  private resources: number = 0;
+  public buildingRef: number = -1;
+  public level: number = 0;
+  public sunLevel: number = 0;
+  public waterLevel: number = 0;
+  public resources: number = 0;
 
-  private isClickable: boolean = false;
+  public isClickable: boolean = false;
   private border?: Phaser.GameObjects.Graphics;
   private buildingIcon?: Phaser.GameObjects.Sprite;
 

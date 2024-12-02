@@ -1,4 +1,4 @@
-class Player extends Phaser.Physics.Arcade.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, row, col, grid, texture = "player") {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);

@@ -1,4 +1,4 @@
-class GameState {
+export class GameState {
   constructor(scene) {
     this.scene = scene;
 
@@ -6,7 +6,7 @@ class GameState {
     this.stateIndex = -1;
   }
 
-  save() {
+  save(): void {
     const boardState = this.getBoardState();
     localStorage.setItem("AUTO_SAVE", boardState);
 
@@ -17,21 +17,21 @@ class GameState {
     this.saveStateHistory("AUTO_SAVE_HISTORY");
   }
 
-  load() {
+  load(): void {
     const boardState = localStorage.getItem("AUTO_SAVE");
     this.loadBoardState(boardState);
 
     this.loadStateHistory("AUTO_SAVE_HISTORY");
   }
 
-  undo() {
+  undo(): void {
     if (this.stateIndex > 0) {
       const boardState = this.historyRewind();
       this.loadBoardState(boardState);
     }
   }
 
-  redo() {
+  redo(): void {
     if (this.stateIndex < this.stateHistory.length - 1) {
       const boardState = this.historyAdvance();
       this.loadBoardState(boardState);
@@ -46,7 +46,7 @@ class GameState {
     });
   }
 
-  loadBoardState(boardState) {
+  loadBoardState(boardState): void {
     if (boardState) {
       const state = JSON.parse(boardState);
 
@@ -60,7 +60,7 @@ class GameState {
     }
   }
 
-  saveStateHistory(key) {
+  saveStateHistory(key): void {
     const undoHistory = JSON.stringify({
       stateHistory: this.stateHistory,
       stateIndex: this.stateIndex,
@@ -70,7 +70,7 @@ class GameState {
     localStorage.setItem(key, undoHistory);
   }
 
-  loadStateHistory(key) {
+  loadStateHistory(key): void {
     const undoHistory = localStorage.getItem(key);
 
     if (undoHistory) {
@@ -81,14 +81,14 @@ class GameState {
     }
   }
 
-  saveToSlot(slot) {
+  saveToSlot(slot): void {
     const boardState = this.getBoardState();
     localStorage.setItem(`SLOT_${slot}`, boardState);
 
     this.saveStateHistory(`SLOT_${slot}_HISTORY`);
   }
 
-  loadFromSlot(slot) {
+  loadFromSlot(slot): void {
     const boardState = localStorage.getItem(`SLOT_${slot}`);
     this.loadBoardState(boardState);
 
@@ -111,7 +111,7 @@ class GameState {
     this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1)
   }
 
-  refreshGameScene() {
+  refreshGameScene(): void {
     const { row, col } = this.scene.player;
     const currentCell = this.scene.grid.getCell(row, col);
 

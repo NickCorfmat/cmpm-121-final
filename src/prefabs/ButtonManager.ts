@@ -1,7 +1,7 @@
 // Source: Brace helped refactor ButtonManager to adopt a state approach to
 // displaying save/load buttons, along with their respective slot buttons.
 
-class ButtonManager {
+export class ButtonManager {
   constructor(scene) {
     this.scene = scene;
     this.state = "main";

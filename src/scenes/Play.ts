@@ -1,3 +1,9 @@
+import { GameState } from "../prefabs/GameState";
+import { Grid } from "../prefabs/Grid";
+import { Player } from "../prefabs/Player";
+import { Stats } from "../prefabs/Stats";
+import { ButtonManager } from "../prefabs/ButtonManager";
+
 /*
 Mechanics:
 - Player can move one grid tile per turn and place on building per turn

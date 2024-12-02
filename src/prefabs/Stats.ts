@@ -1,4 +1,4 @@
-class Stats extends Phaser.GameObjects.Sprite {
+export class Stats extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, width, height, texture = "stats") {
     super(scene, x, y, texture);
     scene.add.existing(this);
@@ -56,7 +56,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     );
   }
 
-  update(cell) {
+  update(cell): void {
     this.cell = cell;
     this.getCellInfo();
 
@@ -66,7 +66,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.displayCollectButton();
   }
 
-  displayCellName() {
+  displayCellName(): void {
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.1;
 
@@ -74,7 +74,7 @@ class Stats extends Phaser.GameObjects.Sprite {
     this.name.setText(this.cell.getName());
   }
 
-  displayCellIcon() {
+  displayCellIcon(): void {
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.365;
     const size = this.width * 0.5;
@@ -94,20 +94,20 @@ class Stats extends Phaser.GameObjects.Sprite {
     }
   }
 
-  getCellInfo() {
+  getCellInfo(): void {
     this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
     this.level = `Level: ${this.cell.level}`;
   }
 
-  displayDescription() {
+  displayDescription(): void {
     this.description.setText(
       `${this.level}\n${this.location}\n${this.sunLevel}\n${this.waterLevel}`
     );
   }
 
-  displayCollectButton() {
+  displayCollectButton(): void {
     if (this.cell.hasBuilding() && this.cell.resources > 0) {
       const x = this.x + this.width * 0.5;
       const y = this.height - 30;
