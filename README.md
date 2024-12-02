@@ -70,7 +70,7 @@ There were many changes we had to make in order to satisfy the F0 requirements. 
 
 - [F1.a] Our game satisfies this requirement by using a single contiguous byte array to store the grid state and providing methods to serialize and deserialize this byte array. The byte array format is the primary format for storing the grid state, and other formats (such as the cell objects in the grid) are derived from this byte array as needed. The game's grid state is closer to the Array-of-Structures (AoS) format. Each cell's properties are stored together in the byte array, and the entire grid state is represented as a single contiguous byte array. This allows for efficient serialization and deserialization of the grid state. Each row contains the property of each cell which within it contains  a building reerence, building level, sun level, water level, and resources.
 
-  (Add image here)
+![F1.a data structure diagram](./f1_a_diagram.png)
   
 - [F1.b] The game provides functionality to manually save and load the game state using multiple save slots. The GameState class includes methods to save the current game state to local storage and load it back, allowing the player to continue from where they left off even after quitting the game. Additionally, the ButtonManager class manages the save and load buttons, enabling the player to select different save slots for storing and retrieving their game progress.
   
