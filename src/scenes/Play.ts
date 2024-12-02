@@ -21,14 +21,23 @@ Mechanics:
 class Play extends Phaser.Scene {
   private gridConfig: { width: number; height: number; size: number };
   private statsConfig: { x: number; y: number; width: number; height: number };
-  private buildings: Array<{ type: string; cost: number; rate: number; scale: number }>;
-  private RESOURCE_GOAL: number;
-  private trackables: { buildingsPlaced: number; resourcesCollected: number; turnsPlayed: number };
+  public buildings: Array<{
+    type: string;
+    cost: number;
+    rate: number;
+    scale: number;
+  }>;
+  public RESOURCE_GOAL: number;
+  public trackables: {
+    buildingsPlaced: number;
+    resourcesCollected: number;
+    turnsPlayed: number;
+  };
 
-  private gameState!: GameState;
-  private grid!: Grid;
-  private stats!: Stats;
-  private player!: Player;
+  public gameState!: GameState;
+  public grid!: Grid;
+  public stats!: Stats;
+  public player!: Player;
   private buttons!: ButtonManager;
 
   constructor() {
@@ -41,7 +50,8 @@ class Play extends Phaser.Scene {
     this.statsConfig = {
       x: this.gridConfig.width * this.gridConfig.size,
       y: 0,
-      width: this.game.scale.width - this.gridConfig.width * this.gridConfig.size,
+      width:
+        this.game.scale.width - this.gridConfig.width * this.gridConfig.size,
       height: this.game.scale.height,
     };
 

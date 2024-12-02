@@ -130,7 +130,7 @@ export class ButtonManager {
   }
 
   // Helpers
-  createButton(id, handler, text): void {
+  createButton(id: string, handler, text): void {
     const button = document.getElementById(id);
 
     if (text) button.innerHTML = text;

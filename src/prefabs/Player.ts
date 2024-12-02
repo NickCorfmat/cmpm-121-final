@@ -1,36 +1,44 @@
+import { Cell } from "./Cell";
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, row, col, grid, texture = "player") {
+  private grid: Grid;
+  private scene: Phaser.Scene;
+  private row: number;
+  private col: number;
+  private resources: number;
+
+  constructor(
+    scene: Phaser.Scene,
+    row: number,
+    col: number,
+    grid: Grid,
+    texture: string = "player"
+  ) {
     // convert logical to pixel for displaying cell
     const { x, y } = grid.logicalToPixelCoords(row, col);
-
     super(scene, x, y, texture);
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
     // sprite configs
     const converage = 1;
-
     this.setOrigin(0.5);
+    this.setDepth(10);
     this.setDisplaySize(grid.size * converage, grid.size * converage);
+    this.anims.play("idle");
 
     // store references
     this.scene = scene;
     this.grid = grid;
     this.row = row; // player logical coords
     this.col = col;
-    this.x = x; // player pixel coords
-    this.y = y;
 
     this.KEYS = scene.scene.get("sceneKeys").KEYS;
 
     // initialize resources
     this.resources = 100;
     this.updatePlayerDisplay();
-
-    // set player depth to ensure it is above everything else
-    this.setDepth(10);
-
-    this.anims.play("idle");
 
     // spawn player at current cell
     this.movePlayer(0, 0);
@@ -65,7 +73,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  movePlayer(dRow, dCol): void {
+  movePlayer(dRow: number, dCol: number): void {
     const newRow = this.row + dRow;
     const newCol = this.col + dCol;
 
@@ -79,7 +87,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  updatePlayerCoordinates(newRow, newCol): void {
+  updatePlayerCoordinates(newRow: number, newCol: number): void {
     // update player logical coordinates
     this.row = newRow;
     this.col = newCol;
@@ -91,14 +99,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.y = coords.y;
   }
 
-  isValidMove(row, col): boolean {
+  isValidMove(row: number, col: number): boolean {
     const isWithinWidth = row >= 0 && row < this.grid.width;
     const isWithinHeight = col >= 0 && col < this.grid.height;
 
     return isWithinWidth && isWithinHeight;
   }
 
-  spendResources(cost): boolean {
+  spendResources(cost: number): boolean {
     if (this.resources >= cost) {
       this.resources -= cost;
       this.updatePlayerDisplay();
@@ -108,7 +116,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     return false;
   }
 
-  collectResourcesFromCell(cell): void {
+  collectResourcesFromCell(cell: Cell): void {
     if (cell.hasBuilding()) {
       const collected = cell.resources;
       cell.resetResources();
@@ -164,7 +172,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  toJSON(): { row: number, col: number, resources: number} {
+  toJSON(): { row: number; col: number; resources: number } {
     return {
       row: this.row,
       col: this.col,
@@ -172,7 +180,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     };
   }
 
-  fromJSON(data): void {
+  fromJSON(data: { row: number; col: number; resources: number }): void {
     this.updatePlayerCoordinates(data.row, data.col);
     this.resources = data.resources;
   }

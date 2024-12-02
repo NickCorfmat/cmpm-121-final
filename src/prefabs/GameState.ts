@@ -1,9 +1,10 @@
 export class GameState {
-  constructor(scene) {
-    this.scene = scene;
+  private scene: Phaser.Scene;
+  private stateHistory: string[] = [];
+  private stateIndex: number = -1;
 
-    this.stateHistory = [];
-    this.stateIndex = -1;
+  constructor(scene: Phaser.Scene) {
+    this.scene = scene;
   }
 
   save(): void {
@@ -18,7 +19,7 @@ export class GameState {
   }
 
   load(): void {
-    const boardState = localStorage.getItem("AUTO_SAVE");
+    const boardState: string | null = localStorage.getItem("AUTO_SAVE");
     this.loadBoardState(boardState);
 
     this.loadStateHistory("AUTO_SAVE_HISTORY");
@@ -26,19 +27,19 @@ export class GameState {
 
   undo(): void {
     if (this.stateIndex > 0) {
-      const boardState = this.historyRewind();
+      const boardState: string = this.historyRewind();
       this.loadBoardState(boardState);
     }
   }
 
   redo(): void {
     if (this.stateIndex < this.stateHistory.length - 1) {
-      const boardState = this.historyAdvance();
+      const boardState: string = this.historyAdvance();
       this.loadBoardState(boardState);
     }
   }
 
-  getBoardState() {
+  getBoardState(): string {
     return JSON.stringify({
       grid: this.scene.grid.toJSON(),
       player: this.scene.player.toJSON(),
@@ -46,7 +47,7 @@ export class GameState {
     });
   }
 
-  loadBoardState(boardState): void {
+  loadBoardState(boardState: string | null): void {
     if (boardState) {
       const state = JSON.parse(boardState);
 
@@ -60,36 +61,35 @@ export class GameState {
     }
   }
 
-  saveStateHistory(key): void {
-    const undoHistory = JSON.stringify({
+  saveStateHistory(key: string): void {
+    const undoHistory: string = JSON.stringify({
       stateHistory: this.stateHistory,
       stateIndex: this.stateIndex,
     });
 
-
     localStorage.setItem(key, undoHistory);
   }
 
-  loadStateHistory(key): void {
-    const undoHistory = localStorage.getItem(key);
+  loadStateHistory(key: string): void {
+    const undoHistory: string | null = localStorage.getItem(key);
 
     if (undoHistory) {
-      const state = JSON.parse(undoHistory)
+      const state = JSON.parse(undoHistory);
 
       this.stateHistory = state.stateHistory;
       this.stateIndex = state.stateIndex;
     }
   }
 
-  saveToSlot(slot): void {
-    const boardState = this.getBoardState();
+  saveToSlot(slot: number): void {
+    const boardState: string = this.getBoardState();
     localStorage.setItem(`SLOT_${slot}`, boardState);
 
     this.saveStateHistory(`SLOT_${slot}_HISTORY`);
   }
 
-  loadFromSlot(slot): void {
-    const boardState = localStorage.getItem(`SLOT_${slot}`);
+  loadFromSlot(slot: number): void {
+    const boardState: string | null = localStorage.getItem(`SLOT_${slot}`);
     this.loadBoardState(boardState);
 
     this.loadStateHistory(`SLOT_${slot}_HISTORY`);
@@ -97,18 +97,18 @@ export class GameState {
 
   // Helpers
 
-  historyAdvance() {
+  historyAdvance(): string {
     this.stateIndex++;
     return this.stateHistory[this.stateIndex];
   }
 
-  historyRewind() {
+  historyRewind(): string {
     this.stateIndex--;
     return this.stateHistory[this.stateIndex];
   }
 
-  trimStateHistory() {
-    this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1)
+  trimStateHistory(): void {
+    this.stateHistory = this.stateHistory.slice(0, this.stateIndex + 1);
   }
 
   refreshGameScene(): void {

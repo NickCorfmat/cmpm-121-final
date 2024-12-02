@@ -1,5 +1,29 @@
 export class Stats extends Phaser.GameObjects.Sprite {
-  constructor(scene, x, y, width, height, texture = "stats") {
+  private scene: Scene;
+  private width: number;
+  private height: number;
+  private cell: Cell | null = null;
+  private name: Phaser.GameObjects.Text;
+  private description: Phaser.GameObjects.Text;
+  private icon: Phaser.GameObjects.Image | null = null;
+  private iconframe: Phaser.GameObjects.Sprite | null = null;
+  private collectButton: Phaser.GameObjects.Text;
+  private textConfig: Phaser.Types.GameObjects.Text.TextConfig;
+
+  // Additional properties for cell info display
+  private location: string = "";
+  private sunLevel: string = "";
+  private waterLevel: string = "";
+  private level: string = "";
+
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    texture: string = "stats"
+  ) {
     super(scene, x, y, texture);
     scene.add.existing(this);
 
@@ -7,7 +31,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.width = width;
     this.height = height;
-    this.cell = -1;
+    this.cell = null;
 
     // stats display configs
     this.setOrigin(0);
@@ -49,17 +73,19 @@ export class Stats extends Phaser.GameObjects.Sprite {
     // collect button configs
     this.collectButton.setOrigin(0.5);
     this.collectButton.setVisible(false);
-
     this.collectButton.setInteractive();
-    this.collectButton.on("pointerdown", () =>
-      this.scene.player.collectResourcesFromCell(this.cell)
-    );
+
+    this.collectButton.on("pointerdown", () => {
+      if (this.cell) {
+        this.scene.player.collectResourcesFromCell(this.cell);
+      }
+    });
   }
 
-  update(cell): void {
+  update(cell: Cell): void {
     this.cell = cell;
-    this.getCellInfo();
 
+    this.getCellInfo();
     this.displayCellName();
     this.displayCellIcon();
     this.displayDescription();
@@ -67,6 +93,8 @@ export class Stats extends Phaser.GameObjects.Sprite {
   }
 
   displayCellName(): void {
+    if (!this.cell) return;
+
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.1;
 
@@ -75,6 +103,8 @@ export class Stats extends Phaser.GameObjects.Sprite {
   }
 
   displayCellIcon(): void {
+    if (!this.cell) return;
+
     const x = this.x + this.width * 0.5;
     const y = this.height * 0.365;
     const size = this.width * 0.5;
@@ -95,6 +125,8 @@ export class Stats extends Phaser.GameObjects.Sprite {
   }
 
   getCellInfo(): void {
+    if (!this.cell) return;
+
     this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
     this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
     this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
@@ -102,12 +134,16 @@ export class Stats extends Phaser.GameObjects.Sprite {
   }
 
   displayDescription(): void {
+    if (!this.cell) return;
+
     this.description.setText(
       `${this.level}\n${this.location}\n${this.sunLevel}\n${this.waterLevel}`
     );
   }
 
   displayCollectButton(): void {
+    if (!this.cell) return;
+
     if (this.cell.hasBuilding() && this.cell.resources > 0) {
       const x = this.x + this.width * 0.5;
       const y = this.height - 30;
