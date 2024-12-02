@@ -8,9 +8,9 @@ export interface GridConfig {
 
 export class Grid {
   private scene: Phaser.Scene;
-  private width: number;
-  private height: number;
-  private size: number;
+  public width: number;
+  public height: number;
+  public size: number;
   private cells: Map<string, Cell>;
   private BYTES_PER_CELL: number = 4;
   private NUM_CELLS: number;

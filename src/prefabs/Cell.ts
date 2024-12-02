@@ -1,3 +1,5 @@
+import { Grid } from "./Grid";
+
 export class Cell extends Phaser.GameObjects.Sprite {
   private row: number;
   private col: number;
@@ -122,7 +124,19 @@ export class Cell extends Phaser.GameObjects.Sprite {
     this.resources = 0;
   }
 
-  restore({ buildingRef, level, sunLevel, waterLevel, resources }): void {
+  restore({
+    buildingRef,
+    level,
+    sunLevel,
+    waterLevel,
+    resources,
+  }: {
+    buildingRef: number;
+    level: number;
+    sunLevel: number;
+    waterLevel: number;
+    resources: number;
+  }): void {
     this.buildingRef = buildingRef;
     this.level = level;
     this.sunLevel = level;
@@ -135,18 +149,18 @@ export class Cell extends Phaser.GameObjects.Sprite {
 
   // Getters/Setters
 
-  setSunLevel(value): void {
+  setSunLevel(value: number): void {
     // only store sun level if cell is has building
     if (this.hasBuilding()) {
       this.sunLevel = value;
     }
   }
 
-  setWaterLevel(value): void {
+  setWaterLevel(value: number): void {
     this.waterLevel = value;
   }
 
-  setBuilding(ref): void {
+  setBuilding(ref: number): void {
     if (!this.hasBuilding() && this.buildingExists(ref)) {
       this.buildingRef = ref;
       this.level++;
@@ -155,12 +169,12 @@ export class Cell extends Phaser.GameObjects.Sprite {
     }
   }
 
-  setLevel(level): void {
+  setLevel(level: number): void {
     this.level = level;
     this.displayBuilding();
   }
 
-  setResources(value): void {
+  setResources(value: number): void {
     this.resources = value;
   }
 
@@ -173,11 +187,11 @@ export class Cell extends Phaser.GameObjects.Sprite {
   }
 
   enableBorder(): void {
-    this.border.setVisible(true);
+    this.border?.setVisible(true);
   }
 
   disableBorder(): void {
-    this.border.setVisible(false);
+    this.border?.setVisible(false);
   }
 
   getAdjacentBuildings(): number[] {
@@ -188,7 +202,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
       { row: 0, col: 1 }, // right
     ];
 
-    const adjacentBuildings = [];
+    const adjacentBuildings: number[] = [];
 
     directions.forEach((dir) => {
       const newRow = this.row + dir.row;
@@ -199,7 +213,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
         newCol >= 0 &&
         newCol < this.grid.width
       ) {
-        const cell = this.grid.getCell(newRow, newCol);
+        const cell = this.grid.getCell(newRow, newCol)!;
 
         if (cell.hasBuilding()) {
           adjacentBuildings.push(cell.buildingRef);
@@ -211,7 +225,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
   }
 
   getName(): string {
-    if (this.buildingRef == -1) {
+    if (this.buildingRef === -1) {
       return "Empty";
     } else {
       return this.scene.buildings[this.buildingRef].type;
@@ -227,7 +241,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
     return "";
   }
 
-  getLogicalCoords() {
+  getLogicalCoords(): { row: number; col: number } {
     return { row: this.row, col: this.col };
   }
 
@@ -237,7 +251,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
     return this.buildingRef >= 0;
   }
 
-  buildingExists(ref): boolean {
+  buildingExists(ref: number): boolean {
     return ref >= 0 && ref < this.scene.buildings.length;
   }
 
