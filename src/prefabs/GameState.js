@@ -75,16 +75,11 @@ class GameState {
   loadUndoHistory(key) {
     const undoHistorySnapshot = localStorage.getItem(key);
 
-    console.log(undoHistorySnapshot)
-
     if (undoHistorySnapshot) {
       const history = JSON.parse(undoHistorySnapshot)
       this.stateHistory = history.stateHistory;
       this.stateIndex = history.stateIndex;
     }
-
-    console.log(this.stateHistory);
-    console.log(this.stateIndex)
   }
 
   saveToSlot(slot) {
