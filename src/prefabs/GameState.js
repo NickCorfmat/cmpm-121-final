@@ -7,7 +7,6 @@ class GameState {
   }
 
   save() {
-    console.log("save")
     const boardState = this.getBoardState();
     localStorage.setItem("AUTO_SAVE", boardState);
 
