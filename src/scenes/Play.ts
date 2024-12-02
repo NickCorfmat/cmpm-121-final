@@ -14,14 +14,15 @@ export interface Trackables {
 export class PlayScene extends Phaser.Scene {
   public gridConfig!: GridConfig;
   public statsConfig!: StatsConfig;
+  public trackables!: Trackables;
+  public RESOURCE_GOAL: number = 0;
+
   public buildings!: Array<{
     type: string;
     cost: number;
     rate: number;
     scale: number;
   }>;
-  public RESOURCE_GOAL: number = 0;
-  public trackables!: Trackables;
 
   public gameState!: GameState;
   public grid!: Grid;

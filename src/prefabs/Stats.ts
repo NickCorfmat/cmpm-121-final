@@ -12,6 +12,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
   public scene: PlayScene;
   public width: number;
   public height: number;
+  
   private cell: Cell | null = null;
   private title: Phaser.GameObjects.Text;
   private description: Phaser.GameObjects.Text;

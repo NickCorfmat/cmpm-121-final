@@ -10,6 +10,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   public grid: Grid;
 
   public resources: number;
+  
   private KEYS: KEYS;
 
   constructor(

@@ -12,9 +12,12 @@ export class Grid {
   public width: number;
   public height: number;
   public size: number;
+
   public cells: Map<string, Cell>;
+
   private BYTES_PER_CELL: number = 4;
   private NUM_CELLS: number;
+  
   public selectedCell: Cell | null = null;
   public lastSelectedCell: Cell | null = null;
 
