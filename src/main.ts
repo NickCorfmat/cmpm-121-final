@@ -1,6 +1,8 @@
 "use strict";
 
-let config = {
+import Phaser from "phaser";
+
+let config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 700,
   height: 400,
@@ -17,5 +19,5 @@ let config = {
   scene: [Load, Keys, Play, Win],
 };
 
-let game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
 const { width, height } = game.config;

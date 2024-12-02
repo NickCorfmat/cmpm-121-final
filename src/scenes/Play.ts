@@ -13,18 +13,30 @@ Mechanics:
 */
 
 class Play extends Phaser.Scene {
+  private gridConfig: { width: number; height: number; size: number };
+  private statsConfig: { x: number; y: number; width: number; height: number };
+  private buildings: Array<{ type: string; cost: number; rate: number; scale: number }>;
+  private RESOURCE_GOAL: number;
+  private trackables: { buildingsPlaced: number; resourcesCollected: number; turnsPlayed: number };
+
+  private gameState!: GameState;
+  private grid!: Grid;
+  private stats!: Stats;
+  private player!: Player;
+  private buttons!: ButtonManager;
+
   constructor() {
     super("scenePlay");
   }
 
-  init() {
+  init(): void {
     // set game display parameters
     this.gridConfig = { width: 8, height: 8, size: 50 };
     this.statsConfig = {
       x: this.gridConfig.width * this.gridConfig.size,
       y: 0,
-      width: width - this.gridConfig.width * this.gridConfig.size,
-      height: height,
+      width: this.game.scale.width - this.gridConfig.width * this.gridConfig.size,
+      height: this.game.scale.height,
     };
 
     this.buildings = [
@@ -58,7 +70,7 @@ class Play extends Phaser.Scene {
     };
   }
 
-  create() {
+  create(): void {
     // initialize game state manager
     this.gameState = new GameState(this);
 
@@ -81,11 +93,11 @@ class Play extends Phaser.Scene {
     this.launchGame();
   }
 
-  update() {
+  update(): void {
     this.player.update();
   }
 
-  updateUI() {
+  updateUI(): void {
     // prioritize displaying stats of selected cell
     this.grid.selectedCell
       ? this.stats.update(this.grid.selectedCell)
@@ -94,19 +106,19 @@ class Play extends Phaser.Scene {
     this.player.updatePlayerDisplay();
   }
 
-  startNextRound() {
+  startNextRound(): void {
     this.grid.step();
     this.updateUI();
     this.gameState.save();
   }
 
-  checkWinCondition() {
+  checkWinCondition(): void {
     if (this.player.resources >= this.RESOURCE_GOAL) {
       this.scene.start("sceneWin", this.trackables);
     }
   }
 
-  launchGame() {
+  launchGame(): void {
     const savedData = localStorage.getItem("AUTO_SAVE");
 
     // prompt user to continue from auto-save or start new game

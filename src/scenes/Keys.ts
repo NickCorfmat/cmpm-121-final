@@ -1,10 +1,12 @@
 class Keys extends Phaser.Scene {
+  private KEYS;
+
   constructor() {
     super("sceneKeys");
   }
 
   // Key encapsulation code from Nathan Altice, https://github.com/nathanaltice/BurgerBoss/blob/master/src/scenes/Keys.js
-  create() {
+  create(): void {
     const { KeyCodes } = Phaser.Input.Keyboard;
 
     this.KEYS = this.input.keyboard.addKeys({

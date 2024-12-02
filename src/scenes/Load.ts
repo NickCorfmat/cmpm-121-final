@@ -3,7 +3,7 @@ class Load extends Phaser.Scene {
     super("sceneLoad");
   }
 
-  preload() {
+  preload(): void {
     // load assets
     this.load.path = "./assets";
 
@@ -21,10 +21,10 @@ class Load extends Phaser.Scene {
     this.load.image("DemolitionPlant3", "/demo3.png");
   }
 
-  create() {
+  create(): void {
     this.anims.create({
       key: "idle",
-      frames: this.anims.generateFrameNumbers("player", {
+      frames: this.anims.generateFrameNames("player", {
         frames: [
           "Astronaut_Idle-0",
           "Astronaut_Idle-1",

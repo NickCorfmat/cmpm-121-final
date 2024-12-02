@@ -10,7 +10,7 @@ class ButtonManager {
     this.initButtons();
   }
 
-  initButtons() {
+  initButtons(): void {
     // create Save/Load buttons
     this.createButton("saveButton", () => this.showSlot("save"));
     this.createButton("loadButton", () => this.showSlot("load"));
@@ -34,27 +34,27 @@ class ButtonManager {
     this.updateUI();
   }
 
-  showSlot(type) {
+  showSlot(type): void {
     this.state = type;
     this.updateUI();
   }
 
-  handleSaveSlot(slot) {
+  handleSaveSlot(slot): void {
     this.scene.gameState.saveToSlot(slot);
     this.returnToMain();
   }
 
-  handleLoadSlot(slot) {
+  handleLoadSlot(slot): void {
     this.scene.gameState.loadFromSlot(slot);
     this.returnToMain();
   }
 
-  returnToMain() {
+  returnToMain(): void {
     this.state = "main";
     this.updateUI();
   }
 
-  updateUI() {
+  updateUI(): void {
     const isMain = this.state === "main";
     const isSave = this.state === "save";
     const isLoad = this.state === "load";
@@ -67,7 +67,7 @@ class ButtonManager {
     this.toggleVisibility(["redoButton"], !isSave && !isLoad);
   }
 
-  createPurchaseButtons() {
+  createPurchaseButtons(): void {
     // create purchase buttons for each building type
     this.scene.buildings.forEach((building, index) => {
       const id = `buy${building.type}Button`;
@@ -78,7 +78,7 @@ class ButtonManager {
     });
   }
 
-  purchaseBuilding(index) {
+  purchaseBuilding(index): void {
     const building = this.scene.buildings[index];
     const { grid, player, gameState, stats, trackables } = this.scene;
 
@@ -97,7 +97,7 @@ class ButtonManager {
     }
   }
 
-  canPlaceBuilding(cost) {
+  canPlaceBuilding(cost): boolean {
     return (
       this.scene.grid.selectedCell &&
       this.scene.player.resources >= cost &&
@@ -105,7 +105,7 @@ class ButtonManager {
     );
   }
 
-  createNextRoundButton() {
+  createNextRoundButton(): void {
     const button = document.getElementById("nextRoundButton");
 
     button.addEventListener("click", () => {
@@ -113,7 +113,7 @@ class ButtonManager {
     });
   }
 
-  createUndoButton() {
+  createUndoButton(): void {
     const undoButton = document.getElementById("undoButton");
 
     undoButton.addEventListener("click", () => {
@@ -121,7 +121,7 @@ class ButtonManager {
     });
   }
 
-  createRedoButton() {
+  createRedoButton(): void {
     const redoButton = document.getElementById("redoButton");
 
     redoButton.addEventListener("click", () => {
@@ -130,7 +130,7 @@ class ButtonManager {
   }
 
   // Helpers
-  createButton(id, handler, text) {
+  createButton(id, handler, text): void {
     const button = document.getElementById(id);
 
     if (text) button.innerHTML = text;
@@ -138,7 +138,7 @@ class ButtonManager {
     button.onclick = handler;
   }
 
-  toggleVisibility(ids, show) {
+  toggleVisibility(ids, show): void {
     ids.forEach((id) => {
       const element = document.getElementById(id);
       element.classList.toggle("hidden", !show);

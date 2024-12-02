@@ -36,11 +36,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.movePlayer(0, 0);
   }
 
-  update() {
+  update(): void {
     this.checkForInput();
   }
 
-  checkForInput() {
+  checkForInput(): void {
     const { KEYS } = this;
 
     switch (true) {
@@ -65,7 +65,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  movePlayer(dRow, dCol) {
+  movePlayer(dRow, dCol): void {
     const newRow = this.row + dRow;
     const newCol = this.col + dCol;
 
@@ -79,7 +79,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  updatePlayerCoordinates(newRow, newCol) {
+  updatePlayerCoordinates(newRow, newCol): void {
     // update player logical coordinates
     this.row = newRow;
     this.col = newCol;
@@ -91,14 +91,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.y = coords.y;
   }
 
-  isValidMove(row, col) {
+  isValidMove(row, col): boolean {
     const isWithinWidth = row >= 0 && row < this.grid.width;
     const isWithinHeight = col >= 0 && col < this.grid.height;
 
     return isWithinWidth && isWithinHeight;
   }
 
-  spendResources(cost) {
+  spendResources(cost): boolean {
     if (this.resources >= cost) {
       this.resources -= cost;
       this.updatePlayerDisplay();
@@ -108,7 +108,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     return false;
   }
 
-  collectResourcesFromCell(cell) {
+  collectResourcesFromCell(cell): void {
     if (cell.hasBuilding()) {
       const collected = cell.resources;
       cell.resetResources();
@@ -123,12 +123,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  displayCurrentCellStats() {
+  displayCurrentCellStats(): void {
     const currentCell = this.grid.getCell(this.row, this.col);
     this.scene.stats.update(currentCell);
   }
 
-  updatePlayerDisplay() {
+  updatePlayerDisplay(): void {
     const display = document.getElementById("playerDisplay");
     display.innerText =
       `Resources: ${this.resources}\n` +
@@ -136,7 +136,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
   }
 
-  updateCellInteractivity() {
+  updateCellInteractivity(): void {
     this.grid.selectedCell = null;
     this.grid.lastSelectedCell = null;
 
@@ -164,7 +164,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  toJSON() {
+  toJSON(): { row: number, col: number, resources: number} {
     return {
       row: this.row,
       col: this.col,
@@ -172,7 +172,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     };
   }
 
-  fromJSON(data) {
+  fromJSON(data): void {
     this.updatePlayerCoordinates(data.row, data.col);
     this.resources = data.resources;
   }

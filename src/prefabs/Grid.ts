@@ -21,7 +21,7 @@ class Grid {
 
   // refactoring with help from Brace
   // https://chat.brace.tools/c/cddb0a0d-e4b1-4775-99bb-9d9f5cbf0962
-  createGrid() {
+  createGrid(): void {
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
         const cell = new Cell(this.scene, row, col, this);
@@ -31,12 +31,12 @@ class Grid {
   }
 
   // progress board state according to game's logic
-  step() {
+  step(): void {
     this.cells.forEach((cell) => cell.step());
     this.scene.trackables.turnsPlayed++;
   }
 
-  selectCell(row, col) {
+  selectCell(row, col): void {
     // retrieve selected cell
     const cell = this.getCell(row, col);
 
@@ -68,34 +68,34 @@ class Grid {
   }
 
   // Extracting key generation to own function idea inspired by Brace
-  generateKey(row, col) {
+  generateKey(row, col): string {
     return `${row}:${col}`;
   }
 
-  getCell(row, col) {
+  getCell(row, col): Cell {
     return this.cells.get(this.generateKey(row, col));
   }
 
-  getCellFromPixelCoords(x, y) {
+  getCellFromPixelCoords(x, y): Cell {
     const { row, col } = this.pixelToLogicalCoords(x, y);
     return this.getCell(row, col);
   }
 
-  pixelToLogicalCoords(x, y) {
+  pixelToLogicalCoords(x, y): {row: number, col: number} {
     return {
       row: Math.floor(x / this.size),
       col: Math.floor(y / this.size),
     };
   }
 
-  logicalToPixelCoords(row, col) {
+  logicalToPixelCoords(row, col): { x: number, y: number } {
     const x = row * this.size + this.size / 2;
     const y = col * this.size + this.size / 2;
 
     return { x, y };
   }
 
-  getByteArray() {
+  getByteArray(): ArrayBuffer {
     const byteArray = new ArrayBuffer(this.NUM_CELLS * this.BYTES_PER_CELL);
     const dataView = new DataView(byteArray);
 
@@ -125,7 +125,7 @@ class Grid {
     return byteArray;
   }
 
-  loadByteArray(byteArray) {
+  loadByteArray(byteArray): void {
     const dataView = new DataView(byteArray);
     let byteOffset = 0;
     const cells = new Map();
@@ -156,12 +156,12 @@ class Grid {
     this.cells = cells;
   }
 
-  arrayBufferToBase64(buffer) {
+  arrayBufferToBase64(buffer): string {
     const binary = String.fromCharCode(...new Uint8Array(buffer));
     return btoa(binary);
   }
 
-  base64ToArrayBuffer(base64) {
+  base64ToArrayBuffer(base64): ArrayBuffer {
     const binary = atob(base64);
     const buffer = new Uint8Array(binary.length);
 
@@ -172,12 +172,12 @@ class Grid {
     return buffer.buffer;
   }
 
-  toJSON() {
+  toJSON(): string {
     const byteArray = this.getByteArray();
     return this.arrayBufferToBase64(byteArray);
   }
 
-  fromJSON(gridData) {
+  fromJSON(gridData): void {
     const byteArray = this.base64ToArrayBuffer(gridData);
     this.loadByteArray(byteArray);
   }
