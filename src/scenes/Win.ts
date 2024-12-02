@@ -2,11 +2,11 @@ import Phaser from "phaser";
 import { Trackables } from "./Play";
 
 export class WinScene extends Phaser.Scene {
-  private buildingsPlaced: number;
-  private resourcesCollected: number;
-  private turnsPlayed: number;
-  private textConfig: Phaser.Types.GameObjects.Text.TextStyle;
-  private text: Phaser.GameObjects.Text;
+  private buildingsPlaced: number = 0;
+  private resourcesCollected: number = 0;
+  private turnsPlayed: number = 0;
+  private textConfig!: Phaser.Types.GameObjects.Text.TextStyle;
+  private text!: Phaser.GameObjects.Text;
 
   constructor() {
     super("sceneWin");

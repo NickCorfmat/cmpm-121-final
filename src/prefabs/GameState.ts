@@ -43,8 +43,8 @@ export class GameState {
 
   getBoardState(): string {
     return JSON.stringify({
-      grid: this.scene.grid.toJSON(),
-      player: this.scene.player.toJSON(),
+      grid: this.scene.grid.serialize(),
+      player: this.scene.player.serialize(),
       trackables: this.scene.trackables,
     });
   }
@@ -53,8 +53,8 @@ export class GameState {
     if (boardState) {
       const state = JSON.parse(boardState);
 
-      this.scene.grid.fromJSON(state.grid);
-      this.scene.player.fromJSON(state.player);
+      this.scene.grid.deserialize(state.grid);
+      this.scene.player.deserialize(state.player);
       this.scene.trackables = { ...state.trackables };
 
       this.refreshGameScene();

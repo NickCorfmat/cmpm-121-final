@@ -138,7 +138,7 @@ export class Grid {
     return byteArray;
   }
 
-  loadByteArray(byteArray): void {
+  loadByteArray(byteArray: ArrayBuffer): void {
     const dataView = new DataView(byteArray);
     let byteOffset = 0;
     const cells = new Map();
@@ -185,12 +185,12 @@ export class Grid {
     return buffer.buffer;
   }
 
-  toJSON(): string {
+  serialize(): string {
     const byteArray = this.getByteArray();
     return this.arrayBufferToBase64(byteArray);
   }
 
-  fromJSON(gridData: string): void {
+  deserialize(gridData: string): void {
     const byteArray = this.base64ToArrayBuffer(gridData);
     this.loadByteArray(byteArray);
   }
