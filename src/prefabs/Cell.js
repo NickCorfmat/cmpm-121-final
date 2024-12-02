@@ -119,12 +119,13 @@ class Cell extends Phaser.GameObjects.Sprite {
   }
 
   restore({ buildingRef, level, sunLevel, waterLevel, resources }) {
-    this.setBuilding(buildingRef);
-    this.setLevel(level);
-    this.setSunLevel(sunLevel);
-    this.setWaterLevel(waterLevel);
-    this.setResources(resources);
+    this.buildingRef = buildingRef;
+    this.level = level;
+    this.sunLevel = level;
+    this.waterLevel = waterLevel;
+    this.resources = resources;
 
+    this.removeBuildingSprite()
     this.displayBuilding();
   }
 
@@ -236,5 +237,12 @@ class Cell extends Phaser.GameObjects.Sprite {
 
   maxLevelReached() {
     return this.level >= 3;
+  }
+
+  removeBuildingSprite() {
+    if (this.buildingIcon) {
+      this.buildingIcon.destroy();
+      this.buildingIcon = null;
+    }
   }
 }
