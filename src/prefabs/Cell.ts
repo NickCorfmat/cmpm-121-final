@@ -15,7 +15,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
 
   public isClickable: boolean = false;
   private border?: Phaser.GameObjects.Graphics;
-  private buildingIcon?: Phaser.GameObjects.Sprite;
+  private buildingIcon?: Phaser.GameObjects.Sprite | null = null;
 
   constructor(
     scene: PlayScene,

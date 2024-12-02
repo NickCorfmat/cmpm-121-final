@@ -103,9 +103,9 @@ export class ButtonManager {
 
   canPlaceBuilding(cost: number): boolean {
     return (
-      this.scene.grid.selectedCell &&
+      this.scene.grid.selectedCell != null &&
       this.scene.player.resources >= cost &&
-      !this.scene.grid.selectedCell.building
+      this.scene.grid.selectedCell.buildingRef < 0
     );
   }
 
@@ -134,7 +134,7 @@ export class ButtonManager {
   }
 
   // Helpers
-  createButton(id: string, handler, text): void {
+  createButton(id: string, handler, text?: string): void {
     const button = document.getElementById(id);
 
     if (button) {

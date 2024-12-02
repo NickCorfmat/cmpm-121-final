@@ -1,6 +1,6 @@
 import { Trackables } from "./Play";
 
-export class Win extends Phaser.Scene {
+export class WinScene extends Phaser.Scene {
   private buildingsPlaced: number;
   private resourcesCollected: number;
   private turnsPlayed: number;

@@ -1,4 +1,4 @@
-class Load extends Phaser.Scene {
+export class LoadScene extends Phaser.Scene {
   constructor() {
     super("sceneLoad");
   }

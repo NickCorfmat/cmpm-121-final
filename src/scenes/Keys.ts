@@ -1,5 +1,10 @@
-export class Keys extends Phaser.Scene {
-  private KEYS;
+export class KeyScene extends Phaser.Scene {
+  public KEYS!: {
+    LEFT: Phaser.Input.Keyboard.Key;
+    RIGHT: Phaser.Input.Keyboard.Key;
+    UP: Phaser.Input.Keyboard.Key;
+    DOWN: Phaser.Input.Keyboard.Key;
+  };
 
   constructor() {
     super("sceneKeys");
@@ -9,12 +14,12 @@ export class Keys extends Phaser.Scene {
   create(): void {
     const { KeyCodes } = Phaser.Input.Keyboard;
 
-    this.KEYS = this.input.keyboard.addKeys({
+    this.KEYS = this.input.keyboard!.addKeys({
       LEFT: KeyCodes.LEFT,
       RIGHT: KeyCodes.RIGHT,
       UP: KeyCodes.UP,
       DOWN: KeyCodes.DOWN,
-    });
+    }) as KeyScene["KEYS"];
 
     this.scene.launch("scenePlay");
   }

@@ -1,6 +1,7 @@
 import { Grid } from "./Grid";
 import { Cell } from "./Cell";
 import { PlayScene } from "../scenes/Play";
+import { KeyScene as Keys } from "../scenes/Keys";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   public grid: Grid;
@@ -8,6 +9,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   public row: number;
   public col: number;
   public resources: number;
+  private KEYS: Keys;
 
   constructor(
     scene: PlayScene,
