@@ -4,8 +4,8 @@ export class WinScene extends Phaser.Scene {
   private buildingsPlaced: number;
   private resourcesCollected: number;
   private turnsPlayed: number;
-  private textConfig: Phaser.Types.GameObjects.Text.TextConfig;
-  private text: Phaser.Types.GameObjects.Text;
+  private textConfig: Phaser.Types.GameObjects.Text.TextStyle;
+  private text: Phaser.GameObjects.Text;
 
   constructor() {
     super("sceneWin");
@@ -19,7 +19,6 @@ export class WinScene extends Phaser.Scene {
     // tunable text parameters
     this.textConfig = {
       fontSize: "32px",
-      fill: "#fff",
       align: "center",
       lineSpacing: 10,
     };

@@ -25,14 +25,9 @@ export class LoadScene extends Phaser.Scene {
     this.anims.create({
       key: "idle",
       frames: this.anims.generateFrameNames("player", {
-        frames: [
-          "Astronaut_Idle-0",
-          "Astronaut_Idle-1",
-          "Astronaut_Idle-2",
-          "Astronaut_Idle-3",
-          "Astronaut_Idle-4",
-          "Astronaut_Idle-5",
-        ],
+        prefix: "Astronaut_Idle-",
+        start: 0,
+        end: 5,
       }),
       frameRate: 6,
       repeat: -1,
