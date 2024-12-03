@@ -95,28 +95,29 @@ class Grid {
     return { x, y };
   }
 
+  // Source: Brace, "How to convert an array of structs to a byte array"
   getByteArray() {
     const byteArray = new ArrayBuffer(this.NUM_CELLS * this.BYTES_PER_CELL);
     const dataView = new DataView(byteArray);
 
     let byteOffset = 0;
 
-    // Loop through each cell in row-major order
+    // loop through each cell in row-major order
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
         const cell = this.getCell(row, col);
 
-        // Pack buildingRef (1 byte)
+        // pack buildingRef (1 byte)
         dataView.setInt8(byteOffset++, cell.buildingRef);
 
-        // Pack level, sunLevel, waterLevel into 1 byte
+        // pack level, sunLevel, waterLevel into 1 byte
         const packedLevels =
           (cell.level & 0b11) | // 2 bits for level
           ((cell.sunLevel & 0b111) << 2) | // 3 bits for sunLevel
           ((cell.waterLevel & 0b111) << 5); // 3 bits for waterLevel
         dataView.setUint8(byteOffset++, packedLevels);
 
-        // Pack resources (2 bytes)
+        // pack resources (2 bytes)
         dataView.setUint16(byteOffset, cell.resources, true);
         byteOffset += 2;
       }
@@ -125,27 +126,29 @@ class Grid {
     return byteArray;
   }
 
+  // Source: Modified from Brace
   loadByteArray(byteArray) {
     const dataView = new DataView(byteArray);
-    let byteOffset = 0;
     const cells = new Map();
+
+    let byteOffset = 0;
 
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
-        // Load buildingRef (1 byte)
+        // load buildingRef (1 byte)
         const buildingRef = dataView.getInt8(byteOffset++);
 
-        // Load packed level, sunLevel, and waterLevel (1 byte)
+        // load packed level, sunLevel, and waterLevel (1 byte)
         const packedLevels = dataView.getUint8(byteOffset++);
-        const level = packedLevels & 0b11; // Extract 2 bits for level
-        const sunLevel = (packedLevels >> 2) & 0b111; // Extract next 3 bits for sunLevel
-        const waterLevel = (packedLevels >> 5) & 0b111; // Extract next 3 bits for waterLevel
+        const level = packedLevels & 0b11;
+        const sunLevel = (packedLevels >> 2) & 0b111;
+        const waterLevel = (packedLevels >> 5) & 0b111;
 
-        // Load resources (2 bytes)
+        // load resources (2 bytes)
         const resources = dataView.getUint16(byteOffset, true);
         byteOffset += 2;
 
-        // Restore the cell
+        // restore the cell
         const cell = this.getCell(row, col);
         cell.restore({ buildingRef, level, sunLevel, waterLevel, resources });
 
