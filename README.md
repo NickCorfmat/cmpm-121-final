@@ -49,3 +49,36 @@ https://www.gimp.org/
 
 ## Reflection
 There were many changes we had to make in order to satisfy the F0 requirements. For example, we had to change the design of the machines and their resource collection. We had initially planned to oil the machines manually with the player so that the player has some control over how well the machines take in resources. This oil mechanic was planned to take the place of the water mechanic currently implemented. Because the water and sun had to be random in some way we had to adjust our design of our game in order to fit these requirements. We had also planned on a separate mechanic on how to level up machines using the resources they collected. However, this again had to be adjusted because of the requirements stating that growth had to be determined spatially. Our tools and materials used were the same ones we stated in the previous devlog. The familiarity with these tools aided us in our development and not many adjustments were made in this regard. Our roles were kept intact throughout this development as well.
+
+# Devlog Entry - 11/30/24
+
+## How we satisfied the software requirements
+
+- [F0.a] Same as last week.
+
+- [F0.b] Same as last week.
+  
+- [F0.c] Same as last week.
+  
+- [F0.d] Same as last week.
+  
+- [F0.e] Same as last week.
+  
+- [F0.f] Same as last week.
+  
+- [F0.g] Same as last week.
+
+- [F1.a] Our game satisfies this requirement by using a single contiguous byte array in an Array-of-Structures (AoS) approach to store the grid state. The byte array format is the primary format for storing the grid state, and other formats (such as the cell objects in the grid) are derived from this byte array as needed. The state of the board is represented by a single Map of Cell structs, with each instance containing 5 numerical properties revealing information about the cell's state. As a result, it made the most sense to back the game's state in the Array-of-Structures format by converting this Map into a byte array, allowing for efficient serialization and deserialization of the grid's state. Each cell contains a building reference, building level, sun level, water level, and resources, and reconstructing the grid simply demanded we read these values from the byte array and restore them to their corresponding cells. Data such as the player state is stored outside of this byte array, since it is independent and irrelevant to the important state of the game's grid, although this data is nonetheless stored within the browser's local storage.
+
+Grid Data Packing Diagram:
+![F1.a data structure diagram](./f1_a_diagram.png)
+Source: diagram created with the help of Brace.
+  
+- [F1.b] The game provides buttons to manually save and load the game state using multiple save slots (3 to be exact). The GameState class includes methods to save the current game state to local storage and load it back, allowing the player to continue from where they left off even after quitting the game. Everything from the grid's state to the player's undo/redo history is saved locally to the browser, resulting in an exact copy to reference later on if the player wishes to load a previous session.
+  
+- [F1.c] An implicit auto-save system is also included that automatically saves the game without any player intervention. Every time the player makes a game-altering decision, the state of the entire game is saved to a separate "AUTO_SAVE" slot within local storage. So regardless of whether they manually saved into a slot or not, they can rest assured their progress is never lost. When the game is launched, it checks whether a previous save to "AUTO_SAVE" exists. If an auto-save entry is present, the game prompts the player with an option to continue from where they left off, ensuring safe recovery from unexpected quits.
+  
+- [F1.d] An undo and redo button is available in the game window that allows the player to traverse the state of the current play session, back to the very start. The GameState class implements an array of snapshots that each represent the state of the entire game after every change. Undoing/redoing changes simply involves traversing this array and deserializing the snapshot, which follows the same process as it otherwise would loading a game manually from a save slot. So everything from the player's position to the cell's resources get restored in the exact state they were in before.
+
+## Reflection
+Overall, the F1 assignment has been a lot more difficult than we anticipated. Implementing state saving and an undo system was extremely challenging with our initial design, leading us to take a step back and spend more time refactoring our approach so that it was more suitable for implementing these requirements. For example, we had to ultimately abandon representing "buildings" as objects, but rather representing them as numbers. This change made it much easier to convert our game's grid data into an "array of structures," rather than an "array of structures of structures." Figuring out how to save the move history into memory was also a challenge, since our current design would max out the browser's local storage within a few moves. This prompted us to optimize the performance of our game (such as pooling from the same objects), while also eliminating circular references within our save data. Overall, our game's internal design has evolved significantly for the better, making it much easier for us (or others) to modify in the future.
