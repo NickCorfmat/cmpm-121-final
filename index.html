@@ -1,59 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CMPM 121 - Final Game</title>
-    <link rel="stylesheet" type="text/css" href="src/style.css" />
-    <script src="lib/phaser.js"></script>
-    <script src="src/prefabs/Cell.js"></script>
-    <script src="src/prefabs/Grid.js"></script>
-    <script src="src/prefabs/Stats.js"></script>
-    <script src="src/prefabs/Player.js"></script>
-    <script src="src/prefabs/GameState.js"></script>
-    <script src="src/prefabs/ButtonManager.js"></script>
-    <script src="src/scenes/Load.js"></script>
-    <script src="src/scenes/Keys.js"></script>
-    <script src="src/scenes/Play.js"></script>
-    <script src="src/scenes/Win.js"></script>
-    <script src="src/main.js"></script>
-  </head>
 
-  <body>
-    <div id="title">
-      <h1>Mining Simulator</h1>
-    </div>
-    <div id="game-container">
-      <div id="phaser-game"></div>
-      <div id="info-panel">
-        <div id="info-panel-left">
-          <h2>Collect<br />1000 Resources<br />to Win!</h2>
-          <button id="saveButton">Save</button>
-          <button id="loadButton">Load</button>
-          <button id="saveSlot1">File 1</button>
-          <button id="saveSlot2">File 2</button>
-          <button id="saveSlot3">File 3</button>
-          <button id="loadSlot1">File 1</button>
-          <button id="loadSlot2">File 2</button>
-          <button id="loadSlot3">File 3</button>
-          <button id="exitButton">Back</button>
-          <button id="undoButton">Undo</button>
-          <button id="redoButton">Redo</button>
-        </div>
-        <div id="info-panel-middle">
-          <h2>Player Stats</h2>
-          <div id="playerDisplay">
-            Resources: 100<br />Turns: 0<br />Buildings Placed: 0
-          </div>
-        </div>
-        <div id="info-panel-right">
-          <h2>Actions</h2>
-          <button id="buyDrillButton">Buy Drill</button>
-          <button id="buyExcavatorButton">Buy Excavator</button>
-          <button id="buyDemolitionPlantButton">Buy Demolition Plant</button>
-          <button id="nextRoundButton">Start Next Round</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMPM 121 - Final Game</title>
+  <link rel="stylesheet" type="text/css" href="src/style.css" />
+  <script src="lib/phaser.js"></script>
+  <script src="dist/bundle.js"></script>
+</head>
+
+<body>
+  <div id="title">
+    <h1>Mining Simulator</h1>
+  </div>
+  <div id="game-container">
+    <div id="phaser-game"></div>
+    <div id="info-panel">
+      <div id="info-panel-left">
+        <h2>Collect<br />1000 Resources<br />to Win!</h2>
+        <button id="saveButton">Save</button>
+        <button id="loadButton">Load</button>
+        <button id="saveSlot1">File 1</button>
+        <button id="saveSlot2">File 2</button>
+        <button id="saveSlot3">File 3</button>
+        <button id="loadSlot1">File 1</button>
+        <button id="loadSlot2">File 2</button>
+        <button id="loadSlot3">File 3</button>
+        <button id="exitButton">Back</button>
+        <button id="undoButton">Undo</button>
+        <button id="redoButton">Redo</button>
+      </div>
+      <div id="info-panel-middle">
+        <h2>Player Stats</h2>
+        <div id="playerDisplay">
+          Resources: 100<br />Turns: 0<br />Buildings Placed: 0
         </div>
       </div>
+      <div id="info-panel-right">
+        <h2>Actions</h2>
+        <button id="buyDrillButton">Buy Drill</button>
+        <button id="buyExcavatorButton">Buy Excavator</button>
+        <button id="buyDemolitionPlantButton">Buy Demolition Plant</button>
+        <button id="nextRoundButton">Start Next Round</button>
+      </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
