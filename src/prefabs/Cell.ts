@@ -14,6 +14,7 @@ export class Cell extends Phaser.GameObjects.Sprite {
   public waterLevel: number = 0;
   public resources: number = 0;
 
+  public isUnplacable: boolean = false;
   public isClickable: boolean = false;
   private border?: Phaser.GameObjects.Graphics;
   private buildingIcon?: Phaser.GameObjects.Sprite | null = null;
@@ -252,6 +253,11 @@ export class Cell extends Phaser.GameObjects.Sprite {
 
   hasBuilding(): boolean {
     return this.buildingRef >= 0;
+  }
+
+  setUnplacable(): void {
+    this.isUnplacable = true;
+    this.setTint(0xff0000); // Example: mark unplacable cells with a red tint
   }
 
   buildingExists(ref: number): boolean {

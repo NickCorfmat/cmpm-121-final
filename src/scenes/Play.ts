@@ -4,6 +4,7 @@ import { GameState } from "../prefabs/GameState";
 import { Grid, GridConfig } from "../prefabs/Grid";
 import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
+import { parseScenarioFile, Scenario } from '../ScenerioParser';
 
 export interface Trackables {
   buildingsPlaced: number;
@@ -15,14 +16,9 @@ export class PlayScene extends Phaser.Scene {
   public gridConfig!: GridConfig;
   public statsConfig!: StatsConfig;
   public trackables!: Trackables;
-  public RESOURCE_GOAL: number = 0;
+  public RESOURCE_GOAL: number = 1000;
 
-  public buildings!: Array<{
-    type: string;
-    cost: number;
-    rate: number;
-    scale: number;
-  }>;
+  public buildings: Array<{ type: string; cost: number; rate: number; scale: number }> = [];
 
   public gameState!: GameState;
   public grid!: Grid;
@@ -88,9 +84,44 @@ export class PlayScene extends Phaser.Scene {
     );
     this.player = new Player(this, 0, 0, this.grid);
     this.buttons = new ButtonManager(this);
-    this.player = new Player(this, 0, 0, this.grid);
 
-    this.launchGame();
+    this.loadScenario();
+  }
+
+  async loadScenario(): Promise<void> {
+    try {
+      const response = await fetch('config/scenarios.txt');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const scenarioFileContent = await response.text();
+      const scenario = parseScenarioFile(scenarioFileContent);
+
+      console.log("Loaded scenario:", scenario); // Add log to verify loading
+
+      // Apply the scenario settings
+      this.player.resources = scenario.startResources;
+      this.RESOURCE_GOAL = parseInt(scenario.victoryCondition.split(" ")[1]);
+
+      // Place buildings
+      scenario.buildings.forEach((building) => {
+        const cell = this.grid.getCell(building.row, building.col);
+        if (cell) {
+          cell.setBuilding(this.buildings.findIndex(b => b.type === building.type));
+          cell.setLevel(building.level);
+        }
+      });
+
+      // Mark unplacable cells
+      scenario.unplacableCells.forEach((cellInfo) => {
+        const cell = this.grid.getCell(cellInfo.row, cellInfo.col);
+        if (cell) {
+          cell.setUnplacable();
+        }
+      });
+    } catch (error) {
+      console.error('Error loading scenario file:', error);
+    }
   }
 
   update(): void {
@@ -115,15 +146,6 @@ export class PlayScene extends Phaser.Scene {
   checkWinCondition(): void {
     if (this.player.resources >= this.RESOURCE_GOAL) {
       this.scene.start("sceneWin", this.trackables);
-    }
-  }
-
-  launchGame(): void {
-    const savedData = localStorage.getItem("AUTO_SAVE");
-
-    // prompt user to continue from auto-save or start new game
-    if (savedData && confirm("Do you want to continue where you left off?")) {
-      this.gameState.load();
     }
   }
 }
