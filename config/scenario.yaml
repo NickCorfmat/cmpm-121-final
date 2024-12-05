@@ -1,30 +1,25 @@
-Scenario: Level1
-StartResources: 200
-VictoryCondition: "Collect 1500 Resources"
-Buildings:
-  - Type: Drill
-    Row: 2
-    Col: 3
-    Level: 1
-  - Type: Excavator
-    Row: 4
-    Col: 5
-    Level: 2
-UnplacableCells:
-  - Row: 1
-    Col: 1
-  - Row: 3
-    Col: 3
-BuildingTypes:
-  - Type: Drill
-    Cost: 100
-    Rate: 10
-    Scale: 1.0
-  - Type: Excavator
-    Cost: 200
-    Rate: 20
-    Scale: 1.2
-  - Type: Refinery
-    Cost: 500
-    Rate: 50
-    Scale: 1.5
+gridConfig:
+  width: 8
+  height: 8
+  cellSize: 50
+
+buildings:
+  - type: Drill
+    cost: 10
+    rate: 1
+    scale: 1.6
+  - type: Excavator
+    cost: 30
+    rate: 1.5
+    scale: 1.6
+  - type: DemolitionPlant
+    cost: 50
+    rate: 2
+    scale: 1.6
+
+RESOURCE_GOAL: 1000
+
+trackables:
+  buildingsPlaced: 0
+  resourcesCollected: 0
+  turnsPlayed: 0

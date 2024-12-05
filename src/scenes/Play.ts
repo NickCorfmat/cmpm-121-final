@@ -4,7 +4,6 @@ import { GameState } from "../prefabs/GameState";
 import { Grid, GridConfig } from "../prefabs/Grid";
 import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
-import { parseScenarioFile, Scenario } from "../ScenarioParser";
 
 export interface Trackables {
   buildingsPlaced: number;
@@ -12,19 +11,19 @@ export interface Trackables {
   turnsPlayed: number;
 }
 
+export interface Building {
+  readonly type: string;
+  readonly cost: number;
+  readonly rate: number;
+  readonly scale: number;
+}
+
 export class PlayScene extends Phaser.Scene {
   public gridConfig!: GridConfig;
   public statsConfig!: StatsConfig;
   public trackables!: Trackables;
   public RESOURCE_GOAL: number = 1000;
-
-  public buildings: Array<{
-    type: string;
-    cost: number;
-    rate: number;
-    scale: number;
-  }> = [];
-
+  public buildings: Building[] = [];
   public gameState!: GameState;
   public grid!: Grid;
   public stats!: Stats;
@@ -36,7 +35,6 @@ export class PlayScene extends Phaser.Scene {
   }
 
   init(): void {
-    console.log("PlayScene init method called"); // Add log to verify init method call
     // set game display parameters
     this.gridConfig = { width: 8, height: 8, size: 50 };
     this.statsConfig = {
@@ -79,7 +77,6 @@ export class PlayScene extends Phaser.Scene {
   }
 
   create(): void {
-    console.log("PlayScene create method called"); // Add log to verify create method call
     this.gameState = new GameState(this);
     this.grid = new Grid(this, this.gridConfig);
     this.stats = new Stats(
@@ -93,48 +90,6 @@ export class PlayScene extends Phaser.Scene {
     this.buttons = new ButtonManager(this);
 
     this.loadScenario();
-  }
-
-  async loadScenario(): Promise<void> {
-    console.log("loadScenario function called"); // Add log to verify function call
-    try {
-      console.log("Fetching scenario file...");
-      const response = await fetch("config/scenarios.txt");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      console.log("Scenario file fetched successfully.");
-      const scenarioFileContent = await response.text();
-      console.log("Scenario file content:", scenarioFileContent);
-      const scenario = parseScenarioFile(scenarioFileContent);
-
-      console.log("Loaded scenario:", scenario); // Add log to verify loading
-
-      // Apply the scenario settings
-      this.player.resources = scenario.startResources;
-      this.RESOURCE_GOAL = parseInt(scenario.victoryCondition.split(" ")[1]);
-
-      // Place buildings
-      scenario.buildings.forEach((building) => {
-        const cell = this.grid.getCell(building.row, building.col);
-        if (cell) {
-          cell.setBuilding(
-            this.buildings.findIndex((b) => b.type === building.type)
-          );
-          cell.setLevel(building.level);
-        }
-      });
-
-      // Mark unplacable cells
-      scenario.unplacableCells.forEach((cellInfo) => {
-        const cell = this.grid.getCell(cellInfo.row, cellInfo.col);
-        if (cell) {
-          cell.setUnplacable();
-        }
-      });
-    } catch (error) {
-      console.error("Error loading scenario file:", error);
-    }
   }
 
   update(): void {
