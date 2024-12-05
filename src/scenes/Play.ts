@@ -5,6 +5,7 @@ import { Grid, GridConfig } from "../prefabs/Grid";
 import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
 import { parseScenarioFile, Scenario } from '../ScenerioParser';
+import { LanguageManager, Language } from '../prefabs/LanguageManager';
 
 export interface Trackables {
   buildingsPlaced: number;
@@ -85,7 +86,18 @@ export class PlayScene extends Phaser.Scene {
     this.player = new Player(this, 0, 0, this.grid);
     this.buttons = new ButtonManager(this);
 
-    this.loadScenario();
+    // Language switching buttons
+    document.getElementById('lang-en')?.addEventListener('click', () => {
+      LanguageManager.setLanguage('en');
+    });
+    document.getElementById('lang-ar')?.addEventListener('click', () => {
+      LanguageManager.setLanguage('ar');
+    });
+    document.getElementById('lang-zh')?.addEventListener('click', () => {
+      LanguageManager.setLanguage('zh');
+    });
+
+    // this.loadScenario();
   }
 
   async loadScenario(): Promise<void> {

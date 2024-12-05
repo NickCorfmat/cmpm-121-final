@@ -1,5 +1,6 @@
 import { PlayScene } from "../scenes/Play";
 import { Cell } from "./Cell";
+import { LanguageManager } from "../prefabs/LanguageManager";
 
 export interface StatsConfig {
   x: number;
@@ -12,7 +13,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
   public scene: PlayScene;
   public width: number;
   public height: number;
-  
+
   private cell: Cell | null = null;
   private title: Phaser.GameObjects.Text;
   private description: Phaser.GameObjects.Text;
@@ -72,7 +73,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     this.icon = null;
 
     // create collect button
-    this.collectButton = this.scene.add.text(0, 0, "Collect Resources", {
+    this.collectButton = this.scene.add.text(0, 0, LanguageManager.getTranslation("collectResources"), {
       fontSize: "16px",
       backgroundColor: "#000",
       padding: { x: 10, y: 5 },
@@ -134,10 +135,10 @@ export class Stats extends Phaser.GameObjects.Sprite {
   getCellInfo(): void {
     if (!this.cell) return;
 
-    this.location = `Location: (${this.cell.row}, ${this.cell.col})`;
-    this.sunLevel = `Sun Level: ${this.cell.sunLevel}`;
-    this.waterLevel = `Water Level: ${this.cell.waterLevel}`;
-    this.level = `Level: ${this.cell.level}`;
+    this.location = `${LanguageManager.getTranslation("location")}: (${this.cell.row}, ${this.cell.col})`;
+    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}`;
+    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}`;
+    this.level = `${LanguageManager.getTranslation("level")}: ${this.cell.level}`;
   }
 
   displayDescription(): void {
