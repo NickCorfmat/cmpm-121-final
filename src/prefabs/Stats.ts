@@ -73,11 +73,16 @@ export class Stats extends Phaser.GameObjects.Sprite {
     this.icon = null;
 
     // create collect button
-    this.collectButton = this.scene.add.text(0, 0, LanguageManager.getTranslation("collectResources"), {
-      fontSize: "16px",
-      backgroundColor: "#000",
-      padding: { x: 10, y: 5 },
-    });
+    this.collectButton = this.scene.add.text(
+      0,
+      0,
+      LanguageManager.getTranslation("collect"),
+      {
+        fontSize: "16px",
+        backgroundColor: "#000",
+        padding: { x: 10, y: 5 },
+      }
+    );
 
     // collect button configs
     this.collectButton.setOrigin(0.5);
@@ -107,7 +112,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     const y = this.height * 0.1;
 
     this.title.setPosition(x, y);
-    this.title.setText(this.cell.getName());
+    this.title.setText(LanguageManager.getTranslation(this.cell.getName()));
   }
 
   displayCellIcon(): void {
@@ -135,10 +140,18 @@ export class Stats extends Phaser.GameObjects.Sprite {
   getCellInfo(): void {
     if (!this.cell) return;
 
-    this.location = `${LanguageManager.getTranslation("location")}: (${this.cell.row}, ${this.cell.col})`;
-    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}`;
-    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}`;
-    this.level = `${LanguageManager.getTranslation("level")}: ${this.cell.level}`;
+    this.location = `${LanguageManager.getTranslation("location")}: (${
+      this.cell.row
+    }, ${this.cell.col})`;
+    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${
+      this.cell.sunLevel
+    }`;
+    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${
+      this.cell.waterLevel
+    }`;
+    this.level = `${LanguageManager.getTranslation("level")}: ${
+      this.cell.level
+    }`;
   }
 
   displayDescription(): void {
@@ -160,6 +173,14 @@ export class Stats extends Phaser.GameObjects.Sprite {
       this.collectButton.setVisible(true);
     } else {
       this.collectButton.setVisible(false);
+    }
+  }
+
+  updateUIText(): void {
+    this.collectButton.setText(LanguageManager.getTranslation("collect"));
+    if (this.cell) {
+      this.getCellInfo();
+      this.displayDescription();
     }
   }
 }

@@ -4,8 +4,8 @@ import { GameState } from "../prefabs/GameState";
 import { Grid, GridConfig } from "../prefabs/Grid";
 import { Stats, StatsConfig } from "../prefabs/Stats";
 import { ButtonManager } from "../prefabs/ButtonManager";
-import { parseScenarioFile, Scenario } from '../ScenerioParser';
-import { LanguageManager, Language } from '../prefabs/LanguageManager';
+import { parseScenarioFile, Scenario } from "../ScenerioParser";
+import { LanguageManager, Language } from "../prefabs/LanguageManager";
 
 export interface Trackables {
   buildingsPlaced: number;
@@ -19,7 +19,12 @@ export class PlayScene extends Phaser.Scene {
   public trackables!: Trackables;
   public RESOURCE_GOAL: number = 1000;
 
-  public buildings: Array<{ type: string; cost: number; rate: number; scale: number }> = [];
+  public buildings: Array<{
+    type: string;
+    cost: number;
+    rate: number;
+    scale: number;
+  }> = [];
 
   public gameState!: GameState;
   public grid!: Grid;
@@ -87,14 +92,17 @@ export class PlayScene extends Phaser.Scene {
     this.buttons = new ButtonManager(this);
 
     // Language switching buttons
-    document.getElementById('lang-en')?.addEventListener('click', () => {
-      LanguageManager.setLanguage('en');
+    document.getElementById("lang-en")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("en");
+      this.updateUIText();
     });
-    document.getElementById('lang-ar')?.addEventListener('click', () => {
-      LanguageManager.setLanguage('ar');
+    document.getElementById("lang-ar")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("ar");
+      this.updateUIText();
     });
-    document.getElementById('lang-zh')?.addEventListener('click', () => {
-      LanguageManager.setLanguage('zh');
+    document.getElementById("lang-zh")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("zh");
+      this.updateUIText();
     });
 
     // this.loadScenario();
@@ -102,7 +110,7 @@ export class PlayScene extends Phaser.Scene {
 
   async loadScenario(): Promise<void> {
     try {
-      const response = await fetch('config/scenarios.txt');
+      const response = await fetch("config/scenarios.txt");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -119,7 +127,9 @@ export class PlayScene extends Phaser.Scene {
       scenario.buildings.forEach((building) => {
         const cell = this.grid.getCell(building.row, building.col);
         if (cell) {
-          cell.setBuilding(this.buildings.findIndex(b => b.type === building.type));
+          cell.setBuilding(
+            this.buildings.findIndex((b) => b.type === building.type)
+          );
           cell.setLevel(building.level);
         }
       });
@@ -132,7 +142,7 @@ export class PlayScene extends Phaser.Scene {
         }
       });
     } catch (error) {
-      console.error('Error loading scenario file:', error);
+      console.error("Error loading scenario file:", error);
     }
   }
 
@@ -146,7 +156,27 @@ export class PlayScene extends Phaser.Scene {
       ? this.stats.update(this.grid.selectedCell)
       : this.player.displayCurrentCellStats();
 
-    this.player.updatePlayerDisplay();
+    this.updateUIText();
+  }
+
+  updateUIText(): void {
+    // Update trackables
+    const playerDisplay = document.getElementById("playerDisplay");
+    if (playerDisplay) {
+      playerDisplay.innerHTML =
+        `<span data-translate="resources">${LanguageManager.getTranslation(
+          "resources"
+        )}</span>: ${this.player.resources}<br />` +
+        `<span data-translate="turns">${LanguageManager.getTranslation(
+          "turns"
+        )}</span>: ${this.trackables.turnsPlayed}<br />` +
+        `<span data-translate="buildingsPlaced">${LanguageManager.getTranslation(
+          "buildingsPlaced"
+        )}</span>: ${this.trackables.buildingsPlaced}`;
+    }
+
+    // Update stats UI
+    this.stats.updateUIText();
   }
 
   startNextRound(): void {

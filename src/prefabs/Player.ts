@@ -1,7 +1,9 @@
+import Phaser from "phaser";
 import { Grid } from "./Grid";
 import { Cell } from "./Cell";
 import { PlayScene } from "../scenes/Play";
 import { KeyScene, KEYS } from "../scenes/Keys";
+import { LanguageManager } from "../prefabs/LanguageManager";
 
 export class Player extends Phaser.GameObjects.Sprite {
   public scene: PlayScene;
@@ -10,7 +12,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   public grid: Grid;
 
   public resources: number;
-  
+
   private KEYS: KEYS;
 
   constructor(
@@ -145,10 +147,16 @@ export class Player extends Phaser.GameObjects.Sprite {
     const display = document.getElementById("playerDisplay");
 
     if (display) {
-      display.innerText =
-        `Resources: ${this.resources}\n` +
-        `Turns: ${this.scene.trackables.turnsPlayed}\n` +
-        `Buildings Placed: ${this.scene.trackables.buildingsPlaced}`;
+      display.innerHTML =
+        `<span data-translate="resources">${LanguageManager.getTranslation(
+          "resources"
+        )}</span>: ${this.resources}<br />` +
+        `<span data-translate="turns">${LanguageManager.getTranslation(
+          "turns"
+        )}</span>: ${this.scene.trackables.turnsPlayed}<br />` +
+        `<span data-translate="buildingsPlaced">${LanguageManager.getTranslation(
+          "buildingsPlaced"
+        )}</span>: ${this.scene.trackables.buildingsPlaced}`;
     }
   }
 
