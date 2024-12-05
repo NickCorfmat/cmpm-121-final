@@ -6,6 +6,8 @@ export class LoadScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.load.text("scenario", "../config/scenario.yaml");
+
     // load assets
     this.load.path = "./assets";
 

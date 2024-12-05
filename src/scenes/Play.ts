@@ -1,3 +1,5 @@
+import { parse } from "yaml";
+
 import Phaser from "phaser";
 import { Player } from "../prefabs/Player";
 import { GameState } from "../prefabs/GameState";
@@ -35,8 +37,13 @@ export class PlayScene extends Phaser.Scene {
   }
 
   init(): void {
+    const yamlText = this.cache.text.get("scenario");
+    const config = parse(yamlText);
+
+    console.log(config);
+
     // set game display parameters
-    this.gridConfig = { width: 8, height: 8, size: 50 };
+    this.gridConfig = config.gridConfig;
     this.statsConfig = {
       x: this.gridConfig.width * this.gridConfig.size,
       y: 0,
@@ -45,35 +52,11 @@ export class PlayScene extends Phaser.Scene {
       height: this.game.scale.height,
     };
 
-    this.buildings = [
-      {
-        type: "Drill",
-        cost: 10,
-        rate: 1,
-        scale: 1.6,
-      },
-      {
-        type: "Excavator",
-        cost: 30,
-        rate: 1.5,
-        scale: 1.6,
-      },
-      {
-        type: "DemolitionPlant",
-        cost: 50,
-        rate: 2,
-        scale: 1.6,
-      },
-    ];
+    this.buildings = config.buildings;
+    this.RESOURCE_GOAL = config.RESOURCE_GOAL;
+    this.trackables = config.trackables;
 
-    this.RESOURCE_GOAL = 1000;
-
-    // initialize game stats
-    this.trackables = {
-      buildingsPlaced: 0,
-      resourcesCollected: 0,
-      turnsPlayed: 0,
-    };
+    console.log("hi");
   }
 
   create(): void {
@@ -88,8 +71,6 @@ export class PlayScene extends Phaser.Scene {
     );
     this.player = new Player(this, 0, 0, this.grid);
     this.buttons = new ButtonManager(this);
-
-    this.loadScenario();
   }
 
   update(): void {
@@ -114,6 +95,15 @@ export class PlayScene extends Phaser.Scene {
   checkWinCondition(): void {
     if (this.player.resources >= this.RESOURCE_GOAL) {
       this.scene.start("sceneWin", this.trackables);
+    }
+  }
+
+  launchGame(): void {
+    const savedData = localStorage.getItem("AUTO_SAVE");
+
+    // prompt user to continue from auto-save or start new game
+    if (savedData && confirm("Do you want to continue where you left off?")) {
+      this.gameState.load();
     }
   }
 }
