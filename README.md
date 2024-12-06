@@ -82,3 +82,48 @@ Source: diagram created with the help of Brace.
 
 ## Reflection
 Overall, the F1 assignment has been a lot more difficult than we anticipated. Implementing state saving and an undo system was extremely challenging with our initial design, leading us to take a step back and spend more time refactoring our approach so that it was more suitable for implementing these requirements. For example, we had to ultimately abandon representing "buildings" as objects, but rather representing them as numbers. This change made it much easier to convert our game's grid data into an "array of structures," rather than an "array of structures of structures." Figuring out how to save the move history into memory was also a challenge, since our current design would max out the browser's local storage within a few moves. This prompted us to optimize the performance of our game (such as pooling from the same objects), while also eliminating circular references within our save data. Overall, our game's internal design has evolved significantly for the better, making it much easier for us (or others) to modify in the future.
+
+# Devlog Entry - 12/6/24
+
+## How we satisfied the software requirements
+  
+### F0+F1
+No major changes were made for the F0 anf F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
+
+### External DSL for Scenario Design
+We designed our external DSL focusing on simplicity while simulatenously following an existing structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
+
+```
+gridConfig:
+  width: 8
+  height: 8
+  size: 50
+
+buildings:
+  - type: Drill
+    cost: 10
+    rate: 1
+    scale: 1.6
+  - type: Excavator
+    cost: 30
+    rate: 1.5
+    scale: 1.6
+  - type: DemolitionPlant
+    cost: 50
+    rate: 2
+    scale: 1.6
+
+RESOURCE_GOAL: 1000
+
+trackables:
+  buildingsPlaced: 0
+  resourcesCollected: 0
+  turnsPlayed: 0
+```
+
+
+### Internal DSL for Plants and Growth Conditions
+
+### Switch to Alternate Platform
+
+## Reflection
