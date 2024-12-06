@@ -33,6 +33,8 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     Drill: "Drill",
     Excavator: "Excavator",
     DemolitionPlant: "Demolition Plant",
+    level3BuildingsGoal: "Get {goal} Buildings to Level 3 to Win!",
+    specificBuildingGoal: "Plant {goal} {buildingType} to Win!",
   },
   ar: {
     title: "محاكي التعدين",
@@ -66,6 +68,8 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     Drill: "حفار",
     Excavator: "حفار",
     DemolitionPlant: "مصنع الهدم",
+    level3BuildingsGoal: "احصل على {goal} مباني إلى المستوى 3 للفوز!",
+    specificBuildingGoal: "زرع {goal} {buildingType} للفوز!",
   },
   zh: {
     title: "采矿模拟器",
@@ -99,6 +103,8 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     Drill: "钻机",
     Excavator: "挖掘机",
     DemolitionPlant: "拆除厂",
+    level3BuildingsGoal: "将{goal}个建筑物升至3级以获胜!",
+    specificBuildingGoal: "种植{goal}个{buildingType}以获胜!",
   },
 };
 
@@ -110,8 +116,14 @@ export class LanguageManager {
     this.updateText();
   }
 
-  static getTranslation(key: string): string {
-    return translations[this.currentLanguage][key] || key;
+  static getTranslation(key: string, params?: { [key: string]: string | number }): string {
+    let translation = translations[this.currentLanguage][key] || key;
+    if (params) {
+      Object.keys(params).forEach((param) => {
+        translation = translation.replace(`{${param}}`, String(params[param]));
+      });
+    }
+    return translation;
   }
 
   static updateText(): void {

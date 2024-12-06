@@ -22,6 +22,12 @@ export interface Building {
   readonly growthRule: string; // New property
 }
 
+export interface VictoryCondition {
+  type: "resources" | "level3Buildings" | "specificBuilding";
+  goal: number;
+  buildingType?: string;
+}
+
 export class PlayScene extends Phaser.Scene {
   public gridConfig!: GridConfig;
   public statsConfig!: StatsConfig;
@@ -41,6 +47,7 @@ export class PlayScene extends Phaser.Scene {
   public stats!: Stats;
   public player!: Player;
   public buttons!: ButtonManager;
+  public victoryCondition!: VictoryCondition;
 
   constructor() {
     super("scenePlay");
@@ -66,6 +73,7 @@ export class PlayScene extends Phaser.Scene {
     }));
     this.RESOURCE_GOAL = config.RESOURCE_GOAL;
     this.trackables = config.trackables;
+    this.victoryCondition = config.victoryCondition;
   }
 
   create(): void {
@@ -81,23 +89,43 @@ export class PlayScene extends Phaser.Scene {
     this.player = new Player(this, 0, 0, this.grid);
     this.buttons = new ButtonManager(this);
 
+    this.updateVictoryConditionText();
+
     // Language switching buttons
     document.getElementById("lang-en")?.addEventListener("click", () => {
       LanguageManager.setLanguage("en");
       this.updateUIText();
-      
+      this.updateVictoryConditionText();
     });
     document.getElementById("lang-ar")?.addEventListener("click", () => {
       LanguageManager.setLanguage("ar");
       this.updateUIText();
+      this.updateVictoryConditionText();
     });
     document.getElementById("lang-zh")?.addEventListener("click", () => {
       LanguageManager.setLanguage("zh");
       this.updateUIText();
+      this.updateVictoryConditionText();
     });
 
+    this.launchGame();
   }
 
+  updateVictoryConditionText(): void {
+    const victoryConditionElement = document.getElementById("victoryCondition");
+    if (victoryConditionElement) {
+      if (this.victoryCondition.type === "resources") {
+        victoryConditionElement.setAttribute("data-translate", "collectGoal");
+        victoryConditionElement.textContent = LanguageManager.getTranslation("collectGoal", { goal: this.victoryCondition.goal });
+      } else if (this.victoryCondition.type === "level3Buildings") {
+        victoryConditionElement.setAttribute("data-translate", "level3BuildingsGoal");
+        victoryConditionElement.textContent = LanguageManager.getTranslation("level3BuildingsGoal", { goal: this.victoryCondition.goal });
+      } else if (this.victoryCondition.type === "specificBuilding") {
+        victoryConditionElement.setAttribute("data-translate", "specificBuildingGoal");
+        victoryConditionElement.textContent = LanguageManager.getTranslation("specificBuildingGoal", { goal: this.victoryCondition.goal, buildingType: LanguageManager.getTranslation(this.victoryCondition.buildingType ?? '') });
+      }
+    }
+  }
 
   update(): void {
     this.player.update();
@@ -143,8 +171,24 @@ export class PlayScene extends Phaser.Scene {
   }
 
   checkWinCondition(): void {
-    if (this.player.resources >= this.RESOURCE_GOAL) {
-      this.scene.start("sceneWin", this.trackables);
+    if (this.victoryCondition.type === "resources") {
+      if (this.player.resources >= this.victoryCondition.goal) {
+        this.scene.start("sceneWin", this.trackables);
+      }
+    } else if (this.victoryCondition.type === "level3Buildings") {
+      const level3Buildings = Array.from(this.grid.cells.values()).filter(
+        (cell) => cell.level === 3
+      ).length;
+      if (level3Buildings >= this.victoryCondition.goal) {
+        this.scene.start("sceneWin", this.trackables);
+      }
+    } else if (this.victoryCondition.type === "specificBuilding") {
+      const specificBuildings = Array.from(this.grid.cells.values()).filter(
+        (cell) => cell.getName() === this.victoryCondition.buildingType
+      ).length;
+      if (specificBuildings >= this.victoryCondition.goal) {
+        this.scene.start("sceneWin", this.trackables);
+      }
     }
   }
 

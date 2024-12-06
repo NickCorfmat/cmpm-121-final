@@ -26,3 +26,8 @@ trackables:
   buildingsPlaced: 0
   resourcesCollected: 0
   turnsPlayed: 0
+
+victoryCondition:
+  type: specificBuilding
+  goal: 1
+  buildingType: Drill

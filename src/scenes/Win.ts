@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { Trackables } from "./Play";
+import { LanguageManager } from "../prefabs/LanguageManager";
 
 export class WinScene extends Phaser.Scene {
   private buildingsPlaced: number = 0;
@@ -27,23 +28,37 @@ export class WinScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.text = this.add
-      .text(
-        this.game.scale.width / 2,
-        this.game.scale.height / 2,
-        this.getWinText(),
-        this.textConfig
-      )
-      .setOrigin(0.5);
+    const { width, height } = this.scale;
+
+    this.add.text(width * 0.5, height * 0.5, LanguageManager.getTranslation("win"), {
+      fontSize: "32px",
+      color: "#ffffff",
+    }).setOrigin(0.5);
+
+    const victoryConditionElement = document.getElementById("victoryCondition");
+    if (victoryConditionElement) {
+      victoryConditionElement.textContent = LanguageManager.getTranslation(victoryConditionElement.getAttribute("data-translate") ?? '');
+    }
+
+    // Language switching buttons
+    document.getElementById("lang-en")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("en");
+      this.updateUIText();
+    });
+    document.getElementById("lang-ar")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("ar");
+      this.updateUIText();
+    });
+    document.getElementById("lang-zh")?.addEventListener("click", () => {
+      LanguageManager.setLanguage("zh");
+      this.updateUIText();
+    });
   }
 
-  // Source: Brace, How can I shorten a long string message?
-  getWinText(): string {
-    return (
-      `You Win!\n` +
-      `Buildings Placed: ${this.buildingsPlaced}\n` +
-      `Resources Collected: ${this.resourcesCollected}\n` +
-      `Turns Played: ${this.turnsPlayed}`
-    );
+  updateUIText(): void {
+    const victoryConditionElement = document.getElementById("victoryCondition");
+    if (victoryConditionElement) {
+      victoryConditionElement.textContent = LanguageManager.getTranslation(victoryConditionElement.getAttribute("data-translate") ?? '');
+    }
   }
 }
