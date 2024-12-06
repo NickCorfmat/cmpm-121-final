@@ -80,6 +80,7 @@ export class PlayScene extends Phaser.Scene {
     document.getElementById("lang-en")?.addEventListener("click", () => {
       LanguageManager.setLanguage("en");
       this.updateUIText();
+      
     });
     document.getElementById("lang-ar")?.addEventListener("click", () => {
       LanguageManager.setLanguage("ar");
@@ -124,6 +125,10 @@ export class PlayScene extends Phaser.Scene {
 
     // Update stats UI
     this.stats.updateUIText();
+    // Update cell name
+    if (this.grid.selectedCell) {
+      this.stats.displayCellName();
+    }
   }
 
   startNextRound(): void {

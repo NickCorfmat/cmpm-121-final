@@ -181,6 +181,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
     if (this.cell) {
       this.getCellInfo();
       this.displayDescription();
+      this.displayCellName(); // Add this line to update cell name
     }
   }
 }
