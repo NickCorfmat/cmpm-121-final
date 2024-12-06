@@ -40,8 +40,6 @@ export class PlayScene extends Phaser.Scene {
     const yamlText = this.cache.text.get("scenario");
     const config = parse(yamlText);
 
-    console.log(config);
-
     // set game display parameters
     this.gridConfig = config.gridConfig;
     this.statsConfig = {
@@ -55,8 +53,6 @@ export class PlayScene extends Phaser.Scene {
     this.buildings = config.buildings;
     this.RESOURCE_GOAL = config.RESOURCE_GOAL;
     this.trackables = config.trackables;
-
-    console.log("hi");
   }
 
   create(): void {

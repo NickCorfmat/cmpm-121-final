@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "target": "ES5",
+    "module": "ESNext",
     "strict": true,
-    "sourceMap": true,
     "esModuleInterop": true,
-    "allowJs": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["phaser", "node"],
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "types": ["phaser", "node"]
   },
-
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts"]
 }

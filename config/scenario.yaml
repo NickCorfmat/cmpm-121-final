@@ -1,7 +1,7 @@
 gridConfig:
-  width: 4
-  height: 4
-  size: 100
+  width: 8
+  height: 8
+  size: 50
 
 buildings:
   - type: Drill
