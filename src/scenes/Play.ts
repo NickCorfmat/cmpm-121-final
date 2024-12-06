@@ -33,6 +33,7 @@ export class PlayScene extends Phaser.Scene {
   public statsConfig!: StatsConfig;
   public trackables!: Trackables;
   public RESOURCE_GOAL: number = 1000;
+  public startingResources: number = 100; // Default value
 
   public buildings: Array<{
     type: string;
@@ -77,6 +78,7 @@ export class PlayScene extends Phaser.Scene {
     this.RESOURCE_GOAL = config.RESOURCE_GOAL;
     this.trackables = config.trackables;
     this.victoryCondition = config.victoryCondition;
+    this.startingResources = config.startingResources || 100; // Read from YAML
   }
 
   /**
@@ -92,7 +94,7 @@ export class PlayScene extends Phaser.Scene {
       this.statsConfig.width,
       this.statsConfig.height
     );
-    this.player = new Player(this, 0, 0, this.grid);
+    this.player = new Player(this, 0, 0, this.grid, this.startingResources); // Pass starting resources
     this.buttons = new ButtonManager(this);
 
     this.updateVictoryConditionText();
@@ -158,6 +160,7 @@ export class PlayScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
+    this.checkWinCondition();
   }
 
   /**
@@ -284,13 +287,87 @@ export class PlayScene extends Phaser.Scene {
  * The `scenario.yaml` file is used to configure the game. It includes the following sections:
  *
  * - `gridConfig`: Configuration for the game grid, including width, height, and cell size.
+ *   Example:
+ *   gridConfig:
+ *     width: 8
+ *     height: 8
+ *     size: 50
+ *
  * - `buildings`: An array of building configurations, each with a type, cost, rate, scale, and growth rule.
- * - `RESOURCE_GOAL`: The default resource goal for the game.
+ *   Example:
+ *   buildings:
+ *     - type: Drill
+ *       cost: 10
+ *       rate: 1
+ *       scale: 1.6
+ *       growthRule: default
+ *     - type: Excavator
+ *       cost: 30
+ *       rate: 1.5
+ *       scale: 1.6
+ *       growthRule: waterSun
+ *     - type: DemolitionPlant
+ *       cost: 50
+ *       rate: 2
+ *       scale: 1.6
+ *       growthRule: default
+ *
  * - `trackables`: Initial values for trackable metrics such as buildings placed, resources collected, and turns played.
+ *   Example:
+ *   trackables:
+ *     buildingsPlaced: 0
+ *     resourcesCollected: 0
+ *     turnsPlayed: 0
+ *
  * - `victoryCondition`: The victory condition for the game, which can be one of the following:
  *   - `resources`: Collect a specified amount of resources to win.
+ *     Example:
+ *     victoryCondition:
+ *       type: resources
+ *       goal: 1000
  *   - `level3Buildings`: Get a specified number of buildings to level 3 to win.
+ *     Example:
+ *     victoryCondition:
+ *       type: level3Buildings
+ *       goal: 5
  *   - `specificBuilding`: Plant a specified number of a specific building type to win.
+ *     Example:
+ *     victoryCondition:
+ *       type: specificBuilding
+ *       goal: 3
+ *       buildingType: Drill
+ *
+ * - `startingResources`: The initial amount of resources the player starts with.
+ *   Example:
+ *   startingResources: 50
  *
  * Example `scenario.yaml`:
+ * gridConfig:
+ *   width: 8
+ *   height: 8
+ *   size: 50
+ * buildings:
+ *   - type: Drill
+ *     cost: 10
+ *     rate: 1
+ *     scale: 1.6
+ *     growthRule: default
+ *   - type: Excavator
+ *     cost: 30
+ *     rate: 1.5
+ *     scale: 1.6
+ *     growthRule: waterSun
+ *   - type: DemolitionPlant
+ *     cost: 50
+ *     rate: 2
+ *     scale: 1.6
+ *     growthRule: default
+ * trackables:
+ *   buildingsPlaced: 0
+ *   resourcesCollected: 0
+ *   turnsPlayed: 0
+ * victoryCondition:
+ *   type: resources
+ *   goal: 1000
+ * startingResources: 50
  */

@@ -20,14 +20,13 @@ buildings:
     scale: 1.6
     growthRule: default
 
-RESOURCE_GOAL: 1000
-
 trackables:
   buildingsPlaced: 0
   resourcesCollected: 0
   turnsPlayed: 0
 
 victoryCondition:
-  type: specificBuilding
-  goal: 1
-  buildingType: Drill
+  type: resources
+  goal: 10000
+
+startingResources: 50

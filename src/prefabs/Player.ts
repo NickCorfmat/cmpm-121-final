@@ -20,6 +20,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     row: number,
     col: number,
     grid: Grid,
+    startingResources: number = 100, // New parameter
     texture: string = "player"
   ) {
     // convert logical to pixel for displaying cell
@@ -44,7 +45,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.KEYS = (scene.scene.get("sceneKeys") as KeyScene).KEYS;
 
     // initialize resources
-    this.resources = 100;
+    this.resources = startingResources; // Initialize with starting resources
     this.updatePlayerDisplay();
 
     // spawn player at current cell
