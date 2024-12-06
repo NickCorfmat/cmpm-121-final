@@ -53,6 +53,9 @@ export class PlayScene extends Phaser.Scene {
     super("scenePlay");
   }
 
+  /**
+   * Initialize the game scene with configuration from the YAML file.
+   */
   init(): void {
     const yamlText = this.cache.text.get("scenario");
     const config = parse(yamlText);
@@ -76,6 +79,9 @@ export class PlayScene extends Phaser.Scene {
     this.victoryCondition = config.victoryCondition;
   }
 
+  /**
+   * Create the game scene, including the grid, player, stats, and buttons.
+   */
   create(): void {
     this.gameState = new GameState(this);
     this.grid = new Grid(this, this.gridConfig);
@@ -111,6 +117,9 @@ export class PlayScene extends Phaser.Scene {
     this.launchGame();
   }
 
+  /**
+   * Update the victory condition text based on the current language and configuration.
+   */
   updateVictoryConditionText(): void {
     const victoryConditionElement = document.getElementById("victoryCondition");
     if (victoryConditionElement) {
@@ -131,6 +140,9 @@ export class PlayScene extends Phaser.Scene {
     this.player.update();
   }
 
+  /**
+   * Update the UI, including trackables and stats.
+   */
   updateUI(): void {
     // prioritize displaying stats of selected cell
     this.grid.selectedCell
@@ -140,6 +152,9 @@ export class PlayScene extends Phaser.Scene {
     this.updateUIText();
   }
 
+  /**
+   * Update the UI text based on the current language.
+   */
   updateUIText(): void {
     // Update trackables
     const playerDisplay = document.getElementById("playerDisplay");
@@ -164,12 +179,18 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Start the next round, update the UI, and save the game state.
+   */
   startNextRound(): void {
     this.grid.step();
     this.updateUI();
     this.gameState.save();
   }
 
+  /**
+   * Check if the win condition has been met and transition to the win scene if so.
+   */
   checkWinCondition(): void {
     if (this.victoryCondition.type === "resources") {
       if (this.player.resources >= this.victoryCondition.goal) {
@@ -192,6 +213,9 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Launch the game, prompting the user to continue from an auto-save or start a new game.
+   */
   launchGame(): void {
     const savedData = localStorage.getItem("AUTO_SAVE");
 
@@ -201,3 +225,18 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 }
+
+/**
+ * The `scenario.yaml` file is used to configure the game. It includes the following sections:
+ * 
+ * - `gridConfig`: Configuration for the game grid, including width, height, and cell size.
+ * - `buildings`: An array of building configurations, each with a type, cost, rate, scale, and growth rule.
+ * - `RESOURCE_GOAL`: The default resource goal for the game.
+ * - `trackables`: Initial values for trackable metrics such as buildings placed, resources collected, and turns played.
+ * - `victoryCondition`: The victory condition for the game, which can be one of the following:
+ *   - `resources`: Collect a specified amount of resources to win.
+ *   - `level3Buildings`: Get a specified number of buildings to level 3 to win.
+ *   - `specificBuilding`: Plant a specified number of a specific building type to win.
+ * 
+ * Example `scenario.yaml`:
+*/
