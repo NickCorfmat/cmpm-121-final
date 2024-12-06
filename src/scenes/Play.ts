@@ -125,13 +125,33 @@ export class PlayScene extends Phaser.Scene {
     if (victoryConditionElement) {
       if (this.victoryCondition.type === "resources") {
         victoryConditionElement.setAttribute("data-translate", "collectGoal");
-        victoryConditionElement.textContent = LanguageManager.getTranslation("collectGoal", { goal: this.victoryCondition.goal });
+        victoryConditionElement.textContent = LanguageManager.getTranslation(
+          "collectGoal",
+          { goal: this.victoryCondition.goal }
+        );
       } else if (this.victoryCondition.type === "level3Buildings") {
-        victoryConditionElement.setAttribute("data-translate", "level3BuildingsGoal");
-        victoryConditionElement.textContent = LanguageManager.getTranslation("level3BuildingsGoal", { goal: this.victoryCondition.goal });
+        victoryConditionElement.setAttribute(
+          "data-translate",
+          "level3BuildingsGoal"
+        );
+        victoryConditionElement.textContent = LanguageManager.getTranslation(
+          "level3BuildingsGoal",
+          { goal: this.victoryCondition.goal }
+        );
       } else if (this.victoryCondition.type === "specificBuilding") {
-        victoryConditionElement.setAttribute("data-translate", "specificBuildingGoal");
-        victoryConditionElement.textContent = LanguageManager.getTranslation("specificBuildingGoal", { goal: this.victoryCondition.goal, buildingType: LanguageManager.getTranslation(this.victoryCondition.buildingType ?? '') });
+        victoryConditionElement.setAttribute(
+          "data-translate",
+          "specificBuildingGoal"
+        );
+        victoryConditionElement.textContent = LanguageManager.getTranslation(
+          "specificBuildingGoal",
+          {
+            goal: this.victoryCondition.goal,
+            buildingType: LanguageManager.getTranslation(
+              this.victoryCondition.buildingType ?? ""
+            ),
+          }
+        );
       }
     }
   }
@@ -177,6 +197,40 @@ export class PlayScene extends Phaser.Scene {
     if (this.grid.selectedCell) {
       this.stats.displayCellName();
     }
+
+    // Update button texts
+    const buttons = [
+      "saveButton",
+      "loadButton",
+      "saveSlot1",
+      "saveSlot2",
+      "saveSlot3",
+      "loadSlot1",
+      "loadSlot2",
+      "loadSlot3",
+      "exitButton",
+      "undoButton",
+      "redoButton",
+      "buyDrillButton",
+      "buyExcavatorButton",
+      "buyDemolitionPlantButton",
+      "nextRoundButton",
+    ];
+
+    buttons.forEach((buttonId) => {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        if (buttonId.startsWith("buy")) {
+          const buildingType = buttonId.replace("buy", "").replace("Button", "");
+          const building = this.buildings.find(b => b.type === buildingType);
+          if (building) {
+            button.textContent = `${LanguageManager.getTranslation(button.getAttribute("data-translate") ?? "")}: $${building.cost}`;
+          }
+        } else {
+          button.textContent = LanguageManager.getTranslation(button.getAttribute("data-translate") ?? "");
+        }
+      }
+    });
   }
 
   /**
@@ -228,7 +282,7 @@ export class PlayScene extends Phaser.Scene {
 
 /**
  * The `scenario.yaml` file is used to configure the game. It includes the following sections:
- * 
+ *
  * - `gridConfig`: Configuration for the game grid, including width, height, and cell size.
  * - `buildings`: An array of building configurations, each with a type, cost, rate, scale, and growth rule.
  * - `RESOURCE_GOAL`: The default resource goal for the game.
@@ -237,6 +291,6 @@ export class PlayScene extends Phaser.Scene {
  *   - `resources`: Collect a specified amount of resources to win.
  *   - `level3Buildings`: Get a specified number of buildings to level 3 to win.
  *   - `specificBuilding`: Plant a specified number of a specific building type to win.
- * 
+ *
  * Example `scenario.yaml`:
-*/
+ */

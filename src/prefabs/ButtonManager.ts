@@ -1,4 +1,5 @@
 import { PlayScene } from "../scenes/Play";
+import { LanguageManager } from "../prefabs/LanguageManager";
 
 // Source: Brace helped refactor ButtonManager to adopt a state approach to
 // displaying save/load buttons, along with their respective slot buttons.
@@ -75,7 +76,7 @@ export class ButtonManager {
     // create purchase buttons for each building type
     this.scene.buildings.forEach((building, index) => {
       const id = `buy${building.type}Button`;
-      const text = `Buy ${building.type}: $${building.cost}`;
+      const text = `${LanguageManager.getTranslation(`buy${building.type}`)}: $${building.cost}`;
 
       this.createButton(id, () => this.purchaseBuilding(index), text);
       this.toggleVisibility([id], true); // always show

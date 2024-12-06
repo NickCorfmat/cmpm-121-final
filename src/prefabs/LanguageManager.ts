@@ -35,6 +35,9 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     DemolitionPlant: "Demolition Plant",
     level3BuildingsGoal: "Get {goal} Buildings to Level 3 to Win!",
     specificBuildingGoal: "Plant {goal} {buildingType} to Win!",
+    langEn: "English",
+    langAr: "Arabic",
+    langZh: "Chinese",
   },
   ar: {
     title: "محاكي التعدين",
@@ -70,6 +73,9 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     DemolitionPlant: "مصنع الهدم",
     level3BuildingsGoal: "احصل على {goal} مباني إلى المستوى 3 للفوز!",
     specificBuildingGoal: "زرع {goal} {buildingType} للفوز!",
+    langEn: "الإنجليزية",
+    langAr: "العربية",
+    langZh: "الصينية",
   },
   zh: {
     title: "采矿模拟器",
@@ -105,6 +111,9 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     DemolitionPlant: "拆除厂",
     level3BuildingsGoal: "将{goal}个建筑物升至3级以获胜!",
     specificBuildingGoal: "种植{goal}个{buildingType}以获胜!",
+    langEn: "英语",
+    langAr: "阿拉伯语",
+    langZh: "中文",
   },
 };
 
@@ -133,5 +142,10 @@ export class LanguageManager {
         element.textContent = this.getTranslation(key);
       }
     });
+
+    // Update language buttons
+    document.getElementById("lang-en")!.textContent = this.getTranslation("langEn");
+    document.getElementById("lang-ar")!.textContent = this.getTranslation("langAr");
+    document.getElementById("lang-zh")!.textContent = this.getTranslation("langZh");
   }
 }
