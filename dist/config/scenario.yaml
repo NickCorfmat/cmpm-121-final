@@ -32,6 +32,6 @@ victoryCondition:
 startingResources: 50
 
 weatherCondition:
-  type: drought
+  type: storm
   startTurn: 3
-  endTurn: 5
+  endTurn: 7
