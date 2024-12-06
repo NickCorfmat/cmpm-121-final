@@ -140,18 +140,14 @@ export class Stats extends Phaser.GameObjects.Sprite {
   getCellInfo(): void {
     if (!this.cell) return;
 
-    this.location = `${LanguageManager.getTranslation("location")}: (${
-      this.cell.row
-    }, ${this.cell.col})`;
-    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${
-      this.cell.sunLevel
-    }`;
-    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${
-      this.cell.waterLevel
-    }`;
-    this.level = `${LanguageManager.getTranslation("level")}: ${
-      this.cell.level
-    }`;
+    const isDrought = this.scene.weatherCondition &&
+      this.scene.trackables.turnsPlayed >= this.scene.weatherCondition.startTurn &&
+      this.scene.trackables.turnsPlayed <= this.scene.weatherCondition.endTurn;
+
+    this.location = `${LanguageManager.getTranslation("location")}: (${this.cell.row}, ${this.cell.col})`;
+    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}`;
+    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}${isDrought ? ` (${LanguageManager.getTranslation("drought")})` : ""}`;
+    this.level = `${LanguageManager.getTranslation("level")}: ${this.cell.level}`;
   }
 
   displayDescription(): void {

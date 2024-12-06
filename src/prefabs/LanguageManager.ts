@@ -38,6 +38,7 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     langEn: "English",
     langAr: "Arabic",
     langZh: "Chinese",
+    drought: "Drought",
   },
   ar: {
     title: "محاكي التعدين",
@@ -76,6 +77,7 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     langEn: "الإنجليزية",
     langAr: "العربية",
     langZh: "الصينية",
+    drought: "جفاف",
   },
   zh: {
     title: "采矿模拟器",
@@ -114,6 +116,7 @@ export const translations: { [key in Language]: { [key: string]: string } } = {
     langEn: "英语",
     langAr: "阿拉伯语",
     langZh: "中文",
+    drought: "干旱",
   },
 };
 

@@ -28,6 +28,12 @@ export interface VictoryCondition {
   buildingType?: string;
 }
 
+export interface WeatherCondition {
+  type: "drought";
+  startTurn: number;
+  endTurn: number;
+}
+
 export class PlayScene extends Phaser.Scene {
   public gridConfig!: GridConfig;
   public statsConfig!: StatsConfig;
@@ -49,6 +55,7 @@ export class PlayScene extends Phaser.Scene {
   public player!: Player;
   public buttons!: ButtonManager;
   public victoryCondition!: VictoryCondition;
+  public weatherCondition?: WeatherCondition;
 
   constructor() {
     super("scenePlay");
@@ -79,6 +86,7 @@ export class PlayScene extends Phaser.Scene {
     this.trackables = config.trackables;
     this.victoryCondition = config.victoryCondition;
     this.startingResources = config.startingResources || 100; // Read from YAML
+    this.weatherCondition = config.weatherCondition;
   }
 
   /**
@@ -241,8 +249,20 @@ export class PlayScene extends Phaser.Scene {
    */
   startNextRound(): void {
     this.grid.step();
+    this.applyWeatherCondition();
     this.updateUI();
     this.gameState.save();
+  }
+
+  applyWeatherCondition(): void {
+    if (this.weatherCondition) {
+      const currentTurn = this.trackables.turnsPlayed;
+      if (currentTurn >= this.weatherCondition.startTurn && currentTurn <= this.weatherCondition.endTurn) {
+        if (this.weatherCondition.type === "drought") {
+          this.grid.cells.forEach(cell => cell.setWaterLevel(0));
+        }
+      }
+    }
   }
 
   /**
@@ -341,6 +361,13 @@ export class PlayScene extends Phaser.Scene {
  *   Example:
  *   startingResources: 50
  *
+ * - `weatherCondition`: A weather condition that affects the game for a specified number of turns.
+ *   Example:
+ *   weatherCondition:
+ *     type: drought
+ *     startTurn: 10
+ *     endTurn: 14
+ *
  * Example `scenario.yaml`:
  * gridConfig:
  *   width: 8
@@ -370,4 +397,8 @@ export class PlayScene extends Phaser.Scene {
  *   type: resources
  *   goal: 1000
  * startingResources: 50
+ * weatherCondition:
+ *   type: drought
+ *   startTurn: 10
+ *   endTurn: 14
  */

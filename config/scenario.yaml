@@ -30,3 +30,8 @@ victoryCondition:
   goal: 1000
 
 startingResources: 50
+
+weatherCondition:
+  type: drought
+  startTurn: 3
+  endTurn: 5
