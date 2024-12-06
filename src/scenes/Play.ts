@@ -92,17 +92,13 @@ export class PlayScene extends Phaser.Scene {
     this.buttons = new ButtonManager(this);
 
     // Language switching buttons
-    document.getElementById("lang-en")?.addEventListener("click", () => {
-      LanguageManager.setLanguage("en");
-      this.updateUIText();
-    });
-    document.getElementById("lang-ar")?.addEventListener("click", () => {
-      LanguageManager.setLanguage("ar");
-      this.updateUIText();
-    });
-    document.getElementById("lang-zh")?.addEventListener("click", () => {
-      LanguageManager.setLanguage("zh");
-      this.updateUIText();
+    const languages: Language[] = ["en", "ar", "zh"];
+
+    languages.forEach((lang) => {
+      document.getElementById(`lang-${lang}`)?.addEventListener("click", () => {
+        LanguageManager.setLanguage(lang);
+        this.updateUIText();
+      });
     });
 
     // this.loadScenario();
