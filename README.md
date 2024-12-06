@@ -125,5 +125,10 @@ trackables:
 ### Internal DSL for Plants and Growth Conditions
 
 ### Switch to Alternate Platform
+Describe how you ported your project to an alternate platform. For example, which chunks of code or data was able to be carried over to the new platform? Which concepts needed to be redesigned or restructured to fit the new platform?  If your alternate platform has changed since the one described earlier, describe how you chose your new alternate platform.
+
+Porting our codebase from JavaScript to TypeScript was a more demanding challenge than we had anticipated, mainly due to the fact with how TypeScript is deployed to the browser. Unlike JavaScript, TypeScript cannot run on browsers and therefore must be transpiled into JavaScript beforehand. After translating our code to TypeScript, we noticed that it would not live update anytime we saved changes to our code. This happened due to the fact that are TypeScript transpiled once into JavaScript and never again for consequent changes. This is the point where we realized we should have used Deno for rapid deployment, since this tool transpiled TypeScript at runtime. Instead, we opted to reconfigure `tsconfig.json` to reflect the need for continuous monitoring. Also enabling watch mode by running `tsc --watch` on the command line helped us continously deploy our game into the browser.
+
+In regards to the actual process of converting our code to TypeScript, the bulk of the work involved adding strict type-checking and creating new structs to represent data more explicitly.
 
 ## Reflection
