@@ -19,6 +19,7 @@ export interface Building {
   readonly cost: number;
   readonly rate: number;
   readonly scale: number;
+  readonly growthRule: string; // New property
 }
 
 export class PlayScene extends Phaser.Scene {
@@ -32,6 +33,7 @@ export class PlayScene extends Phaser.Scene {
     cost: number;
     rate: number;
     scale: number;
+    growthRule: string; // New property
   }> = [];
 
   public gameState!: GameState;
@@ -58,7 +60,10 @@ export class PlayScene extends Phaser.Scene {
       height: this.game.scale.height,
     };
 
-    this.buildings = config.buildings;
+    this.buildings = config.buildings.map((building: any) => ({
+      ...building,
+      growthRule: building.growthRule || "default", // Default to "default" if not specified
+    }));
     this.RESOURCE_GOAL = config.RESOURCE_GOAL;
     this.trackables = config.trackables;
   }

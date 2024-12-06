@@ -115,12 +115,22 @@ export class Cell extends Phaser.GameObjects.Sprite {
 
   updateLevel(): void {
     if (this.hasBuilding()) {
-      const uniqueCount = new Set(this.getAdjacentBuildings()).size;
-
-      if (uniqueCount >= 2 && !this.maxLevelReached()) {
-        this.level++;
-        this.displayBuilding();
+      const building = this.scene.buildings[this.buildingRef];
+      if (building.growthRule === "default") {
+        const uniqueCount = new Set(this.getAdjacentBuildings()).size;
+        if (uniqueCount >= 2 && !this.maxLevelReached()) {
+          this.level++;
+        }
+      } else if (building.growthRule === "waterSun") {
+        if (this.sunLevel >= 3 && this.waterLevel >= 3) {
+          this.level = 3;
+        } else if (this.sunLevel >= 2 && this.waterLevel >= 2) {
+          this.level = 2;
+        } else {
+          this.level = 1;
+        }
       }
+      this.displayBuilding();
     }
   }
 
