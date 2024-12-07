@@ -91,39 +91,98 @@ Overall, the F1 assignment has been a lot more difficult than we anticipated. Im
 No major changes were made for the F0 and F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
 
 ### External DSL for Scenario Design
-We designed our external DSL to prioritize simplicity while simulatenously ensuring the user adheres to a strict structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
+We designed our external DSL to prioritize simplicity while simulatenously ensuring the user adheres to a strict structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. The YAML file is parsed at runtime using the yaml library, enabling the game to dynamically load and apply these configurations. This approach allows users to modify scenarios easily without needing to understand the main programming language. Here is an example scenario definition:
 
 ```
 gridConfig:
-  width: 8
-  height: 8
-  size: 50
+  width: 4
+  height: 5
+  size: 64
 
 buildings:
   - type: Drill
     cost: 10
     rate: 1
     scale: 1.6
+    growthRule: default
   - type: Excavator
     cost: 30
     rate: 1.5
     scale: 1.6
+    growthRule: waterSun
   - type: DemolitionPlant
     cost: 50
     rate: 2
     scale: 1.6
-
-RESOURCE_GOAL: 1000
+    growthRule: default
 
 trackables:
   buildingsPlaced: 0
   resourcesCollected: 0
   turnsPlayed: 0
+
+victoryCondition:
+  type: resources
+  goal: 1000
+
+startingResources: 50
+
+weatherCondition:
+  type: drought
+  startTurn: 3
+  endTurn: 5
 ```
-The YAML file is parsed at runtime using the yaml library, enabling the game to dynamically load and apply these configurations. This approach allows users to modify scenarios easily without needing to understand the main programming language. The user is allowed to customize aspects of the game such as the grid configuration, building types, starting resources, and victory conditions. They are also able to implement timed weather conditions that activate between specific turns determined by the yaml file. Ultimately, our external DSL gives players the freedom to define their own game elements and behaviors, and play these modifications in real-time.
+From the example above, we can see that the player is able to assign values to elements such as the game's grid configuration, building types, starting resources, and victory conditions. Not only can the player modify existing game elements, they can also add things like timed weather conditions that activate between specific turns, as well as apply structurally different growth rules like `'waterSun'`, which alter the conditions building types require to evolve. The external DSL can be translated as such:
+
+1. Define a 4x5 grid with cells of size 64px wide and 64px tall.
+2. Define three building types: Drill, Excavator, and Demolition Plant, each with a unique name, cost, resource production rate, asset scaling, and growth rule.
+3. Start the game off a clean slate, with no buildings placed, no resources collected, and no turns played.
+4. Make resources the objective of this scenario, defining 1000 resources as the goal to reach.
+5. Create a drought weather condition, which starts on round 3 and ends after round 5.
+
+
+Ultimately, our external DSL gives players the freedom to define their own game elements and behaviors, and play these modifications in real-time.
 
 ### Internal DSL for Plants and Growth Conditions
-The program implements an internal DSL for defining different types of buildings and their unique growth conditions within the main programming language (TypeScript). Each building type is represented as an object with properties such as type, cost, rate, scale, and growthRule. The growthRule property allows for the specification of unique growth conditions, such as requiring specific sun and water levels or the presence of adjacent buildings. These conditions are not numeric differences but gameplay difference that require different sets of conditions to be met in order to level up certain buildings. This growth rule can be adjusted through either the internal DSL or external DSL from the yaml file mentioned earlier.
+The program implements an internal DSL for defining different types of buildings and their unique growth conditions within the main programming language (TypeScript). Each building type is represented as an object with properties such as `type`, `cost`, `rate`, `scale`, and `growthRule`. The `growthRule` property allows for the specification of unique growth conditions, such as requiring specific sun and water levels or the presence of adjacent buildings. These conditions are not numeric differences but gameplay difference that require different sets of conditions to be met in order to level up certain buildings. This growth rule can be adjusted through either the internal DSL or external DSL from the YAML file mentioned earlier.
+
+Here is an example code snipped demonstrating the implementation of internal DSL within the game's initialization phase:
+
+```
+ init(): void {
+    const yamlText = this.cache.text.get("scenario");
+    const config = parse(yamlText);
+
+    this.gridConfig = config.gridConfig;
+    this.statsConfig = {
+      x: this.gridConfig.width * this.gridConfig.size,
+      y: 0,
+      width:
+        this.game.scale.width - this.gridConfig.width * this.gridConfig.size,
+      height: this.game.scale.height,
+    };
+
+    this.buildings = config.buildings.map((building: any) => ({
+      ...building,
+      growthRule: building.growthRule || "default",
+    }));
+    this.RESOURCE_GOAL = config.RESOURCE_GOAL;
+    this.trackables = config.trackables;
+    this.victoryCondition = config.victoryCondition;
+    this.startingResources = config.startingResources || 100;
+    this.weatherCondition = config.weatherCondition;
+  }
+  ```
+
+  The external DSL gets parsed into a single `config` object, which includes all the scenario properties defined by the player. Since YAML lacks any sort of type checking, its contents could include game-breaking data. Unlike YAML, our host language TypeScript offers this feature and allows us to assign the contents of `config` into the scene class' fields, which have predefined property types. As a result, class properties like `this.gridConfig` will always contain three numbers: `width`, `height`, and `size`.
+
+  The internal above can be translated as such:
+
+  1. Retrieve the YAML configuration file and parse its data into a single `config` object.
+  2. Establish the grid's width, height, and size according to how it is defined in `config`.
+  3. Create a dictionary of buildings as defined by the YAML file, setting defaulting to the standard growth rule if none is provided.
+  4. Define a resource goal, and other variables to track throughout the game.
+  5. Assign the weather condition, as defined in `config`, to the game, and carry out its instructions later by reading from its properties.
 
 ### Switch to Alternate Platform
 Porting our codebase from JavaScript to TypeScript was a more demanding challenge than we had anticipated, mainly due to the fact with how TypeScript gets deployed to the browser. Unlike JavaScript, TypeScript cannot run on browsers and therefore must be transpiled into JavaScript beforehand. After translating our code to TypeScript, we noticed that it would not live-update anytime we saved changes to our code. This happened due to the fact that our TypeScript code transpiled once into JavaScript and never again, for any subsequent changes. At this point our team realized that we should have used Deno for rapid deployment, since this tool offers the benefit of transpiling TypeScript at runtime. Instead, we opted to reconfigure `tsconfig.json` to reflect the need for continuous monitoring. Also enabling watch mode by running `tsc --watch` on the command line helped us continously deploy our game into the browser.
