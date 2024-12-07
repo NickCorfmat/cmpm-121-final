@@ -4,13 +4,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< Updated upstream
   <title>CMPM 121 - Final Game</title>
+=======
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Mining Simulator" />
+  <meta name="description" content="A fun mining simulator game." />
+
+  <title>Mining Simulator</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+  <link rel="manifest" href="/site.webmanifest" />
+
+>>>>>>> Stashed changes
   <link rel="stylesheet" type="text/css" href="src/style.css" />
+
   <script src="lib/phaser.js"></script>
   <script src="dist/bundle.js"></script>
 </head>
 
 <body>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js").then(() => {
+        console.log("Service Worker Registered");
+      });
+    }
+  </script>
   <div id="title">
     <h1>Mining Simulator</h1>
   </div>
