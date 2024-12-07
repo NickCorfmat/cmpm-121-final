@@ -141,18 +141,12 @@ export class Stats extends Phaser.GameObjects.Sprite {
     if (!this.cell) return;
 
     const isDrought = this.scene.weatherCondition &&
-      this.scene.weatherCondition.type === "drought" &&
-      this.scene.trackables.turnsPlayed >= this.scene.weatherCondition.startTurn &&
-      this.scene.trackables.turnsPlayed <= this.scene.weatherCondition.endTurn;
-
-    const isStorm = this.scene.weatherCondition &&
-      this.scene.weatherCondition.type === "storm" &&
       this.scene.trackables.turnsPlayed >= this.scene.weatherCondition.startTurn &&
       this.scene.trackables.turnsPlayed <= this.scene.weatherCondition.endTurn;
 
     this.location = `${LanguageManager.getTranslation("location")}: (${this.cell.row}, ${this.cell.col})`;
-    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}${isStorm ? ` (${LanguageManager.getTranslation("storm")})` : ""}`;
-    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}${isDrought || isStorm ? ` (${LanguageManager.getTranslation(this.scene.weatherCondition!.type)})` : ""}`;
+    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}`;
+    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}${isDrought ? ` (${LanguageManager.getTranslation("drought")})` : ""}`;
     this.level = `${LanguageManager.getTranslation("level")}: ${this.cell.level}`;
   }
 

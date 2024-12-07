@@ -29,7 +29,7 @@ export interface VictoryCondition {
 }
 
 export interface WeatherCondition {
-  type: "drought" | "storm";
+  type: "drought";
   startTurn: number;
   endTurn: number;
 }
@@ -260,11 +260,6 @@ export class PlayScene extends Phaser.Scene {
       if (currentTurn >= this.weatherCondition.startTurn && currentTurn <= this.weatherCondition.endTurn) {
         if (this.weatherCondition.type === "drought") {
           this.grid.cells.forEach(cell => cell.setWaterLevel(0));
-        } else if (this.weatherCondition.type === "storm") {
-          this.grid.cells.forEach(cell => {
-            cell.setWaterLevel(5);
-            cell.setSunLevel(0);
-          });
         }
       }
     }
@@ -372,9 +367,6 @@ export class PlayScene extends Phaser.Scene {
  *     type: drought
  *     startTurn: 10
  *     endTurn: 14
- *     type: storm
- *     startTurn: 5
- *     endTurn: 7
  *
  * Example `scenario.yaml`:
  * gridConfig:
@@ -409,7 +401,4 @@ export class PlayScene extends Phaser.Scene {
  *   type: drought
  *   startTurn: 10
  *   endTurn: 14
- *   type: storm
- *   startTurn: 5
- *   endTurn: 7
  */
