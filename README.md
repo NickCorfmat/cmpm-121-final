@@ -88,7 +88,7 @@ Overall, the F1 assignment has been a lot more difficult than we anticipated. Im
 ## How we satisfied the software requirements
   
 ### F0+F1
-No major changes were made for the F0 anf F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
+No major changes were made for the F0 and F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
 
 ### External DSL for Scenario Design
 We designed our external DSL to prioritize simplicity while simulatenously ensuring the user adheres to a strict structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
