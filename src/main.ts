@@ -25,3 +25,17 @@ let config: Phaser.Types.Core.GameConfig = {
 
 const game = new Phaser.Game(config);
 const { width, height } = game.config;
+
+// Register service worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("ServiceWorker registration successful with scope: ", registration.scope);
+      })
+      .catch((error) => {
+        console.log("ServiceWorker registration failed: ", error);
+      });
+  });
+}
