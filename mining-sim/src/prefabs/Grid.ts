@@ -17,7 +17,7 @@ export class Grid {
 
   private BYTES_PER_CELL: number = 4;
   private NUM_CELLS: number;
-  
+
   public selectedCell: Cell | null = null;
   public lastSelectedCell: Cell | null = null;
 

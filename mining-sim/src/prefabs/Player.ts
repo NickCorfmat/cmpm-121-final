@@ -3,7 +3,7 @@ import { Grid } from "./Grid";
 import { Cell } from "./Cell";
 import { PlayScene } from "../scenes/Play";
 import { KeyScene, KEYS } from "../scenes/Keys";
-import { LanguageManager } from "../prefabs/LanguageManager";
+import { LanguageManager } from "./LanguageManager";
 
 export class Player extends Phaser.GameObjects.Sprite {
   public scene: PlayScene;

@@ -1,6 +1,6 @@
 import { PlayScene } from "../scenes/Play";
 import { Cell } from "./Cell";
-import { LanguageManager } from "../prefabs/LanguageManager";
+import { LanguageManager } from "./LanguageManager";
 
 export interface StatsConfig {
   x: number;
@@ -140,14 +140,24 @@ export class Stats extends Phaser.GameObjects.Sprite {
   getCellInfo(): void {
     if (!this.cell) return;
 
-    const isDrought = this.scene.weatherCondition &&
-      this.scene.trackables.turnsPlayed >= this.scene.weatherCondition.startTurn &&
+    const isDrought =
+      this.scene.weatherCondition &&
+      this.scene.trackables.turnsPlayed >=
+        this.scene.weatherCondition.startTurn &&
       this.scene.trackables.turnsPlayed <= this.scene.weatherCondition.endTurn;
 
-    this.location = `${LanguageManager.getTranslation("location")}: (${this.cell.row}, ${this.cell.col})`;
-    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${this.cell.sunLevel}`;
-    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${this.cell.waterLevel}${isDrought ? ` (${LanguageManager.getTranslation("drought")})` : ""}`;
-    this.level = `${LanguageManager.getTranslation("level")}: ${this.cell.level}`;
+    this.location = `${LanguageManager.getTranslation("location")}: (${
+      this.cell.row
+    }, ${this.cell.col})`;
+    this.sunLevel = `${LanguageManager.getTranslation("sunLevel")}: ${
+      this.cell.sunLevel
+    }`;
+    this.waterLevel = `${LanguageManager.getTranslation("waterLevel")}: ${
+      this.cell.waterLevel
+    }${isDrought ? ` (${LanguageManager.getTranslation("drought")})` : ""}`;
+    this.level = `${LanguageManager.getTranslation("level")}: ${
+      this.cell.level
+    }`;
   }
 
   displayDescription(): void {
