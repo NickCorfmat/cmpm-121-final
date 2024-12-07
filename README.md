@@ -82,3 +82,68 @@ Source: diagram created with the help of Brace.
 
 ## Reflection
 Overall, the F1 assignment has been a lot more difficult than we anticipated. Implementing state saving and an undo system was extremely challenging with our initial design, leading us to take a step back and spend more time refactoring our approach so that it was more suitable for implementing these requirements. For example, we had to ultimately abandon representing "buildings" as objects, but rather representing them as numbers. This change made it much easier to convert our game's grid data into an "array of structures," rather than an "array of structures of structures." Figuring out how to save the move history into memory was also a challenge, since our current design would max out the browser's local storage within a few moves. This prompted us to optimize the performance of our game (such as pooling from the same objects), while also eliminating circular references within our save data. Overall, our game's internal design has evolved significantly for the better, making it much easier for us (or others) to modify in the future.
+
+# Devlog Entry - 12/6/24
+
+## How we satisfied the software requirements
+  
+### F0+F1
+No major changes were made for the F0 anf F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
+
+### External DSL for Scenario Design
+We designed our external DSL to prioritize simplicity while simulatenously ensuring the user adheres to a strict structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
+
+```
+gridConfig:
+  width: 8
+  height: 8
+  size: 50
+
+buildings:
+  - type: Drill
+    cost: 10
+    rate: 1
+    scale: 1.6
+  - type: Excavator
+    cost: 30
+    rate: 1.5
+    scale: 1.6
+  - type: DemolitionPlant
+    cost: 50
+    rate: 2
+    scale: 1.6
+
+RESOURCE_GOAL: 1000
+
+trackables:
+  buildingsPlaced: 0
+  resourcesCollected: 0
+  turnsPlayed: 0
+```
+
+
+### Internal DSL for Plants and Growth Conditions
+
+### Switch to Alternate Platform
+Porting our codebase from JavaScript to TypeScript was a more demanding challenge than we had anticipated, mainly due to the fact with how TypeScript gets deployed to the browser. Unlike JavaScript, TypeScript cannot run on browsers and therefore must be transpiled into JavaScript beforehand. After translating our code to TypeScript, we noticed that it would not live-update anytime we saved changes to our code. This happened due to the fact that our TypeScript code transpiled once into JavaScript and never again, for any subsequent changes. This is the point where we realized we should have used Deno for rapid deployment, since this tool offers the benefit of transpiling TypeScript at runtime. Instead, we opted to reconfigure `tsconfig.json` to reflect the need for continuous monitoring. Also enabling watch mode by running `tsc --watch` on the command line helped us continously deploy our game into the browser.
+
+In regards to the actual process of converting our code to TypeScript, the bulk of the work involved adding strict type-checking and creating new structs to represent data more explicitly. Since we were constantly passing references of Phaser's built-in Scene objects in JavaScript, we needed to rectify new structs to represent the specific Scene types and properties we were referencing across different classes. For example,
+```
+class Grid { 
+    constructor(scene, gridConfig) {...}
+}
+```
+Now became:
+```
+class Grid { 
+    constructor(scene: PlayScene, gridConfig: GridConfig) {...}
+}
+```
+From the example above, `scene` had to constrained to be of type `PlayScene` given how it consists of a specific list of properties. If we were still working in JavaScript, we could have easily passed `LoadScene` to the Grid's constructor without compilation errors, yet this would inevitably break the game once Grid needed to access properties exclusive to `PlayScene`. TypeScript removes this vulnerability by requiring type-checking for all variables, function arguments, and return values, making it the safer language to work with.
+
+Ultimately, the process of switching from the JavaScript to Typescript mainly demanded we pay closer attention to how the deployment process works, but for the most part, proved to be a manageable transition. As of right now, our team is more confident in our code's resilience thanks to the integration of strict type-checking.
+
+
+
+## Reflection
+
