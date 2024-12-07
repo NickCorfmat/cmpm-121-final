@@ -203,7 +203,5 @@ From the example above, `scene` had to constrained to be of type `PlayScene` giv
 
 Ultimately, the process of switching from the JavaScript to Typescript mainly demanded we pay closer attention to how the deployment process works, but for the most part, proved to be a manageable transition. As of right now, our team is more confident in our code's resilience thanks to the integration of strict type-checking.
 
-
-
 ## Reflection
-
+Our team learned from F2 about the importance of building a solid foundation for creating strong, adaptable code. Migrating our codebase from JavaScript to TypeScript proved to be a bigger challenge than it should have, since it essentially broke our entire game. We had to change how we represented structs in order to have stricter definitions. Additionally, adding external and internal DSLs meant our code had to become more dynamic, a feature that meant rewriting a lot of exisiting code. One key decision we made early on that spared ourselves from a lot of stress during this step, was stepping away from representing buildings as complex structs, but rather simple objects with primitive data types. Overall, our focus right now has changed to prioritize dynamic code in order to set the game up for easier expansion.
