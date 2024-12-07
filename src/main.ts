@@ -4,7 +4,7 @@ import { KeyScene as Keys } from "./scenes/Keys";
 import { PlayScene as Play } from "./scenes/Play";
 import { WinScene as Win } from "./scenes/Win";
 
-"use strict";
+("use strict");
 
 let config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,

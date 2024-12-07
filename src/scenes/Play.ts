@@ -232,13 +232,19 @@ export class PlayScene extends Phaser.Scene {
       const button = document.getElementById(buttonId);
       if (button) {
         if (buttonId.startsWith("buy")) {
-          const buildingType = buttonId.replace("buy", "").replace("Button", "");
-          const building = this.buildings.find(b => b.type === buildingType);
+          const buildingType = buttonId
+            .replace("buy", "")
+            .replace("Button", "");
+          const building = this.buildings.find((b) => b.type === buildingType);
           if (building) {
-            button.textContent = `${LanguageManager.getTranslation(button.getAttribute("data-translate") ?? "")}: $${building.cost}`;
+            button.textContent = `${LanguageManager.getTranslation(
+              button.getAttribute("data-translate") ?? ""
+            )}: $${building.cost}`;
           }
         } else {
-          button.textContent = LanguageManager.getTranslation(button.getAttribute("data-translate") ?? "");
+          button.textContent = LanguageManager.getTranslation(
+            button.getAttribute("data-translate") ?? ""
+          );
         }
       }
     });
@@ -257,9 +263,12 @@ export class PlayScene extends Phaser.Scene {
   applyWeatherCondition(): void {
     if (this.weatherCondition) {
       const currentTurn = this.trackables.turnsPlayed;
-      if (currentTurn >= this.weatherCondition.startTurn && currentTurn <= this.weatherCondition.endTurn) {
+      if (
+        currentTurn >= this.weatherCondition.startTurn &&
+        currentTurn <= this.weatherCondition.endTurn
+      ) {
         if (this.weatherCondition.type === "drought") {
-          this.grid.cells.forEach(cell => cell.setWaterLevel(0));
+          this.grid.cells.forEach((cell) => cell.setWaterLevel(0));
         }
       }
     }
