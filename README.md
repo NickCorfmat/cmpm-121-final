@@ -91,7 +91,7 @@ Overall, the F1 assignment has been a lot more difficult than we anticipated. Im
 No major changes were made for the F0 anf F1 requirements. Our previous coding structured enable us to implement the F2 requirements without significant refactoring. For example, abandoning our approach to representing building types as structs back in F1 allowed us to easily employ an external DSL to define new building types, as they can now be represented using just four primitive data types.
 
 ### External DSL for Scenario Design
-We designed our external DSL focusing on simplicity while simulatenously following an existing structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
+We designed our external DSL to prioritize simplicity while simulatenously ensuring the user adheres to a strict structure; as a result, we felt it was most appropriate to use YAML as the main data format for our DSL. Given the YAML file, our code parses this data into a single `config` object, in which the rest of the game can read from. Here is the default scenario definition our game was built around:
 
 ```
 gridConfig:
@@ -125,9 +125,9 @@ trackables:
 ### Internal DSL for Plants and Growth Conditions
 
 ### Switch to Alternate Platform
-Porting our codebase from JavaScript to TypeScript was a more demanding challenge than we had anticipated, mainly due to the fact with how TypeScript is deployed to the browser. Unlike JavaScript, TypeScript cannot run on browsers and therefore must be transpiled into JavaScript beforehand. After translating our code to TypeScript, we noticed that it would not live update anytime we saved changes to our code. This happened due to the fact that are TypeScript transpiled once into JavaScript and never again for consequent changes. This is the point where we realized we should have used Deno for rapid deployment, since this tool transpiled TypeScript at runtime. Instead, we opted to reconfigure `tsconfig.json` to reflect the need for continuous monitoring. Also enabling watch mode by running `tsc --watch` on the command line helped us continously deploy our game into the browser.
+Porting our codebase from JavaScript to TypeScript was a more demanding challenge than we had anticipated, mainly due to the fact with how TypeScript gets deployed to the browser. Unlike JavaScript, TypeScript cannot run on browsers and therefore must be transpiled into JavaScript beforehand. After translating our code to TypeScript, we noticed that it would not live-update anytime we saved changes to our code. This happened due to the fact that our TypeScript code transpiled once into JavaScript and never again, for any subsequent changes. This is the point where we realized we should have used Deno for rapid deployment, since this tool offers the benefit of transpiling TypeScript at runtime. Instead, we opted to reconfigure `tsconfig.json` to reflect the need for continuous monitoring. Also enabling watch mode by running `tsc --watch` on the command line helped us continously deploy our game into the browser.
 
-In regards to the actual process of converting our code to TypeScript, the bulk of the work involved adding strict type-checking and creating new structs to represent data more explicitly. Since we were constantly passing references of Phaser's built-in Scene objects in JavaScript, we needed to rectify new structs to represent the specific Scene type and properties we were referencing across different classes. For example,
+In regards to the actual process of converting our code to TypeScript, the bulk of the work involved adding strict type-checking and creating new structs to represent data more explicitly. Since we were constantly passing references of Phaser's built-in Scene objects in JavaScript, we needed to rectify new structs to represent the specific Scene types and properties we were referencing across different classes. For example,
 ```
 class Grid { 
     constructor(scene, gridConfig) {...}
@@ -139,7 +139,9 @@ class Grid {
     constructor(scene: PlayScene, gridConfig: GridConfig) {...}
 }
 ```
-From the example above, `scene` had to constrained to be of type `PlayScene` given how it consists of a specific list of properties. If we were still working in JavaScript, we could have passed `LoadScene` to the Grid's constructor without compilation errors, yet this would inevitably break the game once Grid needed to access properties exclusive to `PlayScene`. TypeScript removes this vulnerability by requiring type-checking for all variables, function arguments, and return values.
+From the example above, `scene` had to constrained to be of type `PlayScene` given how it consists of a specific list of properties. If we were still working in JavaScript, we could have easily passed `LoadScene` to the Grid's constructor without compilation errors, yet this would inevitably break the game once Grid needed to access properties exclusive to `PlayScene`. TypeScript removes this vulnerability by requiring type-checking for all variables, function arguments, and return values, making it the safer language to work with.
+
+Ultimately, the process of switching from the JavaScript to Typescript mainly demanded we pay closer attention to how the deployment process works, but for the most part, proved to be a manageable transition. As of right now, our team is more confident in our code's resilience thanks to the integration of strict type-checking.
 
 
 
