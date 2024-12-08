@@ -3,7 +3,7 @@
     "short_name": "Mining",
     "description": "A mining simulator built using Phaser 3",
     "start_url": "/index.html",
-    "display": "fullscreen",
+    "display": "standalone",
     "icons": [
         {
             "src": "icons/apple-touch-icon.png",
