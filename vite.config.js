@@ -10,4 +10,10 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: "/cmpm-121-final/",
+  resolve: {
+    alias: {
+      phaser: "/node_modules/phaser/dist/phaser.js",
+    },
+  },
 });
