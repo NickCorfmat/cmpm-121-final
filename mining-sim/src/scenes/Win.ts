@@ -6,7 +6,7 @@ export class WinScene extends Phaser.Scene {
   private buildingsPlaced: number = 0;
   private resourcesCollected: number = 0;
   private turnsPlayed: number = 0;
-  
+
   private textConfig!: Phaser.Types.GameObjects.Text.TextStyle;
   private text!: Phaser.GameObjects.Text;
 
@@ -23,21 +23,24 @@ export class WinScene extends Phaser.Scene {
     this.textConfig = {
       fontSize: "32px",
       align: "center",
-      lineSpacing: 10,
     };
   }
 
   create(): void {
     const { width, height } = this.scale;
 
-    this.add.text(width * 0.5, height * 0.5, LanguageManager.getTranslation("win"), {
-      fontSize: "32px",
-      color: "#ffffff",
-    }).setOrigin(0.5);
+    this.add
+      .text(width * 0.5, height * 0.5, LanguageManager.getTranslation("win"), {
+        fontSize: "32px",
+        color: "#ffffff",
+      })
+      .setOrigin(0.5);
 
     const victoryConditionElement = document.getElementById("victoryCondition");
     if (victoryConditionElement) {
-      victoryConditionElement.textContent = LanguageManager.getTranslation(victoryConditionElement.getAttribute("data-translate") ?? '');
+      victoryConditionElement.textContent = LanguageManager.getTranslation(
+        victoryConditionElement.getAttribute("data-translate") ?? ""
+      );
     }
 
     // Language switching buttons
@@ -58,7 +61,9 @@ export class WinScene extends Phaser.Scene {
   updateUIText(): void {
     const victoryConditionElement = document.getElementById("victoryCondition");
     if (victoryConditionElement) {
-      victoryConditionElement.textContent = LanguageManager.getTranslation(victoryConditionElement.getAttribute("data-translate") ?? '');
+      victoryConditionElement.textContent = LanguageManager.getTranslation(
+        victoryConditionElement.getAttribute("data-translate") ?? ""
+      );
     }
   }
 }

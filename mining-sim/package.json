@@ -14,7 +14,10 @@
     "vite-plugin-deno": "^0.0.0-alpha.0"
   },
   "dependencies": {
+    "-": "^0.0.1",
+    "D": "^1.0.0",
     "phaser": "^3.55.0",
+    "vite-plugin-pwa": "^0.21.1",
     "yaml": "^2.6.1"
   }
 }
