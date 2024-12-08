@@ -6,31 +6,39 @@ export default defineConfig({
   base: '/cmpm-121-final/', // Add this line to set the base path for your project
   server: {
     port: 3000,
+    fs: {
+      allow: ['..']
+    }
   },
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Mining Sim',
-        short_name: 'MineSim',
-        description: 'A Mining Sim made for CMPM 121 at UCSC.',
-        start_url: '/cmpm-121-final/index.html',
+        name: 'Mining Simulator',
+        short_name: 'MiningSim',
+        description: 'A mining simulation game.',
+        start_url: '/index.html',
         display: 'standalone',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#000000',
+        background_color: '#000000',
         icons: [
           {
-            src: 'icons/android-chrome-192x192.png',
+            src: 'icons/icon-192x192.png',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/png'
           },
           {
-            src: 'icons/android-chrome-512x512.png',
+            src: 'icons/icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png',
-          },
-        ],
-      },
+            type: 'image/png'
+          }
+        ]
+      }
     })
   ],
+  resolve: {
+    alias: {
+      'phaser': 'phaser/dist/phaser.js'
+    }
+  }
 });
