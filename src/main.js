@@ -5,20 +5,20 @@ import { PlayScene as Play } from "./scenes/Play";
 import { WinScene as Win } from "./scenes/Win";
 ("use strict");
 let config = {
-  type: Phaser.AUTO,
-  width: 700,
-  height: 400,
-  parent: "phaser-game",
-  render: {
-    pixelArt: true,
-  },
-  physics: {
-    default: "arcade",
-    arcade: {
-      debug: false,
+    type: Phaser.AUTO,
+    width: 700,
+    height: 400,
+    parent: "phaser-game",
+    render: {
+        pixelArt: true,
     },
-  },
-  scene: [Load, Keys, Play, Win],
+    physics: {
+        default: "arcade",
+        arcade: {
+            debug: false,
+        },
+    },
+    scene: [Load, Keys, Play, Win],
 };
 const game = new Phaser.Game(config);
 const { width, height } = game.config;
