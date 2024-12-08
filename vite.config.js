@@ -1,15 +1,8 @@
-import { defineConfig } from "vite";
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: '/cmpm-121-final/', // Add this line to set the base path for your project
-  server: {
-    port: 3000,
-    fs: {
-      allow: ['..']
-    }
-  },
+  base: '/cmpm-121-final/', // Set the base path for your project
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -17,10 +10,10 @@ export default defineConfig({
         name: 'Mining Simulator',
         short_name: 'MiningSim',
         description: 'A mining simulation game.',
-        start_url: '/index.html',
+        start_url: '/cmpm-121-final/index.html',
         display: 'standalone',
-        theme_color: '#000000',
         background_color: '#000000',
+        theme_color: '#000000',
         icons: [
           {
             src: 'icons/icon-192x192.png',
@@ -36,6 +29,11 @@ export default defineConfig({
       }
     })
   ],
+  server: {
+    fs: {
+      allow: ['..']
+    }
+  },
   resolve: {
     alias: {
       'phaser': 'phaser/dist/phaser.js'
