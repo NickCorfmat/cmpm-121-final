@@ -34,13 +34,15 @@ h2 {
   flex-direction: column;
   border: 8px solid black;
   border-radius: 10px;
+  width: 100%; /* Ensure the game container takes up the full width */
+  max-width: 710px; /* Set a max width to match the game screen */
 }
 
 #phaser-game {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 710px;
+  width: 100%; /* Ensure the game screen takes up the full width */
   height: 410px;
   background-color: rgb(130, 138, 255);
 }
@@ -83,4 +85,5 @@ button:hover {
   text-align: center;
   font-size: 1.5em;
   color: #fff;
+  margin: 0 10px; /* Add margin to avoid text overflow */
 }

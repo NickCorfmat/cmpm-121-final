@@ -248,6 +248,13 @@ export class PlayScene extends Phaser.Scene {
         }
       }
     });
+
+    // Ensure the victory condition text is updated and wrapped correctly
+    const victoryConditionElement = document.getElementById("victoryCondition");
+    if (victoryConditionElement) {
+      victoryConditionElement.style.whiteSpace = "normal";
+      victoryConditionElement.style.margin = "0 10px"; // Add margin to avoid text overflow
+    }
   }
 
   /**

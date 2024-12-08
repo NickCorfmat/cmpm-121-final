@@ -54,6 +54,8 @@ export class Stats extends Phaser.GameObjects.Sprite {
     this.textConfig = {
       fontSize: "20px",
       backgroundColor: "000",
+      wordWrap: { width: width - 20, useAdvancedWrap: true }, // Ensure text wraps within the container
+      padding: { left: 10, right: 10 }, // Add padding to avoid text overflow
     };
 
     // create text elements
@@ -81,6 +83,7 @@ export class Stats extends Phaser.GameObjects.Sprite {
         fontSize: "16px",
         backgroundColor: "#000",
         padding: { x: 10, y: 5 },
+        wordWrap: { width: width - 20, useAdvancedWrap: true }, // Ensure text wraps within the container
       }
     );
 
@@ -189,5 +192,10 @@ export class Stats extends Phaser.GameObjects.Sprite {
       this.displayDescription();
       this.displayCellName(); // Add this line to update cell name
     }
+
+    // Ensure text elements are updated and wrapped correctly
+    this.title.setWordWrapWidth(this.width - 20, true);
+    this.description.setWordWrapWidth(this.width - 20, true);
+    this.collectButton.setWordWrapWidth(this.width - 20, true);
   }
 }
