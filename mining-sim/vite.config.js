@@ -9,11 +9,9 @@ export default defineConfig({
         name: "Mining Simulator",
         short_name: "Mining",
         description: "A mining simulator built using Phaser 3",
-        theme_color: "#ffffff",
-        background_color: "#ffffff",
         display: "standalone",
-        orientation: "portrait",
         start_url: "/index.html",
+        id: "/index.html",
         icons: [
           {
             src: "icons/apple-touch-icon.png",
@@ -44,22 +42,6 @@ export default defineConfig({
             src: "icons/favicon.ico",
             sizes: "any",
             type: "image/x-icon",
-          },
-        ],
-      },
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => {
-              return url.pathname.startsWith("./api");
-            },
-            handler: "CacheFirst",
-            options: {
-              cacheName: "api-cache",
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
           },
         ],
       },
