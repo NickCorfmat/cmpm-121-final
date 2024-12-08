@@ -23,7 +23,6 @@ export class WinScene extends Phaser.Scene {
     this.textConfig = {
       fontSize: "32px",
       align: "center",
-      lineSpacing: 10,
     };
   }
 
