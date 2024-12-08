@@ -23,8 +23,8 @@ export class ButtonManager {
 
     // create Save/Load slot buttons
     for (let i = 1; i <= 3; i++) {
-      this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i));
-      this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i));
+      this.createButton(`saveSlot${i}`, () => this.handleSaveSlot(i), LanguageManager.getTranslation(`file${i}`));
+      this.createButton(`loadSlot${i}`, () => this.handleLoadSlot(i), LanguageManager.getTranslation(`file${i}`));
     }
 
     // create "exit slots" button
