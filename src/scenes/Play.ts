@@ -1,4 +1,4 @@
-import { parse } from "yaml";
+import { parse } from "yaml/dist/index.js";
 
 import Phaser from "phaser";
 import { Player } from "../prefabs/Player";
