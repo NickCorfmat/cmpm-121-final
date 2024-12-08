@@ -1,13 +1,9 @@
 {
     "name": "Mining Simulator",
     "short_name": "Mining",
-    "start_url": "/index.html",
-    "id": "/index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "lang": "en",
-    "scope": "/",
     "description": "A mining simulator built using Phaser 3",
+    "start_url": "/index.html",
+    "display": "standalone",
     "icons": [
         {
             "src": "icons/apple-touch-icon.png",
