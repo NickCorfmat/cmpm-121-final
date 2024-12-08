@@ -29,7 +29,7 @@ victoryCondition:
   type: resources
   goal: 1000
 
-startingResources: 50
+startingResources: 100
 
 weatherCondition:
   type: drought

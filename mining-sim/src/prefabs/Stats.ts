@@ -37,13 +37,14 @@ export class Stats extends Phaser.GameObjects.Sprite {
     texture: string = "stats"
   ) {
     super(scene, x, y, texture);
-    scene.add.existing(this);
 
     // store references
     this.scene = scene;
     this.width = width;
     this.height = height;
     this.cell = null;
+
+    this.scene.add.existing(this);
 
     // stats display configs
     this.setOrigin(0);
@@ -53,7 +54,6 @@ export class Stats extends Phaser.GameObjects.Sprite {
     this.textConfig = {
       fontSize: "20px",
       backgroundColor: "000",
-      lineSpacing: 10,
     };
 
     // create text elements

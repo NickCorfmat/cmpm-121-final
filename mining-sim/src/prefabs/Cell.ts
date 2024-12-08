@@ -30,17 +30,17 @@ export class Cell extends Phaser.GameObjects.Sprite {
     const { x, y } = grid.logicalToPixelCoords(row, col);
     super(scene, x, y, texture);
 
-    scene.add.existing(this);
-
-    // sprite configs
-    this.setOrigin(0.5);
-    this.setDisplaySize(grid.size, grid.size);
-
     // store references
     this.scene = scene;
     this.row = row;
     this.col = col;
     this.grid = grid;
+
+    this.scene.add.existing(this);
+
+    // sprite configs
+    this.setOrigin(0.5);
+    this.setDisplaySize(grid.size, grid.size);
 
     // cell properties/behaviors
     this.createBorder();

@@ -27,7 +27,13 @@ export class Player extends Phaser.GameObjects.Sprite {
     const { x, y } = grid.logicalToPixelCoords(row, col);
     super(scene, x, y, texture);
 
-    scene.add.existing(this);
+    // store references
+    this.scene = scene;
+    this.grid = grid;
+    this.row = row; // player logical coords
+    this.col = col;
+
+    this.scene.add.existing(this);
 
     // sprite configs
     const converage = 1;
@@ -36,13 +42,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.setDisplaySize(grid.size * converage, grid.size * converage);
     this.anims.play("idle");
 
-    // store references
-    this.scene = scene;
-    this.grid = grid;
-    this.row = row; // player logical coords
-    this.col = col;
-
-    this.KEYS = (scene.scene.get("sceneKeys") as KeyScene).KEYS;
+    this.KEYS = (this.scene.scene.get("sceneKeys") as KeyScene).KEYS;
 
     // initialize resources
     this.resources = startingResources; // Initialize with starting resources
