@@ -205,3 +205,29 @@ Ultimately, the process of switching from the JavaScript to Typescript mainly de
 
 ## Reflection
 Our team learned from F2 about the importance of building a solid foundation for creating strong, adaptable code. Migrating our codebase from JavaScript to TypeScript proved to be a bigger challenge than it should have, since it essentially broke our entire game. We had to change how we represented structs in order to have stricter definitions. Additionally, adding external and internal DSLs meant our code had to become more dynamic, a feature that meant rewriting a lot of exisiting code. One key decision we made early on that spared ourselves from a lot of stress during this step, was stepping away from representing buildings as complex structs, but rather simple objects with primitive data types. Overall, our focus right now has changed to prioritize dynamic code in order to set the game up for easier expansion.
+
+# Devlog Entry - 12/08/24
+
+## How we satisfied the software requirements
+### F0+F1+F2
+
+The biggest change we made from the last implementations of our game was the switch from using webpack and ts loader to fully using a vite deno implementation. This allows us to not be bottleknecked by bundling as we were before and can now test more frequently with live code updates to our game.
+
+### Internationalization
+
+Internationalization was achieved by using a dedicated LanguageManager class that handles all translatable strings. Each translatable string is now referenced by a key, and the LanguageManager fetches the appropriate translation based on the current language setting. To ensure completeness and catch missing translations, we leveraged TypeScript's type system. We defined a type for all possible translation keys, and any attempt to use a key not defined in this type results in a compile-time error. This approach helps us catch incomplete translations early in the development process. When adding support for a new language, developers need to update the translations.json file with the new language's translations. Additionally, any new translatable messages must be added to this file and referenced by their keys in the code. This ensures that all user-facing strings are properly localized and easily maintainable.
+
+### Localization
+
+Our game supports three languages: English, Arabic, and Chinese. For English, we used our own knowledge as it is the primary language of the development team. For Arabic, which is a right-to-left script, we used ChatGPT to assist with translations by providing context about the game's content and specific phrases that needed translation. For Chinese, which is a logographic script, we used ChatGPT as well. Players can select the language from within the game using language buttons available on the main menu. These buttons are labeled with the respective language names and allow players to switch languages dynamically during gameplay. This approach ensures that we meet the requirements of supporting at least one logographic script (Chinese) and one right-to-left script (Arabic).
+
+### Mobile Installation
+
+How did you get your game to be installable on a smartphone-class mobile device? If you followed a tutorial, guide, video, or blogpost, directly link to those resources that helped you learn. What changes were needed to make the game installable?
+
+### Mobile Play (Offline)
+
+What changes to your design were needed to make it play well on a mobile device? Were there any changes needed to make sure it worked in the offline case?
+
+## Reflection
+Looking back on how you achieved the new F3 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
