@@ -1,3 +1,8 @@
+# Note
+This repository has been migrated to a new version in support of Vite.
+
+[Link to new repository](https://github.com/NickCorfmat/Space-Mine?tab=readme-ov-file#running-the-game)
+
 # Devlog Entry - 11/14/24
 
 ## Introducing the team
